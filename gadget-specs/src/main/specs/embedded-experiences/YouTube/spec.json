@@ -1,0 +1,6 @@
+{
+  "isDefault" : false,
+  "gadget" : "YouTubePlayer.xml",
+  "title" : "YouTube Player",
+  "eeDataModel" : "dataModel.json"
+}

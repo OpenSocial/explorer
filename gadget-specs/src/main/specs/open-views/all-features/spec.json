@@ -1,0 +1,7 @@
+{
+  "isDefault" : false,
+  "title" : "All Features",
+  "gadget" : "gadget.xml",
+  "htmlFiles" : ["open-views.html"],
+  "jsFiles" : ["open-views.js"]
+}

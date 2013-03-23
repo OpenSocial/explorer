@@ -1,0 +1,73 @@
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>opensocial-explorer</artifactId>
+    <groupId>org.opensocial.explorer</groupId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+  <artifactId>opensocial-explorer-server</artifactId>
+  <name>OpenSocial Explorer Server</name>
+  <description>Server portion of the OpenSocial Explorer that defines customization and other server-wide functionality to make the OSE ready for packaging in different formats.</description>
+  <inceptionYear>2013</inceptionYear>
+  <packaging>jar</packaging>
+
+  <!-- ====================================================================== -->
+  <!-- P R O P E R T I E S -->
+  <!-- ====================================================================== -->
+  <properties>
+    <openid4java.version>0.9.7</openid4java.version>
+  </properties>
+
+  <!-- ====================================================================== -->
+  <!-- B U I L D -->
+  <!-- ====================================================================== -->
+  <build>
+    <resources>
+      <resource>
+        <targetPath>config</targetPath>
+        <directory>${basedir}/config</directory>
+        <includes>
+          <include>oauth.json</include>
+          <include>oauth2.json</include>
+          <include>opensocial-explorer.properties</include>
+        </includes>
+      </resource>
+    </resources>
+  </build>
+  
+  <!-- ====================================================================== -->
+  <!-- D E P E N D E N C I E S -->
+  <!-- ====================================================================== -->
+  <dependencies>
+    <dependency>
+      <groupId>org.opensocial.explorer</groupId>
+      <artifactId>opensocial-explorer-gadget-spec-server</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openid4java</groupId>
+      <artifactId>openid4java</artifactId>
+      <version>${openid4java.version}</version>
+    </dependency>
+  </dependencies>
+</project>

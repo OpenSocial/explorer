@@ -1,0 +1,406 @@
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.opensocial.explorer</groupId>
+  <artifactId>opensocial-explorer</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>OpenSocial Explorer</name>
+  <description>Top-level POM for the OpenSocial Explorer that defines project wide configuration.</description>
+  <inceptionYear>2013</inceptionYear>
+
+  <!-- ====================================================================== -->
+  <!-- L I C E N C E S -->
+  <!-- ====================================================================== -->
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <!-- ====================================================================== -->
+  <!-- D E V E L O P E R S -->
+  <!-- ====================================================================== -->
+  <developers>
+    <developer>
+      <id>ssievers</id>
+      <name>Stanton Sievers</name>
+      <email>ssievers@apache.org</email>
+    </developer>
+    <developer>
+      <id>rbaxter</id>
+      <name>Ryan Baxter</name>
+      <email>rbaxter85@apache.org</email>
+    </developer>
+  </developers>
+
+  <!-- ====================================================================== -->
+  <!-- P R O P E R T I E S -->
+  <!-- ====================================================================== -->
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <shindig.version>2.5.0-beta6</shindig.version>
+    <pom.version>2.0.0</pom.version>
+    <maven-eclipse-plugin.version>2.9</maven-eclipse-plugin.version>
+    <maven-site-plugin.version>3.2</maven-site-plugin.version>
+    <maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
+    <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
+    <maven-surefire-plugins.version>2.13</maven-surefire-plugins.version>
+    <maven-surefire-report-plugin.version>2.13</maven-surefire-report-plugin.version>
+    <maven-project-info-reports-plugin.version>2.2</maven-project-info-reports-plugin.version>
+    <servletapi.version>2.4-20040521</servletapi.version>
+    <wink.version>1.2.1-incubating</wink.version>
+    <guava.version>13.0</guava.version>
+    <junit.version>4.10</junit.version>
+    <easymock.version>3.0</easymock.version>
+    <powermock.version>1.5</powermock.version>
+    <guice.version>3.0</guice.version>
+    <findbugs.version>2.5.2</findbugs.version>
+    <cobertura.version>2.5.2</cobertura.version>
+    <maven-javadoc-plugin.version>2.9</maven-javadoc-plugin.version>
+    <jdepend-maven-plugin.version>2.0-beta-2</jdepend-maven-plugin.version>
+    <taglist-maven-plugin.version>2.4</taglist-maven-plugin.version>
+    <apache-rat-plugin.version>0.8</apache-rat-plugin.version>
+    <slf4j.version>1.6.1</slf4j.version>
+  </properties>
+
+  <!-- ====================================================================== -->
+  <!-- M O D U L E S -->
+  <!-- ====================================================================== -->
+  <modules>
+    <module>java/server</module>
+    <module>java/gadget-spec-server</module>
+    <module>gadget-specs</module>
+    <module>opensocial-explorer-webcontent</module>
+    <module>opensocial-explorer-server-war</module>
+  </modules>
+
+  <!-- ====================================================================== -->
+  <!-- B U I L D -->
+  <!-- ====================================================================== -->
+  <build>
+    <defaultGoal>install</defaultGoal>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <version>${apache-rat-plugin.version}</version>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <excludeSubProjects>false</excludeSubProjects>
+          <excludes>
+            <exclude>**/MANIFEST.MF</exclude>
+            <exclude>**/target/**</exclude>
+            <exclude>**/*.classpath</exclude>
+            <exclude>**/.project</exclude>
+            <exclude>**/.settings/*</exclude>
+            <exclude>**/src/test/resources/**</exclude>
+            <exclude>**/resources/libs/codemirror/**</exclude>
+            <exclude>**/resources/libs/bootstrap/**</exclude>
+            <exclude>**/*.json</exclude>
+            <exclude>**/src/main/specs/specs.txt</exclude>
+            <exclude>**/src/main/javascript/modules/templates/**</exclude>
+            <exclude>**/.git/**</exclude>
+            <exclude>**/.gitignore</exclude>
+            <exclude>**/README.md</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven-compiler-plugin.version}</version>
+          <configuration>
+            <fork>true</fork>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-eclipse-plugin</artifactId>
+          <version>${maven-eclipse-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>${maven-jar-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven-surefire-plugins.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>${maven-site-plugin.version}</version>
+          <configuration>
+            <reportPlugins>
+              <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>${maven-project-info-reports-plugin.version}</version>
+                <reports>
+                  <report>index</report>
+                  <report>project-team</report>
+                  <report>license</report>
+                  <report>mailing-list</report>
+                  <!-- Some of these reports are hanging the builds trying 
+                    to pull down dependency information -->
+                  <!-- <report>dependencies</report> -->
+                  <report>dependency-convergence</report>
+                  <report>plugin-management</report>
+                  <report>cim</report>
+                  <report>issue-tracking</report>
+                  <report>scm</report>
+                  <report>summary</report>
+                </reports>
+              </plugin>
+              <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>${findbugs.version}</version>
+                <configuration>
+                  <xmlOutput>true</xmlOutput>
+                  <xmlOutputDirectory>target/site</xmlOutputDirectory>
+                  <effort>Max</effort>
+                  <threshold>Low</threshold>
+                </configuration>
+              </plugin>
+              <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>${cobertura.version}</version>
+                <configuration>
+                  <formats>
+                    <format>xml</format>
+                    <format>html</format>
+                  </formats>
+                </configuration>
+              </plugin>
+              <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>${maven-surefire-report-plugin.version}</version>
+              </plugin>
+              <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+              </plugin>
+              <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jdepend-maven-plugin</artifactId>
+                <version>${jdepend-maven-plugin.version}</version>
+              </plugin>
+              <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>taglist-maven-plugin</artifactId>
+                <version>${taglist-maven-plugin.version}</version>
+                <configuration>
+                  <tagListOptions>
+                    <tagClasses>
+                      <tagClass>
+                        <displayName>Code Work</displayName>
+                        <tags>
+                          <tag>
+                            <matchString>TODO</matchString>
+                            <matchType>ignoreCase</matchType>
+                          </tag>
+                        </tags>
+                      </tagClass>
+                      <tagClass>
+                        <displayName>Bugs</displayName>
+                        <tags>
+                          <tag>
+                            <matchString>FIXME</matchString>
+                            <matchType>ignoreCase</matchType>
+                          </tag>
+                        </tags>
+                      </tagClass>
+                    </tagClasses>
+                  </tagListOptions>
+                </configuration>
+              </plugin>
+              <plugin>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
+                <version>${apache-rat-plugin.version}</version>
+                <configuration>
+                  <excludeSubProjects>false</excludeSubProjects>
+                  <excludes>
+                    <exclude>**/MANIFEST.MF</exclude>
+                    <exclude>**/target/**</exclude>
+                    <exclude>**/*.classpath</exclude>
+                    <exclude>**/.project</exclude>
+                    <exclude>**/.settings/*</exclude>
+                    <exclude>**/src/test/resources/**</exclude>
+                    <exclude>**/resources/libs/codemirror/**</exclude>
+                    <exclude>**/resources/libs/bootstrap/**</exclude>
+                    <exclude>**/*.json</exclude>
+                    <exclude>**/src/main/specs/specs.txt</exclude>
+                    <exclude>**/src/main/resources/js/modules/templates/**</exclude>
+                  </excludes>
+                </configuration>
+              </plugin>
+            </reportPlugins>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>cobertura-maven-plugin</artifactId>
+          <version>${cobertura.version}</version>
+          <configuration>
+            <instrumentation>
+              <excludes>
+                <exclude>org/opensocial/**/*Test*.class</exclude>
+                <exclude>org/opensocial/**/*Module*.class</exclude>
+                <exclude>org/opensocial/**/Cheating*.class</exclude>
+              </excludes>
+            </instrumentation>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <!-- ====================================================================== -->
+  <!-- R E P O R T I N G -->
+  <!-- ====================================================================== -->
+  <reporting>
+    <plugins>
+    </plugins>
+  </reporting>
+
+  <!-- ====================================================================== -->
+  <!-- P R O F I L E S -->
+  <!-- ====================================================================== -->
+  <profiles>
+  </profiles>
+
+  <!-- ====================================================================== -->
+  <!-- D E P E N D E N C I E S -->
+  <!-- ====================================================================== -->
+  <dependencies>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>${servletapi.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.wink</groupId>
+      <artifactId>wink-json4j</artifactId>
+      <version>${wink.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${guava.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.inject</groupId>
+      <artifactId>guice</artifactId>
+      <version>${guice.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <version>${easymock.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-api-easymock</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.shindig</groupId>
+      <artifactId>shindig-common</artifactId>
+      <version>${shindig.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.shindig</groupId>
+      <artifactId>shindig-sample-container</artifactId>
+      <version>${shindig.version}</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.shindig</groupId>
+      <artifactId>shindig-samples</artifactId>
+      <version>${shindig.version}</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.shindig</groupId>
+      <artifactId>shindig-extras</artifactId>
+      <version>${shindig.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.shindig</groupId>
+      <artifactId>shindig-social-api</artifactId>
+      <version>${shindig.version}</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.shindig</groupId>
+      <artifactId>shindig-gadgets</artifactId>
+      <version>${shindig.version}</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.shindig</groupId>
+      <artifactId>shindig-features</artifactId>
+      <version>${shindig.version}</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-jdk14</artifactId>
+      <version>${slf4j.version}</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+</project>

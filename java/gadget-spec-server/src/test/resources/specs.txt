@@ -1,0 +1,3 @@
+specs/complex/spec.json
+specs/simple/spec.json
+specs/i-do-not-exist/spec.json

@@ -1,0 +1,11 @@
+specs/welcome/spec.json
+specs/preferences/spec.json
+specs/makeRequest/spec.json
+specs/oauth/oauth10a/YouTube/spec.json
+specs/oauth/oauth2/google/spec.json
+specs/embedded-experiences/YouTube/spec.json
+specs/actions/actions-by-path/spec.json
+specs/actions/actions-by-type/spec.json
+specs/actions/actions-with-views/spec.json
+specs/selection/selection-listener/spec.json
+specs/open-views/all-features/spec.json

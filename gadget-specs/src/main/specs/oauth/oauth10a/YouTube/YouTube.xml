@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<Module>
+  <ModulePrefs title="YouTube Gadget" width="700" scrolling="true">
+    <Require feature="dynamic-height" />
+    <Require feature="embedded-experiences" />
+    <Require feature="oauthpopup" />
+    <Require feature="tabs" />
+    <OAuth>
+      <Service name="YouTube">
+        <Request url="https://www.google.com/accounts/OAuthGetRequestToken?scope=http://gdata.youtube.com" />
+        <Access url="https://www.google.com/accounts/OAuthGetAccessToken" />
+        <Authorization url="https://www.google.com/accounts/OAuthAuthorizeToken?oauth_callback=http://sandbox.opensocial2.org:8080gadgets/oauthcallback" />
+      </Service>
+    </OAuth>
+  </ModulePrefs>
+  <Content type="html" view="embedded,default">
+      <![CDATA[
+        <style type="text/css">
+          .youTubeWrapper{
+            font: 75%/1.5 Arial,Helvetica,sans-serif;
+          }
+          
+          #comments{
+            margin-left: -45px;
+          }
+          
+          .comment{
+            background-color: #F4F5F6;
+          border-bottom: 1px solid #FFFFFF;
+          list-style-type: none;
+          overflow: hidden;
+          padding: 7px;
+          }
+          
+          .comment .commentAvatar{
+            float: left;
+          margin-right: 5px;
+          }
+          
+          .comment .commentAvatar img{
+            width: 24px;
+          }
+          
+          .comment .commentMeta a{
+            font-weight: bold;
+            color: #000000;
+          }
+          
+          .comment .commentMeta {
+            color: #666666;
+          font-size: 0.9em;
+          margin-top: -4px;
+          }
+          
+          .comment p {
+            margin: 0;
+          }
+        </style>
+        
+        <div class="youTubeWrapper">
+      <div id="playerWrapper">
+        <div id="author"></div>
+        <div id="player"></div>
+      </div>
+      <div id="commentsWrapper">
+        <h4>Comments</h4>
+        <ul id="comments">
+          <li class="comment">
+            <div class="commentMeta"> 
+              <a href="javascript;;">Add Comment</a>
+            </div>
+            <input id="commentField" type="text" size="60" onkeypress="onKeyPressHandler(event);"/>
+          </li>
+        </ul>
+      </div>
+    </div> 
+    
+  
+    <script type="text/javascript">
+      //URL to post comments to for this video
+      var commentsUrl;
+      
+      var tabs = new gadgets.TabSet(__MODULE_ID__, "Video");
+      
+      /**
+       * Returns the params object needed when making signed requests
+       * @return params object needed when making signed requests
+       */
+      function getGoogleOAuthParams(){
+        var params = {};
+          params[gadgets.io.RequestParameters.AUTHORIZATION] = gadgets.io.AuthorizationType.OAUTH;
+            params[gadgets.io.RequestParameters.OAUTH_SERVICE_NAME] = "YouTube";
+            params[gadgets.io.RequestParameters.OAUTH_USE_TOKEN] = "always";
+            return params;
+      };
+      
+      /**
+       * Utility function to make sure the GData URLs return the data
+       * in JSON
+       * @param url the URL to add the json param to
+       */
+      function addJsonParam(url){
+          if(url.indexOf("?", url) != -1){
+            url = url + "&";
+          }
+          else{
+            url = url + "?";
+          }
+          return url + "alt=json";
+        };
+        
+        /**
+         * Called when the user presses a key in the comment field.
+         * @param event the on key press event
+         */
+        function onKeyPressHandler(event){
+          //The user pressed enter
+          if(event.keyCode == 13){
+            addComment();
+          }
+        };
+  
+      /**
+       * Callback function to be called when the embedded experience context information
+       * has been retrieved for this gadget.
+       * @param id the YouTube video id
+       */
+        function fetchData(id) {
+            var params = {};
+            var url = "http://gdata.youtube.com/feeds/api/videos/" + id + "?v=2&alt=json";
+            params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON;
+            params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
+
+            gadgets.io.makeRequest(url, function (response) {
+              if(response.errors.length == 0){
+                //document.getElementById("title").innerHTML = response.data.entry.title.$t;
+                document.getElementById("player").innerHTML = '<object width=480" height="285"><param name="movie" value="' + response.data.entry.content.src + '"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="' + response.data.entry.content.src + '" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="285"></embed></object>';
+        
+                commentsUrl = response.data.entry.gd$comments.gd$feedLink.href;
+                commentsUrl = addJsonParam(commentsUrl);
+                getComments();
+              }
+              else{
+                alert(response.text);
+              }       
+        
+            }, params, 0);
+        };
+        
+        /**
+         * Gets the comments for the YouTube video.
+         */
+        function getComments(){
+          var params = getGoogleOAuthParams();
+            params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON;
+            params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
+        gadgets.io.makeRequest(commentsUrl, commentsCallback, params, 0); 
+        };
+        
+        /**
+         * Callback function called whent the comments have been retrieved.
+         * @response the comments data
+         */
+        function commentsCallback(response){
+          if(response.errors.length == 0){
+            if(response.oauthApprovalUrl){
+              var onOpen = function() {
+                  };
+                  var onClose = function() {
+                      getComments();
+                  };
+                  var popup = new gadgets.oauth.Popup(response.oauthApprovalUrl,
+                      null, onOpen, onClose);
+                    var onclick = popup.createOpenerOnClick();
+                    onclick();
+            }
+            else if(response.data){
+              var commentsArray = response.data.feed.entry;
+              var html = "";
+              for(var i = 0; i < commentsArray.length; i++){
+                getUserProfileForComment(commentsArray[i]); 
+              }
+            }
+          }
+        };
+        
+        /**
+         * Gets the user profile information for a given comment
+         * @comment the comment object to get the user profile informaiton for
+         */
+        function getUserProfileForComment(comment){
+          var params = {};
+          params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON;
+            params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
+            //Commented out this code because the URI no longer appears to be returned in the
+            //response.  Waiting for feedback in the YouTube forum.
+          //gadgets.io.makeRequest(addJsonParam(comment.author[0].uri.$t), function(response){
+          //  userProfileForCommentCallback(response, comment);
+          //}, params);
+          
+          var element = document.getElementById(comment.id.$t);
+          if(element == null){
+            var html = document.getElementById("comments").innerHTML;
+            html = html + constructCommentHtml2(comment.author[0].name.$t, null,
+            null, comment.content.$t, comment.updated.$t, comment.id.$t);
+            document.getElementById("comments").innerHTML = html;
+            gadgets.window.adjustHeight();
+          }
+          
+        };
+        
+        /**
+         * Callback function called when the user profile information has been retrieved.
+         * @response user profile data
+         * @comment comment object associated with this user profile information
+         */
+        function userProfileForCommentCallback(response, comment){
+          if(response.errors.length == 0){
+              var links = response.data.entry.link;
+              var profileUrl;
+              for(var i = 0; i < links.length; i++){
+                if(links[i].rel == "alternate"){
+                  profileUrl = links[i].href;
+                }
+              }
+              var element = document.getElementById(comment.id.$t);
+              if(element == null){
+                var html = document.getElementById("comments").innerHTML;
+                html = html + constructCommentHtml2(comment.author[0].name.$t, response.data.entry.media$thumbnail.url,
+                profileUrl, comment.content.$t, comment.updated.$t, comment.id.$t);
+                document.getElementById("comments").innerHTML = html;
+                gadgets.window.adjustHeight();
+              }
+              
+          }
+        };
+        
+        /**
+         * Constructs the HTML for a comment in the gadget.
+         * @authorName the author of the comment
+         * @thumbnailUrl the avatar image for the user
+         * @profileUrl the URL to the users profile page
+         * @commentText the text of the comment
+         * @updated the dat the comment was updated
+         */
+        function constructCommentHtml2(authorName, thumbnailUrl, profileUrl, commentText, updated, id){
+          if(thumbnailUrl) {
+              return  '<li id="' + id + '" class="comment">' +
+                    '<div class="commentAvatar"><img src="' + thumbnailUrl + '"/></div>' + 
+                    '<div class="commentMeta"> <a href="' + profileUrl +'" target="_blank">' + authorName +'</a> commented ' + updated +'</div>' +
+                    '<p>' + commentText + '</p>' + 
+                  '</li>'; 
+          } else {
+              return  '<li id="' + id + '" class="comment">' +
+                    '<div class="commentAvatar"></div>' + 
+                    '<div class="commentMeta"> <a href="#" target="_blank">' + authorName +'</a> commented ' + updated +'</div>' +
+                     '<p>' + commentText + '</p>' + 
+                  '</li>'; 
+          }
+        };
+        
+        /**
+         * Constructs the XML sent in the POST request when posting a comment from the gadget.
+         * @comment the text for the comment
+         */
+        function constructCommentPostData(comment){
+          return '<?xml version="1.0" encoding="UTF-8"?>' +
+            '<entry xmlns="http://www.w3.org/2005/Atom" ' +
+            'xmlns:yt="http://gdata.youtube.com/schemas/2007">' +
+              '<content>' + comment + '</content>' +
+            '</entry>'
+        };
+        
+        /**
+         *  Function called when the user clicks the Add Comment button.
+         * @event the click event
+         */
+        function addComment(event){
+          var params = getGoogleOAuthParams();
+          var postData = constructCommentPostData(document.getElementById("commentField").value);
+          document.getElementById("commentField").value = "";
+          params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.POST;
+          params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON;
+          params['HEADERS'] = {"Content-Type": "application/atom+xml", "X-GData-Key": "key=AI39si6A7ddNJDQDDMoUtYkXJe1wm4-8bLjruiyulFW-zxnNKA9mop9kc_BxiCObWK4lS_qEYuowwrCkl9W6Npcp8TGlfe_yvw"};
+          params[gadgets.io.RequestParameters.POST_DATA] = postData;
+          gadgets.io.makeRequest(commentsUrl, function(response){
+            if(response.oauthApprovalUrl){
+              var onOpen = function() {
+                  };
+                  var onClose = function() {
+                      addComment();
+                  };
+                  var popup = new gadgets.oauth.Popup(response.oauthApprovalUrl,
+                      null, onOpen, onClose);
+                    var onclick = popup.createOpenerOnClick();
+                    onclick();
+            }
+            else if(response.data){
+              getComments();
+            }
+            else if(response.errors.length != 0){
+              if(response.rc == 403){
+                //We have probably made too many requests
+                alert("RC: 403 too many requests");
+              }
+            }
+          }, params, 0);
+        };
+    
+        /*
+         * Once the gadget loads register a listener for the EE context information.
+         * The context informaiton should can the ID for the YouTube video we want
+         * to show.
+         */
+        gadgets.util.registerOnLoadHandler(function(){
+          //tabs.addTab("Video", {contentContainer: document.getElementById("playerWrapper")});
+          //tabs.addTab("Comments", {contentContainer: document.getElementById("commentsWrapper")});
+          opensocial.data.getDataContext().registerListener('org.opensocial.ee.context', function(key){
+            fetchData(opensocial.data.getDataContext().getDataSet(key));
+          });
+        });
+      </script>
+        ]]>
+  </Content>
+</Module>

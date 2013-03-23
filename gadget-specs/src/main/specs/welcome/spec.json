@@ -1,0 +1,8 @@
+{
+  "isDefault" : true,
+  "gadget" : "gadget.xml",
+  "htmlFiles" : ["welcome.html"],
+  "cssFiles" : ["welcome.css"],
+  "jsFiles" : ["welcome.js"],
+  "title" : "Welcome"
+}

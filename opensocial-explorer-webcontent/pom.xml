@@ -1,0 +1,191 @@
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>opensocial-explorer</artifactId>
+    <groupId>org.opensocial.explorer</groupId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>..</relativePath>
+  </parent>
+  <artifactId>opensocial-explorer-webcontent</artifactId>
+  <name>OpenSocial Explorer Web Content</name>
+  <description>Contains the client-side (web) content for the OpenSocial Explorer.  This is a separate module to allow downstream projects to customize the OSE without having to copy or rewrite the client-side code.</description>
+  <inceptionYear>2013</inceptionYear>
+
+  <!-- ====================================================================== -->
+  <!-- P R O P E R T I E S -->
+  <!-- ====================================================================== -->
+  <properties>
+    <maven-jstools-plugin.version>0.7</maven-jstools-plugin.version>
+    <maven-source-plugin.version>2.1.2</maven-source-plugin.version>
+    <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
+    <jasmin-maven-plugin.version>1.2.0.0</jasmin-maven-plugin.version>
+    <maven-surefire-report-plugin.version>2.13</maven-surefire-report-plugin.version>
+  </properties>
+
+  <!-- ====================================================================== -->
+  <!-- B U I L D -->
+  <!-- ====================================================================== -->
+  <build>
+    <pluginManagement>
+      <plugins>
+        <!-- The M2E plugin for Eclipse does not support the lint goal of 
+          the jslint plugin and shows an error in the POM. We use this plugin configuration 
+          to tell m2e to ignore the lint goal. -->
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>${lifecycle-mapping.version}</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>com.googlecode.jslint4java</groupId>
+                    <artifactId>jslint4java-maven-plugin</artifactId>
+                    <versionRange>[1.0.0,)</versionRange>
+                    <goals>
+                      <goal>lint</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore />
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <resources>
+      <resource>
+        <directory>${basedir}/src/main/javascript</directory>
+        <filtering>false</filtering>
+        <targetPath>js</targetPath>
+      </resource>
+      <resource>
+        <directory>${basedir}/src/main/resources</directory>
+        <filtering>false</filtering>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>${maven-source-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+         <!-- Documentation: http://jslint4java.googlecode.com/svn/docs/2.0.0/maven.html -->
+        <groupId>com.googlecode.jslint4java</groupId>
+        <artifactId>jslint4java-maven-plugin</artifactId>
+        <version>2.0.0</version>
+        <executions>
+          <execution>
+            <id>lint</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>lint</goal>
+            </goals>
+            <configuration>
+              <failOnError>false</failOnError>
+              <options>
+                <undef>true</undef>
+                <white>true</white>
+                <sloppy>true</sloppy>
+              </options>
+              <sourceFolders>
+                <sourceFolder>${basedir}/src/main/javascript</sourceFolder>
+              </sourceFolders>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <!-- Documentation: http://searls.github.com/jasmine-maven-plugin/ -->
+        <groupId>com.github.searls</groupId>
+        <artifactId>jasmine-maven-plugin</artifactId>
+        <version>${jasmin-maven-plugin.version}</version>
+        <extensions>true</extensions>
+        <executions>
+          <execution>
+            <goals>
+              <goal>test</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <!-- configuration properties will go here -->
+          <specIncludes>
+            <include>**/*.js</include>
+          </specIncludes>
+          <sourceExcludes>
+            <exclude>**/*.js</exclude>
+          </sourceExcludes>
+          <jsTestSrcDir>${basedir}/src/test/javascript</jsTestSrcDir> 
+          <preloadSources>
+            <source>${basedir}/src/test/resources/jasmine-test-bootstrap.js</source>
+            <source>${basedir}/src/test/resources/dojo-release-1.8.3/dojo/dojo.js</source>
+          </preloadSources>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <!-- ====================================================================== -->
+  <!-- R E P O R T I N G -->
+  <!-- ====================================================================== -->
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>gr.abiss.mvn.plugins</groupId>
+        <artifactId>maven-jstools-plugin</artifactId>
+        <version>${maven-jstools-plugin.version}</version>
+        <configuration>
+          <jsDir>src/main/javascript</jsDir>
+          <includePrivate>true</includePrivate>
+          <includeUndocumented>true</includeUndocumented>
+        </configuration>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>jslint</report>
+              <report>jsdoc</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+        <version>${maven-surefire-report-plugin.version}</version>
+      </plugin>
+    </plugins>
+  </reporting>
+</project>

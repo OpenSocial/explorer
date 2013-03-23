@@ -1,0 +1,6 @@
+{
+  "isDefault" : false,
+  "title" : "Make Request Example",
+  "gadget" : "gadget.xml",
+  "jsFiles" : ["makeRequest.js"]
+}

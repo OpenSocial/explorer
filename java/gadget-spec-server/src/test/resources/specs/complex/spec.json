@@ -1,0 +1,9 @@
+{
+  "isDefault" : false,
+  "gadget" : "gadget.xml",
+  "htmlFiles" : ["complex.html", "complex2.html"],
+  "cssFiles" : ["complex.css", "complex2.css"],
+  "jsFiles" : ["complex.js", "complex2.js"],
+  "eeDataModel" : "complex.json",
+  "title" : "Complex Test"
+}
