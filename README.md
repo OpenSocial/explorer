@@ -9,8 +9,8 @@ The OpenSocial Explorer is a tool to help developers learn how to build OpenSoci
 Getting Started
 -------------
 
-    git clone git@github.com:OpenSocial/explorer.git
-    cd explorer
-    mvn clean package -P run
+    $ git clone git@github.com:OpenSocial/explorer.git
+    $ cd explorer
+    $ mvn clean package -P run
 
 Open your favorite browser and navigate to http://localhost:8080, then click Explore in the navigation bar.
