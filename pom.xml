@@ -403,4 +403,21 @@
       <scope>compile</scope>
     </dependency>
   </dependencies>
+  
+  <!-- ====================================================================== -->
+  <!-- O R G A N I Z A T I O N -->
+  <!-- ====================================================================== -->
+  <organization>
+    <name>OpenSocial Foundation</name>
+    <url>http://opensocial.org</url>
+  </organization>
+  
+  <!-- ====================================================================== -->
+  <!-- S C M -->
+  <!-- ====================================================================== -->
+  <scm>
+    <url>scm:git:git@github.com:OpenSocial/explorer.git</url>
+    <connection>scm:git:git@github.com:OpenSocial/explorer.git</connection>
+    <developerConnection>scm:git:git@github.com:OpenSocial/explorer.git</developerConnection>
+  </scm>
 </project>
