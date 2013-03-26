@@ -14,3 +14,8 @@ Getting Started
     $ mvn clean package -P run
 
 Open your favorite browser and navigate to http://localhost:8080, then click Explore in the navigation bar.
+
+Developing
+-------------
+
+If you plan on doing development we suggest you [fork](https://help.github.com/articles/fork-a-repo) the repository.
