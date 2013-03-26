@@ -26,19 +26,29 @@
   <custom>
     <fluidoSkin>
       <sideBarEnabled>true</sideBarEnabled>
+      <sourceLineNumbersEnabled>true</sourceLineNumbersEnabled>
+      <gitHub>
+        <projectId>OpenSocial/explorer</projectId>
+        <ribbonOrientation>right</ribbonOrientation>
+      </gitHub>
     </fluidoSkin>
   </custom>
   
-  <bannerRight>
+  <bannerLeft>
     <name>OpenSocial</name>
     <src>http://opensocial.org/wp-content/themes/Lucid/images/logo.png</src>
     <href>http://opensocial.org/wp-content/themes/Lucid/images/logo.png</href>
-  </bannerRight>
+    <height>180</height>
+    <width>250</width>
+  </bannerLeft>
   
    <body>
    
-     <menu ref="modules" inherit="top"/>
-	 <menu ref="parent" inherit="top"/>	
+   <menu name="Developer Resources">
+    <item name="Maven Site" href="developer/site.html" />
+   </menu>
+   <menu ref="parent" inherit="top"/> 
+   <menu ref="modules" inherit="top"/>
 	 <menu ref="reports" inherit="top"/>
    </body>
 </project>

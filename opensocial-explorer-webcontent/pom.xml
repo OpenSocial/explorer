@@ -188,4 +188,13 @@
       </plugin>
     </plugins>
   </reporting>
+
+  <!-- ====================================================================== -->
+  <!-- S C M -->
+  <!-- ====================================================================== -->
+  <scm>
+    <url>${project.parent.scm.url}</url>
+    <connection>${project.parent.scm.connection}</connection>
+    <developerConnection>${project.parent.scm.developerConnection}</developerConnection>
+  </scm>
 </project>

@@ -82,6 +82,9 @@
     <taglist-maven-plugin.version>2.4</taglist-maven-plugin.version>
     <apache-rat-plugin.version>0.8</apache-rat-plugin.version>
     <slf4j.version>1.6.1</slf4j.version>
+    <maven-scm-publish-plugin.version>1.0-beta-2</maven-scm-publish-plugin.version>
+    <scmpublish.content>target/staging</scmpublish.content>
+    <doxia-module-markdown.version>1.3</doxia-module-markdown.version>
   </properties>
 
   <!-- ====================================================================== -->
@@ -163,6 +166,17 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
           <version>${maven-site-plugin.version}</version>
+          <dependencies>
+            <dependency>
+              <!--
+              | allows markdown syntax for site generation. To use it place files below
+              | src/site/markdown/[filename].md
+              -->
+              <groupId>org.apache.maven.doxia</groupId>
+              <artifactId>doxia-module-markdown</artifactId>
+              <version>${doxia-module-markdown.version}</version>
+            </dependency>
+          </dependencies>
           <configuration>
             <reportPlugins>
               <plugin>
@@ -287,6 +301,16 @@
                 <exclude>org/opensocial/**/Cheating*.class</exclude>
               </excludes>
             </instrumentation>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-scm-publish-plugin</artifactId>
+          <version>${maven-scm-publish-plugin.version}</version>
+          <inherited>true</inherited>
+          <configuration>
+            <pubScmUrl>${project.scm.developerConnection}</pubScmUrl>
+            <scmBranch>gh-pages</scmBranch>
           </configuration>
         </plugin>
       </plugins>
@@ -420,4 +444,23 @@
     <connection>scm:git:git@github.com:OpenSocial/explorer.git</connection>
     <developerConnection>scm:git:git@github.com:OpenSocial/explorer.git</developerConnection>
   </scm>
+
+  <!-- ====================================================================== -->
+  <!-- D I S T R I B U T I O N    M A N A G E M E N T -->
+  <!-- ====================================================================== -->
+  <distributionManagement>
+    <site>
+      <id>github</id>
+      <name>maven-reports at github</name>
+      <url>http://opensocial.github.com/explorer/</url>
+    </site>
+  </distributionManagement>
+
+  <!-- ====================================================================== -->
+  <!-- I S S U E    M A N A G E M E N T -->
+  <!-- ====================================================================== -->
+  <issueManagement>
+    <system>GitHub Issues</system>
+    <url>https://github.com/OpenSocial/explorer/issues</url>
+  </issueManagement>
 </project>
