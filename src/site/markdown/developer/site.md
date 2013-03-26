@@ -33,7 +33,7 @@ Note this command will not produce a working site for the entire project.  The l
 
     $ mvn clean site site:stage
 
-This will stage the site and will produce working links between all the different modules.  To see the staged site navigate to the parent projects target folder and open the staged folder.
+This will stage the site and will produce working links between all the different modules.  To see the staged site navigate to the parent projects target folder and open the staging folder.
 
 After verifying the site is working in the staging directory it can be published to GitHub and made live.  To do this run
 
