@@ -16,62 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-describe('A ModalDialog widget', function(){
-  it("can be hidden", function() {
-    var dialog;
-    runs(function() {
-      require(['modules/widgets/ModalDialog'], function(ModalDialog) {
-        dialog = new ModalDialog();
-        dialog.startup();
-      });
-    })
-    
-    waitsFor(function() {
-      return dialog !== undefined;
-    });
-    
-    runs(function() {
+define(['modules/widgets/ModalDialog','dojo/query', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'], function(ModalDialog, dojoQuery){
+  describe('A ModalDialog widget', function(){
+    it("can be hidden", function() {
+      var dialog = new ModalDialog();
       dialog.hide();
       expect(dialog.domNode.getAttribute('class')).toBe('modal hide fade');
     });
-  });
   
-  it("can be shown", function() {
-    var dialog;
-    runs(function() {
-      require(['modules/widgets/ModalDialog'], function(ModalDialog) {
-        dialog = new ModalDialog();
-        dialog.startup();
-      });
-    })
-    
-    waitsFor(function() {
-      return dialog !== undefined;
-    });
-    
-    runs(function() {
+    it("can be shown", function() {
+      var dialog = new ModalDialog();
       dialog.show();
       expect(dialog.domNode.getAttribute('class')).toBe('modal fade in');
-    })
-  });
-  
-  it("can change its title", function() {
-    var dialog;
-    var query;
-    runs(function() {
-      require(['modules/widgets/ModalDialog', 'dojo/query',
-               'dojo/NodeList-manipulate', 'dojo/NodeList-dom'], function(ModalDialog, dojoQuery) {
-        dialog = new ModalDialog();
-        dialog.startup();
-        query = dojoQuery;
-      });
-    })
-    
-    waitsFor(function() {
-      return dialog !== undefined && query !== undefined;
     });
-    
-    runs(function() {
+  
+    it("can change its title", function() {
+      var dialog = new ModalDialog();
+      var query = dojoQuery;
       dialog.setHeaderTitle('Test title');
       expect(query('div.modal-header h3', dialog.domNode).innerHTML()).toBe('Test title');
     });

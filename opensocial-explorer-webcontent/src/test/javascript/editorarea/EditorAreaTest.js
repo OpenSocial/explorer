@@ -16,37 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-describe('An EditorArea widget', function() {
-  beforeEach(function() {
-    var div = document.createElement("div");
-    div.style.display = 'none';
-    div.id = 'testDiv';
-    document.body.appendChild(div);
+define(['modules/widgets/editorarea/EditorArea'], function(EditorArea){
+  describe('An EditorArea widget', function() {
+    beforeEach(function() {
+      var div = document.createElement("div");
+      div.style.display = 'none';
+      div.id = 'testDiv';
+      document.body.appendChild(div);
     
-    var editor = jasmine.createSpyObj('editor', ['addLineClass', 'on', 'getValue', 'refresh']);
-    window.CodeMirror = jasmine.createSpyObj('CodeMirror', ['fromTextArea']);
-    window.CodeMirror.fromTextArea.andReturn(editor);
-  });
-  
-  afterEach(function() {
-    document.body.removeChild(document.getElementById('testDiv'));
-    window.CodeMirror = undefined;
-  });
-  
-  it("can be started", function() {
-    var editorArea;
-    runs(function() {
-      require(['modules/widgets/editorarea/EditorArea'], function(EditorArea) {
-        editorArea = EditorArea.getInstance();
-      });
+      var editor = jasmine.createSpyObj('editor', ['addLineClass', 'on', 'getValue', 'refresh']);
+      window.CodeMirror = jasmine.createSpyObj('CodeMirror', ['fromTextArea']);
+      window.CodeMirror.fromTextArea.andReturn(editor);
     });
-    
-    waitsFor(function() {
-      return editorArea != null;
+  
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('testDiv'));
+      window.CodeMirror = undefined;
     });
-    
-    runs(function() {
+  
+    it("can be started", function() {
+      var editorArea = EditorArea.getInstance();
       spyOn(editorArea, 'getGadgetSpecService').andReturn({
         getDefaultGadgetSpec : function(callbacks) {
           var data = {
@@ -65,21 +54,10 @@ describe('An EditorArea widget', function() {
       expect(editorArea.getEditorTabs().tabs.length).toEqual(1);
       editorArea.destroy();
     });
-  });
   
-  it("can be started with an error", function() {
-    var editorArea;
-    runs(function() {
-      require(['modules/widgets/editorarea/EditorArea'], function(EditorArea) {
-        editorArea = EditorArea.getInstance();
-      });
-    });
-    
-    waitsFor(function() {
-      return editorArea != null;
-    });
-    
-    runs(function() {
+    it("can be started with an error", function() {
+      var editorArea = EditorArea.getInstance();
+
       spyOn(editorArea, 'getGadgetSpecService').andReturn({
         getDefaultGadgetSpec : function(callbacks) {
           callbacks.error();
@@ -92,21 +70,9 @@ describe('An EditorArea widget', function() {
       expect(editorArea.getEditorTabs()).toBeUndefined();
       editorArea.destroy();
     });
-  });
   
-  it("can display any spec with an id", function() {
-    var editorArea;
-    runs(function() {
-      require(['modules/widgets/editorarea/EditorArea'], function(EditorArea) {
-        editorArea = EditorArea.getInstance();
-      });
-    });
-    
-    waitsFor(function() {
-      return editorArea != null;
-    });
-    
-    runs(function() {
+    it("can display any spec with an id", function() {
+      var editorArea = EditorArea.getInstance();
       spyOn(editorArea, 'getGadgetSpecService').andReturn({
         getDefaultGadgetSpec : function(callbacks) {
           var data = {
@@ -134,21 +100,9 @@ describe('An EditorArea widget', function() {
       expect(editorArea.renderGadget.calls.length).toEqual(2);
       editorArea.destroy();
     });
-  });
   
-  it("can handle an error when displaying a spec with an id", function() {
-    var editorArea;
-    runs(function() {
-      require(['modules/widgets/editorarea/EditorArea'], function(EditorArea) {
-        editorArea = EditorArea.getInstance();
-      });
-    });
-    
-    waitsFor(function() {
-      return editorArea != null;
-    });
-    
-    runs(function() {
+    it("can handle an error when displaying a spec with an id", function() {
+      var editorArea = EditorArea.getInstance();
       spyOn(editorArea, 'getGadgetSpecService').andReturn({
         getDefaultGadgetSpec : function(callbacks) {
           var data = {
