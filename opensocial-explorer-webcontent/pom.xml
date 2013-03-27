@@ -142,7 +142,6 @@
         </executions>
         <configuration>
           <!-- configuration properties will go here -->
-          <!--<specRunnerTemplate>REQUIRE_JS</specRunnerTemplate>-->
           <specIncludes>
             <include>javascript/**/*.js</include>
           </specIncludes>
