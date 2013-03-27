@@ -16,34 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-describe("A Loading widget", function() {
-  it("can be shown", function() {
-    var loading;
-    runs(function() {
-      require(['modules/widgets/Loading'], function(Loading) {
-        loading = new Loading();
-      });
-    });
-    waitsFor(function() {
-      return loading !== undefined;
-    });
-    runs(function() {
+
+define(['modules/widgets/Loading'], function(Loading){
+  describe("A Loading widget", function() {
+    it("can be shown", function() {
+      var loading = new Loading();
       loading.show();
       expect(loading.domNode.getAttribute('class')).toBe('progress progress-striped active');
     });
-  });
   
-  it("can be hidden", function() {
-    var loading;
-    runs(function() {
-      require(['modules/widgets/Loading'], function(Loading) {
-        loading = new Loading();
-      });
-    });
-    waitsFor(function() {
-      return loading !== undefined;
-    });
-    runs(function() {
+    it("can be hidden", function() {
+      var loading = new Loading();
       loading.hide();
       expect(loading.domNode.getAttribute('class')).toBe('progress progress-striped active hide');
     });
