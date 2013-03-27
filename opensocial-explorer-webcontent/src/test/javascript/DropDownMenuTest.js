@@ -16,50 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-describe('A DropDownMenu widget', function() {
+define(['modules/widgets/DropDownMenu', 'modules/widgets/MenuItemWidget'], function(DropDownMenu, MenuItemWidget){
+  describe('A DropDownMenu widget', function() {
     it("can add a menu item", function() {
-    var dropDownMenu;
-    var menuItem;
-    runs(function() {
-      require(['modules/widgets/DropDownMenu', 'modules/widgets/MenuItemWidget'], function(DropDownMenu, MenuItemWidget) {
-        dropDownMenu = new DropDownMenu();
-        dropDownMenu.startup();
-        menuItem = new MenuItemWidget({"name" : "Test Menu"});
-        menuItem.startup();
-      });
-    });
+      var dropDownMenu = new DropDownMenu();
+      dropDownMenu.startup();
+      var menuItem = new MenuItemWidget({"name" : "Test Menu"});
+      menuItem.startup();
     
-    waitsFor(function() {
-      return dropDownMenu !== undefined && menuItem !== undefined;
-    });
-    
-    runs(function() {
       dropDownMenu.addMenuItem(menuItem);
       expect(dropDownMenu.getMenuItem('Test Menu')).toEqual(menuItem);
     });
-  });
   
-  it("can clear a menu item", function() {
-    var dropDownMenu;
-    var menuItem;
-    runs(function() {
-      require(['modules/widgets/DropDownMenu', 'modules/widgets/MenuItemWidget'], function(DropDownMenu, MenuItemWidget) {
-        dropDownMenu = new DropDownMenu();
-        dropDownMenu.startup();
-        menuItem = new MenuItemWidget({"name" : "Test Menu"});
-        menuItem.startup();
-      });
-    });
+    it("can clear a menu item", function() {
+      var dropDownMenu = new DropDownMenu();
+      dropDownMenu.startup();
+      var menuItem = new MenuItemWidget({"name" : "Test Menu"});
+      menuItem.startup();
     
-    waitsFor(function() {
-      return dropDownMenu !== undefined && menuItem !== undefined;
-    });
-    
-    runs(function() {
       dropDownMenu.addMenuItem(menuItem);
       expect(dropDownMenu.menuItems.length).toBe(1);
       dropDownMenu.clearMenuItems();
       expect(dropDownMenu.menuItems.length).toBe(0);
     });
   });
-})
+});
