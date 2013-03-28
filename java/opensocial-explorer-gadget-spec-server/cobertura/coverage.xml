@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
 
-<coverage line-rate="0.9423631123919308" branch-rate="0.9117647058823529" lines-covered="327" lines-valid="347" branches-covered="93" branches-valid="102" complexity="1.9615384615384615" version="1.9.4.1" timestamp="1364503433245">
+<coverage line-rate="0.9423631123919308" branch-rate="0.9117647058823529" lines-covered="327" lines-valid="347" branches-covered="93" branches-valid="102" complexity="1.9615384615384615" version="1.9.4.1" timestamp="1364510066502">
 	<sources>
 		<source>--source</source>
-		<source>/Users/ryanjbaxter/git-repos/opensocial/explorer/java/gadget-spec-server/src/main/java</source>
+		<source>C:/Users/Stanton/git/explorer/java/gadget-spec-server/src/main/java</source>
 	</sources>
 	<packages>
 		<package name="org.opensocial.explorer.specserver" line-rate="0.9619565217391305" branch-rate="0.9629629629629629" complexity="1.9210526315789473">
