@@ -28,7 +28,7 @@ Setting Up Your Development Environment
 If you don't already have a JDK installed you will need one.  The OpenSocial Explorer requires Java 1.6 or newer.  You can download a JDK directly from [Oracle](http://www.oracle.com/technetwork/java/javase/downloads/index.html) or use another implementation.
 
 ### Installing Git 
-You will need to do is install [Git](http://git-scm.com/) if you don't already have it installed.  If you are new to Git, GitHub provides some good getting started documentation in their (help section)[https://help.github.com/].  Atlassian also provides a good [tutorial](http://atlassian.com/git/) on getting started with Git, especially if you are familiar with SVN.
+You will need to do is install [Git](http://git-scm.com/) if you don't already have it installed.  If you are new to Git, GitHub provides some good getting started documentation in their [help section](https://help.github.com/).  Atlassian also provides a good [tutorial](http://atlassian.com/git/) on getting started with Git, especially if you are familiar with SVN.
 
 ### Installing Maven
 The OpenSocial Explorer uses [Maven](http://maven.apache.org/) to build and run tests on the code.  You will need to [download](http://maven.apache.org/download.cgi) and install Maven.  You might find it useful to add Maven's bin directory to your PATH so you can run Maven from anywhere.  The [Maven Users Centre](http://maven.apache.org/users/index.html) provides some good getting started documentation if you are not familiar with Maven. 
