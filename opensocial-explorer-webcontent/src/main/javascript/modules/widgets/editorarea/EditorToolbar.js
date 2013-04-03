@@ -27,13 +27,13 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                 
                 startup : function() {
                   var self = this;
-                  on(query('#renderBtn', this.domNode)[0], 'click', function(e){
+                  query('#renderBtn', this.domNode).on('click', function(e){
                     self.postGadgetSpec.call(self, function(data) {
                       self.editorArea.renderGadget(data.id);
                     });
                   });
                   
-                  on(query('#renderEEBtn', this.domNode)[0], 'click', function(e){
+                  query('#renderEEBtn', this.domNode).on('click', function(e){
                     self.postGadgetSpec.call(self, function(data) {
                       self.editorArea.renderEmbeddedExperience(data.id);
                     });
@@ -46,12 +46,16 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                 
                 postGadgetSpec : function(thenFunction) {
                   var self = this;
-                  gadgetSpecService.createNewGadgetSpec(this.editorArea.getGadgetSpec(),{
+                  this.getGadgetSpecService().createNewGadgetSpec(this.editorArea.getGadgetSpec(),{
                     success : thenFunction,
                     error : function(data) {
                       console.error("There was an error");
                     }
                   });
+                },
+
+                getGadgetSpecService : function() {
+                  return gadgetSpecService;
                 },
                 
                 showEEButton: function() {
