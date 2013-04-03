@@ -86,6 +86,8 @@
     <maven-scm-publish-plugin.version>1.0-beta-2</maven-scm-publish-plugin.version>
     <scmpublish.content>target/staging</scmpublish.content>
     <doxia-module-markdown.version>1.3</doxia-module-markdown.version>
+    <maven-source-plugin.version>2.2.1</maven-source-plugin.version>
+    <maven-javadoc-plugin.version>2.9</maven-javadoc-plugin.version>
   </properties>
 
   <!-- ====================================================================== -->
@@ -140,6 +142,35 @@
     </plugins>
     <pluginManagement>
       <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>${maven-source-plugin.version}</version>
+          <executions>
+            <execution>
+              <id>attach-sources</id>
+              <phase>verify</phase>
+              <goals>
+                <goal>jar</goal>
+                <goal>test-jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>${maven-javadoc-plugin.version}</version>
+          <executions>
+            <execution>
+              <id>attach-javadocs</id>
+              <goals>
+                <goal>jar</goal>
+                <goal>test-jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
@@ -441,7 +472,7 @@
   <!-- S C M -->
   <!-- ====================================================================== -->
   <scm>
-    <url>scm:git:git@github.com:OpenSocial/explorer.git</url>
+    <url>git@github.com:OpenSocial/explorer.git</url>
     <connection>scm:git:git@github.com:OpenSocial/explorer.git</connection>
     <developerConnection>scm:git:git@github.com:OpenSocial/explorer.git</developerConnection>
   </scm>
@@ -464,4 +495,13 @@
     <system>GitHub Issues</system>
     <url>https://github.com/OpenSocial/explorer/issues</url>
   </issueManagement>
+
+  <!-- ====================================================================== -->
+  <!-- P A R E N T     P O M -->
+  <!-- ====================================================================== -->
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
 </project>
