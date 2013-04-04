@@ -149,48 +149,19 @@
           <autoversionsubmodules>true</autoversionsubmodules>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-gpg-plugin</artifactId>
-        <version>${maven-gpg-plugin.version}</version>
-        <executions>
-          <execution>
-            <id>sign-artifacts</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>sign</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
     <pluginManagement>
       <plugins>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-source-plugin</artifactId>
-          <version>${maven-source-plugin.version}</version>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>${maven-gpg-plugin.version}</version>
           <executions>
             <execution>
-              <id>attach-sources</id>
+              <id>sign-artifacts</id>
               <phase>verify</phase>
               <goals>
-                <goal>jar</goal>
-                <goal>test-jar</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <version>${maven-javadoc-plugin.version}</version>
-          <executions>
-            <execution>
-              <id>attach-javadocs</id>
-              <goals>
-                <goal>jar</goal>
-                <goal>test-jar</goal>
+                <goal>sign</goal>
               </goals>
             </execution>
           </executions>
@@ -385,6 +356,50 @@
   <!-- P R O F I L E S -->
   <!-- ====================================================================== -->
   <profiles>
+    <profile>
+      <id>release</id>
+      <modules>
+        <module>gadget-specs</module>
+        <module>java/gadget-spec-server</module>
+        <module>java/server</module>
+        <module>opensocial-explorer-webcontent</module>
+        <module>opensocial-explorer-server-war</module>
+        <module>opensocial-explorer-assembly</module>
+      </modules>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>${maven-source-plugin.version}</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>jar</goal>
+                  <goal>test-jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>${maven-javadoc-plugin.version}</version>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                  <goal>test-jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 
   <!-- ====================================================================== -->
