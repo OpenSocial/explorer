@@ -1,0 +1,97 @@
+This file contains the PGP keys of various developers.
+
+Users: pgp < KEYS
+Developers:
+        (pgpk -ll <your name> && pgpk -xa <your name>) >> this file.
+      or
+        (gpg --fingerprint --list-sigs <your name>
+             && gpg --armor --export <your name>) >> this file.
+
+Developers: please ensure that your key is also available via the
+PGP keyservers (such as pgpkeys.mit.edu).
+
+----------------------------------------------------------------
+pub   4096R/680DB18A 2012-05-24
+uid                  Ryan Jason Baxter (CODE SIGNING KEY) <rbaxter85@apache.org>
+sig 3        680DB18A 2012-05-24  Ryan Jason Baxter (CODE SIGNING KEY) <rbaxter85@apache.org>
+sig 3        680DB18A 2012-05-24  Ryan Jason Baxter (CODE SIGNING KEY) <rbaxter85@apache.org>
+sig          EEAA42C0 2012-05-30  Matt Franklin (CODE SIGNING KEY) <mfranklin@apache.org>
+sub   4096R/28C41552 2012-05-24
+sig          680DB18A 2012-05-24  Ryan Jason Baxter (CODE SIGNING KEY) <rbaxter85@apache.org>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG/MacGPG2 v2.0.19 (Darwin)
+Comment: GPGTools - http://gpgtools.org
+
+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
+=1eC1
+-----END PGP PUBLIC KEY BLOCK-----
