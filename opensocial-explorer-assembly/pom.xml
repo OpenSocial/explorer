@@ -40,9 +40,9 @@
   <!-- S C M -->
   <!-- ====================================================================== -->
   <scm>
-    <url>${project.parent.scm.url}</url>
-    <connection>${project.parent.scm.connection}</connection>
-    <developerConnection>${project.parent.scm.developerConnection}</developerConnection>
+    <url>git@github.com:OpenSocial/explorer.git</url>
+    <connection>scm:git:git@github.com:OpenSocial/explorer.git</connection>
+    <developerConnection>scm:git:git@github.com:OpenSocial/explorer.git</developerConnection>
   </scm>
 
   <!-- ====================================================================== -->
