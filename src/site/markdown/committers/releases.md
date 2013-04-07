@@ -93,7 +93,7 @@ of the repo if you have one.
 You want to do a dry run of the release first.  This will perform a release without checking in
 any code or creating a tag.
 
-    $ mvn release:prepare -DdryRun=true autoversionsubmodules=true -Prelease
+    $ mvn release:prepare -DdryRun=true -Prelease
 
 Running the release profile (-Prelease) is key in that it will also build the 
 opensocial-explorer-assembly module and produce source and javadoc jar files.  This is kept out of
@@ -115,9 +115,6 @@ can clean the release by running
 
 This will clean up all the POM files.  You can then go ahead and fix whatever is wrong and rerun
 the dry run.
-
-The autoversionsubmodules parameter tells Maven to only ask you to specify the release version
-number once instead of asking you for each sub-module in the project.
 
 4.  Prepare The Release
 ---------------------
