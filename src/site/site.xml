@@ -48,7 +48,10 @@
     <item name="Getting Started" href="developer/getting-started.html" />
     <item name="Writing Unit Tests" href="developer/unit-tests.html" />
     <item name="Adding Gadget Specs" href="developer/adding-gadget-specs.html" />
-    <item name="Maven Site" href="developer/site.html" />
+    <item name="Publishing The Site" href="developer/site.html" />
+   </menu>
+   <menu name="Committer Resources">
+    <item name="Performing Releases" href="committers/releases.html" />
    </menu>
    <menu ref="parent" inherit="top"/>
    <menu ref="modules" inherit="top"/>
