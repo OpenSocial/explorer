@@ -121,7 +121,7 @@ the dry run.
 Once you are satisfied with the dry run you can prepare the release.
 
     $ mvn release:clean
-    $ mvn release:prepare -Dautoversionsubmodules=true
+    $ mvn release:prepare
 
 <span class="label label-important">The release:prepare goal will actually check in the new POM 
 files and tag the release in the GitHub repo.</span>
