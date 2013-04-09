@@ -121,7 +121,7 @@ the dry run.
 Once you are satisfied with the dry run you can prepare the release.
 
     $ mvn release:clean
-    $ mvn release:prepare
+    $ mvn release:prepare -Prelease
 
 <span class="label label-important">The release:prepare goal will actually check in the new POM 
 files and tag the release in the GitHub repo.</span>
@@ -171,7 +171,7 @@ for you by using the
 [release rollback goal](http://maven.apache.org/maven-release/maven-release-plugin/examples/rollback-release.html).
 You just have to run
 
-    $ mvn release:rollback
+    $ mvn release:rollback -Dtag=tag-name -Prelease
 
 <span class="label label-important">Currently this will not [undo](http://jira.codehaus.org/browse/MRELEASE-229) 
 the tag Maven created in GitHub, that you will have to do yourself.</span>
