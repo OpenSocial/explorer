@@ -16,12 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.opensocial.explorer</groupId>
   <artifactId>opensocial-explorer</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.1</version>
   <packaging>pom</packaging>
   <name>OpenSocial Explorer</name>
   <description>The OpenSocial Explorer is a tool to help developers learn how to build OpenSocial gadgets. The goal of the OpenSocial Explorer is to demonstrate how to use all the features and APIs that are part of the OpenSocial specification. Besides the samples, the OpenSocial Explorer has an editor which allows developers to tweak the gadget to learn more about the specific features and APIs the sample is demonstrating. After modifying the sample the OpenSocial Explorer allows developers to re-render the gadget to see how the changes effect the sample.</description>
@@ -514,6 +513,7 @@
     <url>git@github.com:OpenSocial/explorer.git</url>
     <connection>scm:git:git@github.com:OpenSocial/explorer.git</connection>
     <developerConnection>scm:git:git@github.com:OpenSocial/explorer.git</developerConnection>
+    <tag>opensocial-explorer-0.0.1</tag>
   </scm>
 
   <!-- ====================================================================== -->
