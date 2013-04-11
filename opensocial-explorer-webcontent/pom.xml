@@ -88,8 +88,10 @@
       </resource>
     </resources>
     <plugins>
-      <plugin>
-         <!-- Documentation: http://jslint4java.googlecode.com/svn/docs/2.0.0/maven.html -->
+      <!-- Documentation: http://jslint4java.googlecode.com/svn/docs/2.0.0/maven.html -->
+      <!-- I don't think we need this plugin right now since the plugin in the reporting section
+           does the same thing.  Keeping this here until we make the final decision -->
+      <!-- <plugin>
         <groupId>com.googlecode.jslint4java</groupId>
         <artifactId>jslint4java-maven-plugin</artifactId>
         <version>2.0.0</version>
@@ -113,7 +115,7 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
+      </plugin> -->
       <plugin>
         <!-- Documentation: http://searls.github.com/jasmine-maven-plugin/ -->
         <groupId>com.github.searls</groupId>
@@ -156,9 +158,10 @@
         <artifactId>maven-jstools-plugin</artifactId>
         <version>${maven-jstools-plugin.version}</version>
         <configuration>
-          <jsDir>src/main/javascript</jsDir>
+          <jsDir>${basedir}/src/main/javascript</jsDir>
           <includePrivate>true</includePrivate>
           <includeUndocumented>true</includeUndocumented>
+          <includes>**/*.js</includes>  
         </configuration>
         <reportSets>
           <reportSet>
