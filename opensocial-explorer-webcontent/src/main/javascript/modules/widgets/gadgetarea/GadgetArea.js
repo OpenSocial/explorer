@@ -175,11 +175,11 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                     
                     // Decorate the action with a function to be called when the action is executed
                     if (action.path && action.path.length > 0) {
-                      action['runAction'] = function() {
+                      action.runAction = function() {
                         runAction(action.id);
                       };
                     } else if (action.dataType && action.dataType.length > 0) {
-                      action['runAction'] = function() {
+                      action.runAction = function() {
                         var selection = osData.get(action.dataType);
                         container.selection.setSelection(selection);
                         runAction(action.id);
@@ -229,7 +229,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                     if(opt_gadgetInfo && opt_gadgetInfo.modulePrefs && opt_gadgetInfo.modulePrefs.title) {
                       title = opt_gadgetInfo.modulePrefs.title;
                     }
-                    return self.createDialog(title, opt_viewTarget)
+                    return self.createDialog(title, opt_viewTarget);
                   };
                 },
                 
@@ -264,5 +264,5 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                 }
                 return instance;
               }
-            }
+            };
         });

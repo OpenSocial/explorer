@@ -29,7 +29,7 @@ define(['dojo/request/xhr', 'dojo/json'], function(xhr, json) {
         error(err);
       }
     });
-  };
+  }
   return {
     getDefaultGadgetSpec : function(callbacks) {
       getGadgetSpecBase('default', callbacks.success, callbacks.error);

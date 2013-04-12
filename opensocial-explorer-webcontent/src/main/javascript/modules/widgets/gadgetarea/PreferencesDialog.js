@@ -55,7 +55,7 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'doj
                   //TODO we probably need to destroy the widgets created as well
                   for(var key in prefs) {
                     var pref = prefs[key];
-                    this.addPrefToUI(pref)
+                    this.addPrefToUI(pref);
                   }
                 },
                 

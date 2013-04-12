@@ -63,15 +63,15 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                     var resource = tab.getResource();
                     var editor = tab.getEditor();
                     if(editor instanceof GadgetEditor) {
-                      spec['gadgetResource'] = tab.getResource();
+                      spec.gadgetResource = tab.getResource();
                     } else if(editor instanceof CssEditor) {
-                      spec['cssResources'].push(tab.getResource());
+                      spec.cssResources.push(tab.getResource());
                     } else if(editor instanceof JSEditor) {
-                      spec['jsResources'].push(tab.getResource());
+                      spec.jsResources.push(tab.getResource());
                     } else if(editor instanceof HtmlEditor) {
-                      spec['htmlResources'].push(tab.getResource());
+                      spec.htmlResources.push(tab.getResource());
                     } else if(editor instanceof JSONEditor) {
-                      spec['eeResource'] = tab.getResource();
+                      spec.eeResource = tab.getResource();
                     }
                   }
                   return spec;
