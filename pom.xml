@@ -407,9 +407,9 @@
               <execution>
                 <id>attach-javadocs</id>
                 <goals>
-                  <goal>aggregate</goal>
+                  <goal>jar</goal>
+                  <goal>test-jar</goal>
                 </goals>
-                <phase>site</phase>
               </execution>
             </executions>
           </plugin>
