@@ -16,12 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>opensocial-explorer</artifactId>
     <groupId>org.opensocial.explorer</groupId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>opensocial-explorer-server-war</artifactId>
   <packaging>war</packaging>
@@ -36,7 +37,7 @@
     <maven-jetty-plugin.version>6.1.26</maven-jetty-plugin.version>
     <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
     <maven-war-plugin.version>2.1.1</maven-war-plugin.version>
-    <opensocial-explorer-webcontent.version>0.0.2-SNAPSHOT</opensocial-explorer-webcontent.version>
+    <opensocial-explorer-webcontent.version>0.0.1-SNAPSHOT</opensocial-explorer-webcontent.version>
     <com.github.goldin.version>0.2.5</com.github.goldin.version>
   </properties>
 
@@ -158,7 +159,7 @@
     <dependency>
       <groupId>org.opensocial.explorer</groupId>
       <artifactId>opensocial-explorer-server</artifactId>
-      <version>0.0.2-SNAPSHOT</version>
+      <version>0.0.1-SNAPSHOT</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
@@ -176,6 +177,5 @@
     <url>${project.parent.scm.url}</url>
     <connection>${project.parent.scm.connection}</connection>
     <developerConnection>${project.parent.scm.developerConnection}</developerConnection>
-    <tag>HEAD</tag>
   </scm>
 </project>
