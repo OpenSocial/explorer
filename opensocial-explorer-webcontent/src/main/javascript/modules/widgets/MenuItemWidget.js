@@ -41,8 +41,9 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                 setSubMenuContent : function(menuItems, opt_direction) {
                   this.createSubMenu(opt_direction);
                   this.subMenu.clearMenuItems();
-                  for(var i = 0; i < menuItems.length; i++) 
+                  for(var i = 0; i < menuItems.length; i++) {
                     this.subMenu.addMenuItem(menuItems[i]);
+                  }
                 },
                 
                 createSubMenu : function(opt_direction) {

@@ -50,7 +50,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                     }
                   }
                   
-                  if (this.menuItems.length == 0) {
+                  if (this.menuItems.length === 0) {
                     // this.destroy();
                     // TODO: If this.menuItems.length == 0 should I call this.destroy()? Can I show a
                     // menu item with a label of <Empty>?
