@@ -21,7 +21,7 @@
   <parent>
     <artifactId>opensocial-explorer</artifactId>
     <groupId>org.opensocial.explorer</groupId>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>opensocial-explorer-server</artifactId>
@@ -71,7 +71,7 @@
     <dependency>
       <groupId>org.opensocial.explorer</groupId>
       <artifactId>opensocial-explorer-gadget-spec-server</artifactId>
-      <version>0.0.1</version>
+      <version>0.0.2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.openid4java</groupId>
@@ -87,6 +87,6 @@
     <url>${project.parent.scm.url}</url>
     <connection>${project.parent.scm.connection}</connection>
     <developerConnection>${project.parent.scm.developerConnection}</developerConnection>
-    <tag>opensocial-explorer-0.0.1</tag>
+    <tag>HEAD</tag>
   </scm>
 </project>
