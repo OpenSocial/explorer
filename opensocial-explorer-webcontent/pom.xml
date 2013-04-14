@@ -142,8 +142,29 @@
             <source>${project.basedir}/src/test/resources/dojo-release-1.8.3/dojo/dojo.js</source>
           </preloadSources>
           <customRunnerTemplate>src/test/resources/DojoSpecRunner.htmltemplate</customRunnerTemplate>
+          <keepServerAlive>true</keepServerAlive>
         </configuration>
       </plugin>
+        <plugin>
+          <groupId>com.github.timurstrekalov</groupId>
+          <artifactId>saga-maven-plugin</artifactId>
+          <version>1.4.1</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>coverage</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <baseDir>http://localhost:${jasmine.serverPort}</baseDir>
+            <outputDir>${project.build.directory}/coverage</outputDir>
+            <noInstrumentPatterns>
+              <!-- <pattern>.*/spec/.*</pattern> --> <!-- Don't instrument specs -->
+            </noInstrumentPatterns>
+            <includeInlineScripts>true</includeInlineScripts>
+          </configuration>
+        </plugin>      
     </plugins>
   </build>
 
