@@ -73,7 +73,7 @@ public class OpenIDServlet extends ExplorerInjectedServlet {
 
     if ("openidcallback".equals(paths[0])) {
       // Service the callback
-      Identifier identifier = this.consumer.verifyResponse(req);
+      Identifier identifier = OpenIDServlet.consumer.verifyResponse(req);
       returnIdentifier(identifier, resp);
       return;
     }
@@ -81,7 +81,7 @@ public class OpenIDServlet extends ExplorerInjectedServlet {
     if ("authrequest".equals(paths[0])) {
       // Service the authrequest from the client.  This will send a redirect upon success.
       String discoveryUrl = req.getParameter("url");
-      this.consumer.authRequest(discoveryUrl, req, resp);
+      OpenIDServlet.consumer.authRequest(discoveryUrl, req, resp);
       return;
     }
   }
