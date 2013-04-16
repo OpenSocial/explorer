@@ -179,8 +179,8 @@ the tag Maven created in GitHub, that you will have to do yourself.</span>
 8.  Update The Project Site
 ---------------------
 
-After a new release is promoted you need to update the [project site](../developer/site.html).
-More specifically links to the current release artifacts should be updated on the Downloads page.
+After a new release you need to update the [Downloads](../download.html) page with a links to the latest release artifacts and source
+code.  To publish the site see the [site documentation](../committers/site.html).
 
 9.  Close The Issue And The Milestone
 ---------------------
