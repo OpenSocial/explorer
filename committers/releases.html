@@ -166,9 +166,31 @@
           <hr class="divider" />
 
            <div id="poweredBy">
-                            <div class="clear"></div>
-                            <div class="clear"></div>
-                            <div class="clear"></div>
+                   
+    <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+
+    
+    <div class="g-plusone" data-href="http://opensocial.github.com/explorer/" data-size="tall" ></div>
+
+                   <div class="clear"></div>
+                   
+        
+        
+        
+    <iframe src="http://www.facebook.com/plugins/like.php?href=http://opensocial.github.com/explorer/&send=false&layout=box_count&show-faces=false&action=like&colorscheme=light"
+        scrolling="no" frameborder="0"
+        style="border:none; width:48px; height:63px; margin-top: 10px;" ></iframe>
+               <div class="clear"></div>
+               
+        
+        
+        <div id="twitter">
+    
+    <a href="https://twitter.com/opensocial" class="twitter-follow-button" data-show-count="false" data-align="left" data-size="medium" data-show-screen-name="false" data-lang="en">Follow opensocial</a>
+    <script type="text/javascript">!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+        </div>
+                   <div class="clear"></div>
                              <a href="http://maven.apache.org/" title="Built by Maven" class="poweredBy">
         <img class="builtBy" alt="Built by Maven" src="../images/logos/maven-feather.png" />
       </a>
@@ -232,8 +254,8 @@
 <div class="source"><pre class="prettyprint linenums">$ mvn release:clean
 $ mvn release:prepare -Prelease
 </pre></div><p><span class="label label-important">The release:prepare goal will actually check in the new POM files and tag the release in the GitHub repo.</span></p></div><div class="section"><h2>5. Stage The Release<a name="a5._Stage_The_Release"></a></h2><p>You should now deploy the releases to the staging repository.</p>
-<div class="source"><pre class="prettyprint linenums">$ mvn release:perform -Prelease
-</pre></div><p>You should now be able to log into <a class="externalLink" href="https://oss.sonatype.org">Sonatype Nexus App</a> and click Staging Repositories in the navigator on the left and find the release you just staged. The artifacts in this staging repository will be the ones you and the rest of the community test with before promoting the release. It is easier to download the artifacts <a class="externalLink" href="https://oss.sonatype.org/content/groups/staging/org/opensocial/explorer/">here</a> than from the Nexus app.</p></div><div class="section"><h2>6. Let The Community Know<a name="a6._Let_The_Community_Know"></a></h2><p>Modify the issue you created in step 1 with a link to the staging artifacts and let the community know that there is a new release candidate. As long as no one finds any issues within 72 hours of staging the release you may promote the release.</p></div><div class="section"><h2>7a. Promoting A Release<a name="a7a._Promoting_A_Release"></a></h2><p>Follow step 8a in the <a class="externalLink" href="https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide">Sonatype OSS User Guide</a> to release the staged artifacts. Once a staged release has been closed they will appear <a class="externalLink" href="https://oss.sonatype.org/content/groups/public/org/opensocial/explorer/">here</a>. Note that the Sonatype repository syncs with the Central Maven Repository every 2 hours so it may take up to 2 hours for the release to appear in the Central Maven Repository.</p></div><div class="section"><h2>7b. Dropping A Release<a name="a7b._Dropping_A_Release"></a></h2><p>It is not uncommon to find a problem with a staged release. When you do you will need to drop the release, fix the problem, and stage it again. In step 8a of the <a class="externalLink" href="https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide">Sonatype OSS User Guide</a> there is a description of how to drop a release as well. This will remove all the staged artifacts from the repository.</p><p>This is not the only thing you need to do though, remember Maven also created a tag for the release and checked in changes to the POM files, we also need to undo those as well. Luckily as long as you have not run a release clean operation since performing the release, Maven can take case of undoing some of this for you by using the <a class="externalLink" href="http://maven.apache.org/maven-release/maven-release-plugin/examples/rollback-release.html">release rollback goal</a>. You just have to run</p>
+<div class="source"><pre class="prettyprint linenums">$ mvn release:perform -Dgoals=deploy -Prelease
+</pre></div><p><b>Note</b> we only execute the deploy goal because we do not want to deploy the site as well. Our project uses a different method of <a href="site.html">deploying the project site</a>.</p><p>You should now be able to log into <a class="externalLink" href="https://oss.sonatype.org">Sonatype Nexus App</a> and click Staging Repositories in the navigator on the left and find the release you just staged. The artifacts in this staging repository will be the ones you and the rest of the community test with before promoting the release. It is easier to download the artifacts <a class="externalLink" href="https://oss.sonatype.org/content/groups/staging/org/opensocial/explorer/">here</a> than from the Nexus app.</p></div><div class="section"><h2>6. Let The Community Know<a name="a6._Let_The_Community_Know"></a></h2><p>Modify the issue you created in step 1 with a link to the staging artifacts and let the community know that there is a new release candidate. As long as no one finds any issues within 72 hours of staging the release you may promote the release.</p></div><div class="section"><h2>7a. Promoting A Release<a name="a7a._Promoting_A_Release"></a></h2><p>Follow step 8a in the <a class="externalLink" href="https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide">Sonatype OSS User Guide</a> to release the staged artifacts. Once a staged release has been closed they will appear <a class="externalLink" href="https://oss.sonatype.org/content/groups/public/org/opensocial/explorer/">here</a>. Note that the Sonatype repository syncs with the Central Maven Repository every 2 hours so it may take up to 2 hours for the release to appear in the Central Maven Repository.</p></div><div class="section"><h2>7b. Dropping A Release<a name="a7b._Dropping_A_Release"></a></h2><p>It is not uncommon to find a problem with a staged release. When you do you will need to drop the release, fix the problem, and stage it again. In step 8a of the <a class="externalLink" href="https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide">Sonatype OSS User Guide</a> there is a description of how to drop a release as well. This will remove all the staged artifacts from the repository.</p><p>This is not the only thing you need to do though, remember Maven also created a tag for the release and checked in changes to the POM files, we also need to undo those as well. Luckily as long as you have not run a release clean operation since performing the release, Maven can take case of undoing some of this for you by using the <a class="externalLink" href="http://maven.apache.org/maven-release/maven-release-plugin/examples/rollback-release.html">release rollback goal</a>. You just have to run</p>
 <div class="source"><pre class="prettyprint linenums">$ mvn release:rollback -Dtag=tag-name -Prelease
 </pre></div><p><span class="label label-important">Currently this will not <a class="externalLink" href="http://jira.codehaus.org/browse/MRELEASE-229">undo</a> the tag Maven created in GitHub, that you will have to do yourself.</span></p></div><div class="section"><h2>8. Update The Project Site<a name="a8._Update_The_Project_Site"></a></h2><p>After a new release you need to update the <a href="../download.html">Downloads</a> page with a links to the latest release artifacts and source code. To publish the site see the <a href="../committers/site.html">site documentation</a>.</p></div><div class="section"><h2>9. Close The Issue And The Milestone<a name="a9._Close_The_Issue_And_The_Milestone"></a></h2><p>Close the issue you opened for the release and also close the milestone for the release. Make sure you create a milestone for the next release.</p></div><div class="section"><h2>10. Announce The Release<a name="a10._Announce_The_Release"></a></h2><p>We need to get the word out about the new release, here are some channels we can use to do that.</p>
 <ol style="list-style-type: decimal">
@@ -257,7 +279,14 @@ $ mvn release:prepare -Prelease
 
         
         
-                </div>
+          
+    
+    
+                
+    <div id="ohloh" class="pull-right">
+      <script type="text/javascript" src="http://www.ohloh.net/p/OpenSocialExplorer/widgets/project_thin_badge.js"></script>
+    </div>
+        </div>
     </footer>
   </body>
 </html>

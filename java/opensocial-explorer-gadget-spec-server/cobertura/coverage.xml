@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
 
-<coverage line-rate="0.9423631123919308" branch-rate="0.9117647058823529" lines-covered="327" lines-valid="347" branches-covered="93" branches-valid="102" complexity="1.9615384615384615" version="1.9.4.1" timestamp="1366128341565">
+<coverage line-rate="0.9423631123919308" branch-rate="0.9117647058823529" lines-covered="327" lines-valid="347" branches-covered="93" branches-valid="102" complexity="1.9615384615384615" version="1.9.4.1" timestamp="1366160340658">
 	<sources>
 		<source>--source</source>
 		<source>/Users/ryanjbaxter/git-repos/ryanjbaxter/explorer/java/gadget-spec-server/src/main/java</source>
