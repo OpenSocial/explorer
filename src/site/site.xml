@@ -31,6 +31,15 @@
         <projectId>OpenSocial/explorer</projectId>
         <ribbonOrientation>right</ribbonOrientation>
       </gitHub>
+      <ohloh>
+        <projectId>OpenSocialExplorer</projectId>
+        <widget>thin-badge</widget>
+      </ohloh>
+      <twitter>
+        <user>opensocial</user>
+      </twitter>
+      <googlePlusOne />
+      <facebookLike />
     </fluidoSkin>
   </custom>
   

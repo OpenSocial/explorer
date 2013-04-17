@@ -130,7 +130,10 @@ files and tag the release in the GitHub repo.</span>
 ---------------------
 You should now deploy the releases to the staging repository.
 
-    $ mvn release:perform -Prelease
+    $ mvn release:perform -Dgoals=deploy -Prelease
+
+<b>Note</b> we only execute the deploy goal because we do not want to deploy the site as well.  Our
+project uses a different method of [deploying the project site](site.html).
 
 You should now be able to log into [Sonatype Nexus App](https://oss.sonatype.org) and click Staging
 Repositories in the navigator on the left and find the release you just staged.  The artifacts 
