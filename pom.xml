@@ -474,13 +474,6 @@
     </dependency>
     <dependency>
       <groupId>org.apache.shindig</groupId>
-      <artifactId>shindig-samples</artifactId>
-      <version>${shindig.version}</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.shindig</groupId>
       <artifactId>shindig-extras</artifactId>
       <version>${shindig.version}</version>
     </dependency>
