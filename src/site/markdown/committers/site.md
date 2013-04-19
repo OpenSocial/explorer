@@ -43,4 +43,4 @@ After this completes you should be able to navigate to [http://opensocial.github
 
 ### Creating New Pages For The Site
 
-To generate new content you must add a Markdown file to the src/site/markdown folder in the part project.  If you want to then add a link to that page open src/site/site.xml and add a menu item.
+To generate new content you must add a Markdown file to the [src/site/markdown](https://github.com/OpenSocial/explorer/tree/master/src/site/markdown) folder.  If you want to then add a link to that page in the navigation of the site open [src/site/site.xml](https://github.com/OpenSocial/explorer/blob/master/src/site/site.xml) and add a menu item.

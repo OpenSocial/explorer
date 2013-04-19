@@ -130,7 +130,10 @@ files and tag the release in the GitHub repo.</span>
 ---------------------
 You should now deploy the releases to the staging repository.
 
-    $ mvn release:perform -Prelease
+    $ mvn release:perform -Dgoals=deploy -Prelease
+
+<b>Note</b> we only execute the deploy goal because we do not want to deploy the site as well.  Our
+project uses a different method of [deploying the project site](site.html).
 
 You should now be able to log into [Sonatype Nexus App](https://oss.sonatype.org) and click Staging
 Repositories in the navigator on the left and find the release you just staged.  The artifacts 
@@ -179,8 +182,8 @@ the tag Maven created in GitHub, that you will have to do yourself.</span>
 8.  Update The Project Site
 ---------------------
 
-After a new release is promoted you need to update the [project site](../developer/site.html).
-More specifically links to the current release artifacts should be updated on the Downloads page.
+After a new release you need to update the [Downloads](../download.html) page with a links to the latest release artifacts and source
+code.  To publish the site see the [site documentation](../committers/site.html).
 
 9.  Close The Issue And The Milestone
 ---------------------

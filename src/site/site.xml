@@ -31,6 +31,15 @@
         <projectId>OpenSocial/explorer</projectId>
         <ribbonOrientation>right</ribbonOrientation>
       </gitHub>
+      <ohloh>
+        <projectId>OpenSocialExplorer</projectId>
+        <widget>thin-badge</widget>
+      </ohloh>
+      <twitter>
+        <user>opensocial</user>
+      </twitter>
+      <googlePlusOne />
+      <facebookLike />
     </fluidoSkin>
   </custom>
   
@@ -41,20 +50,24 @@
     <height>180</height>
     <width>250</width>
   </bannerLeft>
+
+  <version position="none"/>
   
-   <body>
-   
-   <menu name="Developer Resources">
-    <item name="Getting Started" href="developer/getting-started.html" />
-    <item name="Writing Unit Tests" href="developer/unit-tests.html" />
-    <item name="Adding Gadget Specs" href="developer/adding-gadget-specs.html" />
-    <item name="Publishing The Site" href="developer/site.html" />
-   </menu>
-   <menu name="Committer Resources">
-    <item name="Performing Releases" href="committers/releases.html" />
-   </menu>
-   <menu ref="parent" inherit="top"/>
-   <menu ref="modules" inherit="top"/>
-	 <menu ref="reports" inherit="top"/>
-   </body>
+  <body>
+    <menu name="Get The OSE">
+      <item name="Download" href="download.html" />
+    </menu>
+    <menu name="Developer Resources">
+      <item name="Getting Started" href="developer/getting-started.html" />
+      <item name="Writing Unit Tests" href="developer/unit-tests.html" />
+      <item name="Adding Gadget Specs" href="developer/adding-gadget-specs.html" />
+    </menu>
+    <menu name="Committer Resources">
+      <item name="Performing Releases" href="committers/releases.html" />
+      <item name="Publishing The Site" href="committers/site.html" />
+    </menu>
+    <menu ref="parent" inherit="top"/>
+    <menu ref="modules" inherit="top"/>
+	  <menu ref="reports" inherit="top"/>
+  </body>
 </project>
