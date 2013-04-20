@@ -19,11 +19,18 @@
 /**
  * Main JS file the OpenSocial Explorer.
  */
-require(['modules/widgets/editorarea/EditorArea', 'modules/widgets/gadgetarea/GadgetArea', 'modules/widgets/sidebar/SidebarNav', 'dojo/query', 'dojo/dom-class', 'dojo/_base/event', 'dojo/NodeList-manipulate', 
-         'dojo/NodeList-dom', 'dojo/NodeList-traverse', 'dojo/domReady!'], function(EditorArea, GadgetArea, SidebarNav, query, domClass, event) {
+require(['modules/widgets/editorarea/EditorArea', 'modules/widgets/gadgetarea/GadgetArea', 'modules/widgets/sidebar/SidebarNav', 
+         'modules/widgets/openid/OpenIDLoginDialog', 'dojo/query', 'dojo/dom-class', 'dojo/_base/event', 
+         'dojo/NodeList-manipulate', 'dojo/NodeList-dom', 'dojo/NodeList-traverse', 'dojo/domReady!'], 
+         function(EditorArea, GadgetArea, SidebarNav, OpenIDLoginDialog, query, domClass, event) {
     var editorArea = EditorArea.getInstance(),
         gadgetArea = GadgetArea.getInstance(),
-        sidebarNav = SidebarNav.getInstance();
+        sidebarNav = SidebarNav.getInstance(),
+        openIDLogin = OpenIDLoginDialog.getInstance();
+    
+    query('#openid-login').on('click', function(e) {
+      openIDLogin.show();
+    });
     
     query('#spec-nav').append(sidebarNav.domNode);
     sidebarNav.startup();
