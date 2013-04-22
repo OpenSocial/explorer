@@ -22,12 +22,21 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'doj
         function(declare, ModalDialog, query, domConstruct, on, OpenIDLoginControls) {
             var OpenIDLoginDialog = declare('OpenIDLoginDialog', [ ModalDialog ], {
               constructor : function() {
-                
               },
 
               postCreate : function() {
-                var openIdLoginControls = new OpenIDLoginControls();
-                query('.modal-body', this.domNode).append(openIdLoginControls.domNode);
+                this.openIdLoginControls = new OpenIDLoginControls();
+                query('.modal-body', this.domNode).append(this.openIdLoginControls.domNode);
+              },
+              
+              startup : function() {
+                this.setHeaderTitle('Sign-in or Create New Account');
+                this.inherited(arguments);
+              },
+              
+              show : function() {
+                this.openIdLoginControls.show();
+                this.inherited(arguments);
               }
             });
     var instance;

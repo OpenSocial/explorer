@@ -28,6 +28,8 @@ require(['modules/widgets/editorarea/EditorArea', 'modules/widgets/gadgetarea/Ga
         sidebarNav = SidebarNav.getInstance(),
         openIDLogin = OpenIDLoginDialog.getInstance();
     
+    openIDLogin.startup();
+    query('body').append(openIDLogin.domNode);
     query('#openid-login').on('click', function(e) {
       openIDLogin.show();
     });

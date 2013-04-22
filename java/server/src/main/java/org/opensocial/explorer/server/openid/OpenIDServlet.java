@@ -38,7 +38,7 @@ import com.google.inject.Inject;
  * client and handling login callbacks from the OpenID provider.
  * 
  * <pre>
- * GET /openid/authrequest?url=<OpenID discovery url>
+ * GET /openid/authrequest?openid_identifier=<OpenID discovery url>
  * - Initiate an OpenID auth request using the given OpenID discovery url
  * - Upon success this will return a redirect to the client
  * - Upon failure it will return a 500 status code with the error
@@ -80,7 +80,7 @@ public class OpenIDServlet extends ExplorerInjectedServlet {
 
     if ("authrequest".equals(paths[0])) {
       // Service the authrequest from the client.  This will send a redirect upon success.
-      String discoveryUrl = req.getParameter("url");
+      String discoveryUrl = req.getParameter("openid_identifier");
       OpenIDServlet.consumer.authRequest(discoveryUrl, req, resp);
       return;
     }
