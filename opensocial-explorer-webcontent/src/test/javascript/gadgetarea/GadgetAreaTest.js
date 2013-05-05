@@ -42,6 +42,17 @@ define(['modules/widgets/gadgetarea/GadgetArea'], function(GadgetArea){
         return container;
       });
     };
+    
+    function defineGadgetNameSpace() {
+      window.gadgets = window.gadgets || {};
+      window.gadgets.config = window.gadgets.config || {};
+      window.gadgets.config.get = window.gadgets.config.get || function(opt_component) {
+        if (opt_component === 'shindig.auth') {
+          return {'authToken': '-1:-1:*:*:*:0:default'};
+        }
+        throw "Unexpected config requested";
+      };
+    };
   
     function createContainerSpy() {
       var container = jasmine.createSpyObj('container', 
@@ -106,6 +117,7 @@ define(['modules/widgets/gadgetarea/GadgetArea'], function(GadgetArea){
       div.id = 'testDiv';
       document.body.appendChild(div);
       defineContainerNamespace();
+      defineGadgetNameSpace();
     });
   
     afterEach(function() {

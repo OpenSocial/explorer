@@ -27,6 +27,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shindig.auth.SecurityTokenCodec;
 import org.apache.wink.json4j.JSONObject;
 import org.openid4java.discovery.Identifier;
 import org.opensocial.explorer.specserver.servlet.ExplorerInjectedServlet;
@@ -54,10 +55,12 @@ public class OpenIDServlet extends ExplorerInjectedServlet {
   private static final String CLASS = OpenIDServlet.class.getName();
   private static final Logger LOG = Logger.getLogger(CLASS);
   private static transient OpenIDConsumer consumer;
+  private static transient SecurityTokenCodec codec;
 
   @Inject
-  public void setOpenIDConsumer(OpenIDConsumer consumer) {
+  public void injectDependencies(OpenIDConsumer consumer, SecurityTokenCodec codec) {
     checkInitialized();
+    OpenIDServlet.codec = codec;
     OpenIDServlet.consumer = consumer;
   }
 
@@ -90,15 +93,23 @@ public class OpenIDServlet extends ExplorerInjectedServlet {
     final String method = "returnResource";
     PrintWriter writer = null;
     try {
-
       JSONObject obj = new JSONObject();
-      obj.put("openid", identifier.getIdentifier());
+      // We shouldn't ever need to send this to the client
+      // obj.put("openid", identifier.getIdentifier());
+      obj.put("securityToken", OpenIDServlet.codec.encodeToken(new OpenIDSecurityToken(identifier)));
+      obj.put("securityTokenTTL", OpenIDServlet.codec.getTokenTimeToLive("default")); // TODO: Don't hardcode the container
       String content = obj.toString();
-      resp.setContentLength(content.length());
-      resp.setContentType(JSON_CONTENT_TYPE);
+      resp.setContentType("text/html");
 
+      // FIXME: Write some code to automatically close the popup and provide a link for the user to close it.
       writer = resp.getWriter();
-      writer.print(content);
+      writer.print(
+              "<html>" +
+                "<head>" +
+                  "<script type='text/javascript'>setResponseObj_(" + content + ");</script>" +
+                "</head>" +
+                "<body></body>" +
+              "</html>");
     } catch (Exception e) {
       LOG.logp(Level.WARNING, CLASS, method, e.getMessage(), e);
       resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

@@ -35,7 +35,7 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'doj
               },
               
               show : function() {
-                this.openIdLoginControls.show();
+                this.openIdLoginControls.show(this);
                 this.inherited(arguments);
               }
             });
