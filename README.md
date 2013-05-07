@@ -1,3 +1,5 @@
+[![Build Status](https://buildhive.cloudbees.com/job/OpenSocial/job/explorer/badge/icon)](https://buildhive.cloudbees.com/job/OpenSocial/job/explorer/)
+
 OpenSocial Explorer
 ========
 
