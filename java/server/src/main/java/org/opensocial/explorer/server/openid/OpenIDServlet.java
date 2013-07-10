@@ -20,6 +20,7 @@ package org.opensocial.explorer.server.openid;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shindig.auth.SecurityTokenCodec;
+import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
 import org.openid4java.discovery.Identifier;
 import org.opensocial.explorer.specserver.servlet.ExplorerInjectedServlet;
@@ -56,22 +58,24 @@ public class OpenIDServlet extends ExplorerInjectedServlet {
   private static final Logger LOG = Logger.getLogger(CLASS);
   private static transient OpenIDConsumer consumer;
   private static transient SecurityTokenCodec codec;
+  private OpenIDProviderStore providerStore;
 
   @Inject
-  public void injectDependencies(OpenIDConsumer consumer, SecurityTokenCodec codec) {
+  public void injectDependencies(OpenIDConsumer consumer, SecurityTokenCodec codec, OpenIDProviderStore providerStore) {
     checkInitialized();
     OpenIDServlet.codec = codec;
     OpenIDServlet.consumer = consumer;
+    this.providerStore = providerStore;
   }
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
           IOException {
-
+    final String method = "doGet";
     String[] paths = getPaths(req);
     if (paths.length == 0) {
       resp.sendError(HttpServletResponse.SC_NOT_FOUND,
-              "Path must be one of \"openidcallback\" or \"authrequest\"");
+              "Path must be one of \"openidcallback\", \"authrequest\", or \"providers\"");
     }
 
     if ("openidcallback".equals(paths[0])) {
@@ -86,6 +90,32 @@ public class OpenIDServlet extends ExplorerInjectedServlet {
       String discoveryUrl = req.getParameter("openid_identifier");
       OpenIDServlet.consumer.authRequest(discoveryUrl, req, resp);
       return;
+    }
+    
+    if ("providers".equals(paths[0])) {
+      returnProviders(resp);
+      return;
+    }
+  }
+  
+  private void returnProviders(HttpServletResponse resp) throws IOException {
+    final String method = "returnProviders";
+    PrintWriter writer = null;
+    JSONObject providersObj = new JSONObject();
+    Set<OpenIDProvider> providers = providerStore.getProviders();
+    try {
+      for(OpenIDProvider provider : providers) {
+        providersObj.put(provider.getId(), provider.toJson());
+      }
+      resp.setContentType(JSON_CONTENT_TYPE);
+      writer = resp.getWriter();
+      writer.print(providersObj.toString());
+    } catch (JSONException e) {
+      LOG.logp(Level.WARNING, CLASS, method, e.getMessage(), e);
+    } finally {
+      if(writer != null) {
+        writer.flush();
+      }
     }
   }
 

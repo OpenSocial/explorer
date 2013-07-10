@@ -49,6 +49,7 @@
           <include>oauth.json</include>
           <include>oauth2.json</include>
           <include>opensocial-explorer.properties</include>
+          <include>openid.json</include>
         </includes>
       </resource>
     </resources>
