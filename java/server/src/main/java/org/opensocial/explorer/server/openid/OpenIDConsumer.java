@@ -144,7 +144,7 @@ public class OpenIDConsumer {
       StringBuffer receivingURL = httpReq.getRequestURL();
       String queryString = httpReq.getQueryString();
       if (queryString != null && queryString.length() > 0)
-        receivingURL.append("?").append(httpReq.getQueryString());
+        receivingURL.append("?").append(queryString);
 
       // verify the response; ConsumerManager needs to be the same
       // (static) instance used to place the authentication request

@@ -25,6 +25,8 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                 JSON) {
             var GadgetArea = declare('GadgetAreaWidget', [ WidgetBase, TemplatedMixin ], {
                 templateString : template,
+                containerToken : null,
+                containerTokenTTL : 3600,
                 
                 constructor : function() {
                   this.siteCounter = 0;
@@ -32,8 +34,10 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                   var config = {},
                       self = this,
                       lifecycle = {};
+                  this.containerToken = gadgets.config.get('shindig.auth')['authToken'];
                   config[osapi.container.ContainerConfig.RENDER_DEBUG] = '1';
                   config[osapi.container.ContainerConfig.SET_PREFERENCES] = this.setPrefs();
+                  config[osapi.container.ContainerConfig.GET_CONTAINER_TOKEN] = dojo.hitch(this, 'getContainerToken');
                   this.container = new osapi.container.Container(config);
                   lifecycle[osapi.container.CallbackType.ON_RENDER] = function(gadgetUrl, sideId) {
                     self.loadingWidget.hide();
@@ -86,6 +90,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                   var self = this;
                   this.container.preloadGadget(url, function(metadata) {
                     if(metadata[url] && !metadata[url].error) {
+                      // TODO: Check to see if the gadget requires OAuth and ensure we are logged in if it does
                       self.gadgetToolbar.setGadgetMetadata(metadata[url]);
                       self.renderGadget(url);
                     } else { 
@@ -252,6 +257,29 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                 destroy : function() {
                   this.inherited(arguments);
                   instance = undefined;
+                },
+                
+                /**
+                 * Updates the container security token and forces a refresh of all of the gadget
+                 * security tokens to ensure owner/viewer information is up-to-date.
+                 */
+                updateContainerSecurityToken : function(token, ttl) {
+                  this.containerToken = token;
+                  this.containerTokenTTL = ttl;
+                  shindig.auth.updateSecurityToken(token);
+                  // FIXME: Workaround for a bug in 2.5.0 beta6 of Shindig - fixed in Shindig 2.5.0
+                  // Begin GROSS
+                  this.container.sites = this.container.sites_;
+                  // End GROSS
+                  dojo.hitch(this.container, 'forceRefreshAllTokens');
+                },
+                
+                /**
+                 * Will get called when Shindig needs to get a new container security token
+                 */
+                getContainerToken : function(result) {
+                  // TODO: Do work to get a new container token
+                  result(this.containerToken, this.containerTokenTTL);
                 }
             });
             
