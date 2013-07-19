@@ -26,7 +26,7 @@
   <includeBaseDirectory>false</includeBaseDirectory>
   <fileSets>
     <fileSet>
-      <outputDirectory>shindig-${pom.version}-source</outputDirectory>
+      <outputDirectory>opensocial-explorer-${pom.version}-source</outputDirectory>
       <directory>${project.basedir}/../</directory>
       <includes>
         <include>**</include>
