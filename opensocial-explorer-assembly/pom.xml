@@ -34,6 +34,7 @@
   <!-- ====================================================================== -->
   <properties>
     <maven-assembly-plugin.version>2.2.1</maven-assembly-plugin.version>
+    <opensocial-explorer.version>0.0.2-SNAPSHOT</opensocial-explorer.version>
   </properties>
   
   <!-- ====================================================================== -->
@@ -60,10 +61,11 @@
         <configuration>
           <descriptors>
             <descriptor>src/main/assembly/source.xml</descriptor>
+            <descriptor>src/main/assembly/binaries.xml</descriptor>
           </descriptors>
           <tarLongFileMode>gnu</tarLongFileMode>
           <filters>
-            <filter>${project.build.directory}/assemblyFilter.properties</filter>
+            <!--<filter>${project.build.directory}/assemblyFilter.properties</filter>-->
           </filters>
         </configuration>
         <executions>
@@ -78,4 +80,38 @@
       </plugin>
     </plugins>
   </build>
+
+    <!-- ====================================================================== -->
+  <!-- D E P E N D E N C I E S -->
+  <!-- ====================================================================== -->
+  <dependencies>
+    <dependency>
+      <groupId>org.opensocial.explorer</groupId>
+      <artifactId>opensocial-explorer-server</artifactId>
+      <version>${opensocial-explorer.version}</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.opensocial.explorer</groupId>
+      <artifactId>opensocial-explorer-gadget-specs</artifactId>
+      <version>${opensocial-explorer.version}</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.opensocial.explorer</groupId>
+      <artifactId>opensocial-explorer-gadget-spec-server</artifactId>
+      <version>${opensocial-explorer.version}</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.opensocial.explorer</groupId>
+      <artifactId>opensocial-explorer-webcontent</artifactId>
+      <version>${opensocial-explorer.version}</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
 </project>
