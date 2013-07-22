@@ -41,7 +41,7 @@ public final class OpenIDSecurityToken extends AbstractSecurityToken {
     values.put(Keys.OWNER.getKey(), id);
     values.put(Keys.APP_ID.getKey(), "ose");
     values.put(Keys.APP_URL.getKey(), "ose");
-    values.put(Keys.CONTAINER.getKey(), "default");
+    values.put(Keys.CONTAINER.getKey(), "ose"); // FIXME: Don't hardcode the container
     values.put(Keys.DOMAIN.getKey(), "ose");
 
     this.mapKeys = EnumSet.allOf(Keys.class);

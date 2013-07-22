@@ -127,7 +127,7 @@ public class OpenIDServlet extends ExplorerInjectedServlet {
       // We shouldn't ever need to send this to the client
       // obj.put("openid", identifier.getIdentifier());
       obj.put("securityToken", OpenIDServlet.codec.encodeToken(new OpenIDSecurityToken(identifier)));
-      obj.put("securityTokenTTL", OpenIDServlet.codec.getTokenTimeToLive("default")); // TODO: Don't hardcode the container
+      obj.put("securityTokenTTL", OpenIDServlet.codec.getTokenTimeToLive("ose")); // TODO: Don't hardcode the container
       String content = obj.toString();
       resp.setContentType("text/html");
 

@@ -87,7 +87,7 @@ public class OpenIDSecurityTokenTest {
 
   @Test
   public void testGetContainer() {
-    assertEquals("default", token.getContainer());
+    assertEquals("ose", token.getContainer());
   }
 
 }

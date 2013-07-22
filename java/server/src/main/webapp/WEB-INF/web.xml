@@ -31,7 +31,6 @@
       org.opensocial.explorer.server.modules.ExplorerOAuthModule:
       org.opensocial.explorer.server.modules.ExplorerPropertiesModule:
       org.opensocial.explorer.server.modules.ExplorerModule:
-      org.apache.shindig.common.PropertiesModule:
       org.apache.shindig.gadgets.DefaultGuiceModule:
       org.apache.shindig.social.core.config.SocialApiGuiceModule:
       org.apache.shindig.social.sample.SampleModule:
