@@ -48,13 +48,11 @@ require(['modules/widgets/editorarea/EditorArea', 'modules/widgets/gadgetarea/Ga
     query('html').on('click', function(e) {
       query('.dropdown-menu').parent().removeClass('open');
     });
-    var dropDownMenuParents = query('.dropdown-menu').parent('div');
+    var dropDownMenuParents = query('.dropdown-menu').parent('div,.dropdown-parent');
     dropDownMenuParents.on('click', function(e) {
-      for(var i = 0; i < dropDownMenuParents.length; i++) {
-        if(!domClass.contains(dropDownMenuParents[i], 'open')) {
-          domClass.add(dropDownMenuParents[i], 'open');
-          event.stop(e);
-        }
+      if(!domClass.contains(e.currentTarget, 'open')) {
+        domClass.add(e.currentTarget, 'open');
+        event.stop(e);
       }
     });
 });
