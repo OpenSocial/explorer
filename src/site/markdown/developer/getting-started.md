@@ -31,7 +31,7 @@ If you don't already have a JDK installed you will need one.  The OpenSocial Exp
 You will need to do is install [Git](http://git-scm.com/) if you don't already have it installed.  If you are new to Git, GitHub provides some good getting started documentation in their [help section](https://help.github.com/).  Atlassian also provides a good [tutorial](http://atlassian.com/git/) on getting started with Git, especially if you are familiar with SVN.
 
 ### Installing Maven
-The OpenSocial Explorer uses [Maven](http://maven.apache.org/) to build and run tests on the code.  You will need to [download](http://maven.apache.org/download.cgi) and install Maven.  You might find it useful to add Maven's bin directory to your PATH so you can run Maven from anywhere.  The [Maven Users Centre](http://maven.apache.org/users/index.html) provides some good getting started documentation if you are not familiar with Maven. 
+The OpenSocial Explorer uses [Maven](http://maven.apache.org/) to build and run tests on the code.  You will need to [download](http://maven.apache.org/download.cgi) and install Maven.  You might find it useful to add Maven's bin directory to your PATH so you can run Maven from anywhere.  The [Maven Users Centre](http://maven.apache.org/users/index.html) provides some good getting started documentation if you are not familiar with Maven.
 
 Getting And Running The Code
 ---------------------
@@ -46,6 +46,30 @@ Obviously you are here because you want to modify and hopefully contribut the co
     $ mvn clean package -P run
 
  This will first build the OpenSocial Explorer and then deploy the WAR produced by the build to a Jetty server.  Now all you have to do is open your favorite browser and navigate to [http://localhost:8080](http://localhost:8080).  When you make changes to the code all you have to do is rerun the Maven command above to test them out.
+
+
+Eclipse Configuration
+---------------------
+
+Eclipse users are used to being able to start a webapp in debug mode and use hot code replace to change code and immediately see their changes.  With the way the webapp is constructed for the OpenSocial Explorer this is not possible.  Since hot code replace does not work out of the box, making changes to the web app resources requires you to rerun the build.  To solve this problem we use an Eclipse plugin called [FileSync](http://andrei.gmxhome.de/filesync/index.html) and a [Maven plugin](http://mavenfilesync.googlecode.com/svn/trunk/maven-filesync-plugin/site/index.html) which generates the FileSync configuration files for the OpenSocial Explorer.  Follow the below instrcutions to setup your development environment.
+
+1.)  Install the Eclipse FileSync plugin from the project update site.  See the [installation instructions](http://andrei.gmxhome.de/filesync/index.html) on the project website.
+
+2.)  Then you need to run a mvn build of the OpenSocial Explorer which will generate the necessary configuration files.
+
+
+    $ mvn clean package
+
+
+3.)  Refresh the projects in your Eclipse workspace.  You should be able to right click on the opensocial-explorer-webcontent project and go to Properties -> File synchronization and see the synchronization settings for the web resources.
+
+4.)  Run the Jetty goal to start the server.
+
+
+    $ mvn clean package -P run
+
+
+5.)  Now any changes you make in the opensocial-explorer-webcontent project will be synchronized with the webapp directory Jetty is using.
 
 
  Contributing Code
