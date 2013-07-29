@@ -115,7 +115,6 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
     } catch (Exception e) {
       LOG.logp(Level.SEVERE, CLASS, method, e.getMessage(), e);
     }
-
   }
 
   public JSONArray getSpecTree() {
@@ -157,7 +156,7 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
   }
   
   /* Builds a JSON from the locations of the specs. */
-  void constructJSON(List<String> path, JSONArray parent, GadgetSpec gadgetSpec) throws JSONException {
+  private void constructJSON(List<String> path, JSONArray parent, GadgetSpec gadgetSpec) throws JSONException {
     // Base case
     if(path.size() == 1) {
       parent.put(this.createSpec(gadgetSpec));
@@ -182,7 +181,7 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
   }
   
   /* Returns the index of where the JSONObject exists in the JSONArray; Returns -1 if not found. */
-  Integer findObject(JSONArray array, String node) throws JSONException {
+  private Integer findObject(JSONArray array, String node) throws JSONException {
     for(int i=0; i<array.length(); i++) {
       if(array.get(i) instanceof JSONObject) {
         JSONObject temp = array.getJSONObject(i);
@@ -196,7 +195,7 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
   
   /* Creates a JSONObject of the spec with :name (String), :id (Integer), and :children (JSONArray).
      {name: "abc", id: 123, children: [...]} */
-  public JSONObject createSpec(GadgetSpec gadgetSpec) throws JSONException {
+  private JSONObject createSpec(GadgetSpec gadgetSpec) throws JSONException {
     JSONObject temp = new JSONObject();
     temp.put("name", StringUtils.capitalize(gadgetSpec.getTitle()));
     temp.put("id", gadgetSpec.getId());
@@ -206,12 +205,16 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
   
   /* Creates a folder in the specTree with :name (String) and :children (JSONArray).
   {name: "folder1", children: [...]} */
-  public JSONObject createFolder(String name) throws JSONException {
+  private JSONObject createFolder(String name) throws JSONException {
     JSONObject temp = new JSONObject();
     temp.put("name", StringUtils.capitalize(name));
-    temp.put("id", name.hashCode());
+    temp.put("id", this.getFolderId(name));
     temp.put("children", new JSONArray());
     return temp;
+  }
+  
+  public String getFolderId(String name) {
+    return String.valueOf(name.hashCode());
   }
   
   public GadgetSpec getDefaultGadget() {

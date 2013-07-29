@@ -53,186 +53,117 @@ public class GadgetRegistryTest {
     specFactory = null;
     gadgetRegistry = null;
   }
-
-  protected void setupGadgetSpecCreation(String...paths) {
-    setupGadgetSpecCreation(false, paths);
-  }
   
-  protected void setupGadgetSpecCreation(boolean isDefault, String... paths) {
-    String specPath = Joiner.on("/").join(paths);
-    String id = paths[paths.length - 1];
-    setupGadgetSpecCreation(specPath + "/spec.json", id, id, isDefault);
-  }
-  
-  protected void setupGadgetSpecCreation(final String specPath, final String id, final String title, final boolean isDefault) {
+  protected void setupGadgetSpecCreation(final String specPath, final String id, final String title) {
     expect(specFactory.create(specPath)).andStubAnswer(new IAnswer<GadgetSpec>(){
       public GadgetSpec answer() throws Throwable {
         GadgetSpec mockSpec = createMock(GadgetSpec.class);
         expect(mockSpec.getPathToSpec()).andReturn(specPath).anyTimes();
         expect(mockSpec.getTitle()).andReturn(title).anyTimes();
         expect(mockSpec.getId()).andReturn(id).anyTimes();
-        expect(mockSpec.isDefault()).andReturn(isDefault).anyTimes();
+        expect(mockSpec.isDefault()).andReturn(true).anyTimes();
         replay(mockSpec);
         return mockSpec;
       }});
   }
 
   @Test
-  public void testEmptySpecs() throws Exception {
+  public void testEmptySpec() throws Exception {
     replay(specFactory);
     
     gadgetRegistry = new DefaultGadgetRegistry(specFactory, null, new String[] {});
-    assertNull("No default spec", gadgetRegistry.getDefaultGadget());
     assertEquals(new JSONArray(), gadgetRegistry.getSpecTree());
   }
-
-  @Test
-  @Ignore("Currently fails.  Is this even valid or do we require all specs to be in a sub-folder?")
-  public void testSingleNoRootSpec() throws Exception {
-    setupGadgetSpecCreation(true, "foo");
-    replay(specFactory);
-    
-    gadgetRegistry = new DefaultGadgetRegistry(specFactory, null, new String[] { "foo/spec.json" });
-    assertNotNull("Default gadget is not null", gadgetRegistry.getDefaultGadget());
-    assertTrue("Default gadget thinks it is the default", gadgetRegistry.getDefaultGadget().isDefault());
-    assertEquals(new JSONArray("[{'nodes':[{'id':'foo','title':'foo','isDefault':true}]}]"), gadgetRegistry.getSpecTree());
-  }
-
-  @Test
-  public void testSingleSpec() throws Exception {
-    setupGadgetSpecCreation(true, "bar", "foo");
-    replay(specFactory);
-    
-    gadgetRegistry = new DefaultGadgetRegistry(specFactory, null, new String[] { "bar/foo/spec.json" });
-    assertNotNull("Default gadget is not null", gadgetRegistry.getDefaultGadget());
-    assertTrue("Default gadget thinks it is the default", gadgetRegistry.getDefaultGadget().isDefault());
-    assertEquals(new JSONArray("[{'bar':[{'nodes':[{'id':'foo','title':'foo','isDefault':true}]}]}]"), gadgetRegistry.getSpecTree());
-  }
   
   @Test
-  @Ignore("Currently this fails but we would want the single gadget to be picked as the default")
-  public void testSingleGadgetNoDefault() throws Exception {
-    setupGadgetSpecCreation("bar", "foo");
+  public void testRootFolderSingleSpec() throws Exception {
+    setupGadgetSpecCreation("specs/foo/spec.json", "123", "foo");
     replay(specFactory);
     
-    gadgetRegistry = new DefaultGadgetRegistry(specFactory, null, new String[] { "bar/foo/spec.json" });
-    assertNotNull("Default gadget is not null", gadgetRegistry.getDefaultGadget());
-    assertTrue("Default gadget thinks it is the default", gadgetRegistry.getDefaultGadget().isDefault());
-    assertEquals(new JSONArray("[{'bar':[{'nodes':[{'id':'foo','title':'foo','isDefault':true}]}]}]"), gadgetRegistry.getSpecTree());
-  }
-  
-  // TODO: Write a test for multiple specs wanting to be the default.  The last one should win.
-  
-  @Test
-  public void testSiblingSpecs() throws Exception {
-    setupGadgetSpecCreation("bar", "foo");
-    setupGadgetSpecCreation(true, "bar", "baz");
-    replay(specFactory);
-    
-    gadgetRegistry = new DefaultGadgetRegistry(specFactory, null, new String[] { "bar/foo/spec.json", "bar/baz/spec.json" });
-    assertNotNull("Default gadget is not null", gadgetRegistry.getDefaultGadget());
-    assertTrue("Default gadget thinks it is the default", gadgetRegistry.getDefaultGadget().isDefault());
-    assertEquals(new JSONArray("[{'bar':[{'nodes':[{'id':'foo','title':'foo','isDefault':false}, " +
-    		"{'id':'baz','title':'baz','isDefault':true}]}]}]"), 
-    		gadgetRegistry.getSpecTree());
-    
-    gadgetRegistry = new DefaultGadgetRegistry(specFactory, null, new String[] { "bar/baz/spec.json", "bar/foo/spec.json" });
-    assertNotNull("Default gadget is not null", gadgetRegistry.getDefaultGadget());
-    assertTrue("Default gadget thinks it is the default", gadgetRegistry.getDefaultGadget().isDefault());
-    assertEquals(new JSONArray("[{'bar':[{'nodes':[{'id':'baz','title':'baz','isDefault':true}, " +
-        "{'id':'foo','title':'foo','isDefault':false}]}]}]"), 
+    gadgetRegistry = new DefaultGadgetRegistry(specFactory, null, new String[] { "specs/foo/spec.json" });
+    assertEquals(new JSONArray(
+        "[{'id':'109641752','name':'Specs','children':["
+        +  "{'id':'123','name':'Foo','children':[]}]}]"), 
         gadgetRegistry.getSpecTree());
   }
   
   @Test
-  public void testTwoRoots() throws Exception {
-    setupGadgetSpecCreation("foo", "bax");
-    setupGadgetSpecCreation(true, "bar", "baz");
+  public void testRootFolderDoubleSpec() throws Exception {
+    setupGadgetSpecCreation("specs/foo/spec.json", "123", "foo");
+    setupGadgetSpecCreation("specs/bar/spec.json", "456", "bar");
     replay(specFactory);
-    
-    gadgetRegistry = new DefaultGadgetRegistry(specFactory, null, new String[] { "foo/bax/spec.json", "bar/baz/spec.json" });
-    assertNotNull("Default gadget is not null", gadgetRegistry.getDefaultGadget());
-    assertTrue("Default gadget thinks it is the default", gadgetRegistry.getDefaultGadget().isDefault());
-    assertEquals(new JSONArray("[{'foo':[{'nodes':[{'id':'bax','title':'bax','isDefault':false}]}]}," +
-    		"{'bar':[{'nodes':[{'id':'baz','title':'baz','isDefault':true}]}]}]"), 
+    gadgetRegistry = new DefaultGadgetRegistry(specFactory, null, 
+        new String[] { "specs/foo/spec.json", "specs/bar/spec.json"});
+    assertEquals(new JSONArray(
+        "[{'id':'109641752','name':'Specs','children':["
+        +  "{'id':'123','name':'Foo','children':[]},"
+        +  "{'id':'456','name':'Bar','children':[]}]}]"), 
         gadgetRegistry.getSpecTree());
   }
   
   @Test
-  public void testNodesBeforeSubTrees() throws Exception {
-    setupGadgetSpecCreation("foo", "bar", "baz");
-    setupGadgetSpecCreation(true, "foo", "bax");
+  public void testTwoFolderDoubleSpec() throws Exception {
+    setupGadgetSpecCreation("specs/abc/foo/spec.json", "123", "foo");
+    setupGadgetSpecCreation("specs/def/bar/spec.json", "456", "bar");
     replay(specFactory);
-    
-    gadgetRegistry = new DefaultGadgetRegistry(specFactory, null, new String[] { "foo/bax/spec.json",
-    "foo/bar/baz/spec.json" });
-    assertNotNull("Default gadget is not null", gadgetRegistry.getDefaultGadget());
-    assertTrue("Default gadget thinks it is the default", gadgetRegistry.getDefaultGadget().isDefault());
-    assertEquals(new JSONArray("[{'foo':[{'nodes':[{'id':'bax','title':'bax','isDefault':true}]}," + 
-            "{'bar':[{'nodes':[{'id':'baz','title':'baz','isDefault':false}]}]}]}]"),
-            gadgetRegistry.getSpecTree());
-
-    // Order doesn't matter. Nodes before subtrees.
-    gadgetRegistry = new DefaultGadgetRegistry(specFactory, null, new String[] { "foo/bar/baz/spec.json",
-    "foo/bax/spec.json" });
-    assertNotNull("Default gadget is not null", gadgetRegistry.getDefaultGadget());
-    assertTrue("Default gadget thinks it is the default", gadgetRegistry.getDefaultGadget().isDefault());
-    assertEquals(new JSONArray("[{'foo':[{'nodes':[{'id':'bax','title':'bax','isDefault':true}]}," +
-            "{'bar':[{'nodes':[{'id':'baz','title':'baz','isDefault':false}]}]}]}]"),
-            gadgetRegistry.getSpecTree());
-    
+    gadgetRegistry = new DefaultGadgetRegistry(specFactory, null, 
+        new String[] { "specs/abc/foo/spec.json", "specs/def/bar/spec.json"});
+    assertEquals(new JSONArray(
+        "[{'id':'109641752','name':'Specs','children':["
+        +  "{'id':'96354','name':'Abc','children':["
+        +    "{'id':'123','name':'Foo','children':[]}]},"
+        +  "{'id':'99333','name':'Def','children':["
+        +    "{'id':'456','name':'Bar','children':[]}]}]}]"), 
+        gadgetRegistry.getSpecTree());
   }
   
   @Test
-  public void testRealWorldSpecs() throws Exception {
-    setupGadgetSpecCreation(true, "specs", "welcome");
-    setupGadgetSpecCreation("specs", "oauth", "intro");
-    setupGadgetSpecCreation("specs", "oauth", "oauth2", "google");
-    setupGadgetSpecCreation("specs", "oauth", "oauth10a", "youtube");
+  public void testSameFolderDoubleSpec() throws Exception {
+    setupGadgetSpecCreation("specs/abc/foo/spec.json", "123", "foo");
+    setupGadgetSpecCreation("specs/abc/bar/spec.json", "456", "bar");
     replay(specFactory);
-    
-    String resultJSON = "[{'specs':[{'nodes':[{'id':'welcome','title':'welcome','isDefault':true}]},"
-            + "{'oauth':[{'nodes':[{'id':'intro','title':'intro','isDefault':false}]},"
-            + "{'oauth2':[{'nodes':[{'id':'google','title':'google','isDefault':false}]}]},"
-            + "{'oauth10a':[{'nodes':[{'id':'youtube','title':'youtube','isDefault':false}]}]}]}]}]";
-    
     gadgetRegistry = new DefaultGadgetRegistry(specFactory, null, 
-            new String[] { "specs/welcome/spec.json", "specs/oauth/intro/spec.json", 
-                           "specs/oauth/oauth2/google/spec.json", "specs/oauth/oauth10a/youtube/spec.json" });
-    assertNotNull("Default gadget is not null", gadgetRegistry.getDefaultGadget());
-    assertTrue("Default gadget thinks it is the default", gadgetRegistry.getDefaultGadget().isDefault());
-    assertEquals(new JSONArray(resultJSON), gadgetRegistry.getSpecTree());
-    
-    // Nodes before sub-trees
-    gadgetRegistry = new DefaultGadgetRegistry(specFactory, null, 
-            new String[] { "specs/welcome/spec.json", "specs/oauth/oauth2/google/spec.json",
-                           "specs/oauth/oauth10a/youtube/spec.json", "specs/oauth/intro/spec.json" });
-    assertNotNull("Default gadget is not null", gadgetRegistry.getDefaultGadget());
-    assertTrue("Default gadget thinks it is the default", gadgetRegistry.getDefaultGadget().isDefault());
-    assertEquals(new JSONArray(resultJSON), gadgetRegistry.getSpecTree());
+        new String[] { "specs/abc/foo/spec.json", "specs/abc/bar/spec.json"});
+    assertEquals(new JSONArray(
+        "[{'id':'109641752','name':'Specs','children':["
+        +  "{'id':'96354','name':'Abc','children':["
+        +    "{'id':'123','name':'Foo','children':[]},"
+        +    "{'id':'456','name':'Bar','children':[]}]}]}]]"), 
+        gadgetRegistry.getSpecTree());
+  }
+  
+  
+  @Test
+  public void testLoadingRealSpecsEmpty() throws Exception {
+    replay(specFactory);
+    gadgetRegistry = new DefaultGadgetRegistry(new DefaultGadgetSpecFactory(), "nospecs.txt");
+    assertEquals(new JSONArray(), gadgetRegistry.getSpecTree());
   }
   
   @Test
-  public void testLoadingRealSpecs() throws Exception {
+  public void testLoadingRealSpecsNotEmpty() throws Exception {
+    replay(specFactory);
+    gadgetRegistry = new DefaultGadgetRegistry(new DefaultGadgetSpecFactory(), "specs.txt");
+    JSONArray specTree = gadgetRegistry.getSpecTree();
+    assertNotNull(specTree);
+    assertEquals(1, specTree.size());
+  }
+  
+  @Test
+  public void testLoadingRealSpecsBoth() throws Exception {
     replay(specFactory);
     gadgetRegistry = new DefaultGadgetRegistry(new DefaultGadgetSpecFactory(), "specs.txt,nospecs.txt");
     JSONArray specTree = gadgetRegistry.getSpecTree();
     assertNotNull(specTree);
     assertEquals(1, specTree.size());
-    
-    Object obj = specTree.iterator().next();
-    assertTrue(obj instanceof JSONObject);
-    
-    JSONObject jsonObj = (JSONObject) obj;
-    JSONArray jsonArray = jsonObj.getJSONArray("specs");
-    assertEquals(1, jsonArray.size());
-    
-    obj = jsonArray.iterator().next();
-    assertTrue(obj instanceof JSONObject);
-    
-    jsonObj = (JSONObject) obj;
-    jsonArray = jsonObj.getJSONArray("nodes");
-    assertEquals(2, jsonArray.size());
   }
   
+  @Test
+  public void testLoadingRealSpecsBothReverse() throws Exception {
+    replay(specFactory);
+    gadgetRegistry = new DefaultGadgetRegistry(new DefaultGadgetSpecFactory(), "nospecs.txt,specs.txt");
+    JSONArray specTree = gadgetRegistry.getSpecTree();
+    assertNotNull(specTree);
+    assertEquals(1, specTree.size());
+  }
 }
