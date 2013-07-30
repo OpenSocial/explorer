@@ -39,8 +39,6 @@
     <jasmin-maven-plugin.version>1.3.1.0</jasmin-maven-plugin.version>
     <maven-surefire-report-plugin.version>2.13</maven-surefire-report-plugin.version>
     <saga-maven-plugin.version>1.4.2</saga-maven-plugin.version>
-    <maven-filesync-plugin.version>1.0.0</maven-filesync-plugin.version>
-    <webapps-dir>${basedir}/../opensocial-explorer-server-war/target/work/webapp</webapps-dir>
   </properties>
 
   <!-- ====================================================================== -->
@@ -49,6 +47,9 @@
   <build>
     <pluginManagement>
       <plugins>
+        <!-- The M2E plugin for Eclipse does not support the lint goal of
+          the jslint plugin and shows an error in the POM. We use this plugin configuration
+          to tell m2e to ignore the lint goal. -->
         <plugin>
           <groupId>org.eclipse.m2e</groupId>
           <artifactId>lifecycle-mapping</artifactId>
@@ -56,9 +57,6 @@
           <configuration>
             <lifecycleMappingMetadata>
               <pluginExecutions>
-                <!-- The M2E plugin for Eclipse does not support the lint goal of 
-                the jslint plugin and shows an error in the POM. We use this plugin configuration 
-                to tell M2E to ignore the lint goal. -->
                 <pluginExecution>
                   <pluginExecutionFilter>
                     <groupId>com.googlecode.jslint4java</groupId>
@@ -66,22 +64,6 @@
                     <versionRange>[1.0.0,)</versionRange>
                     <goals>
                       <goal>lint</goal>
-                    </goals>
-                  </pluginExecutionFilter>
-                  <action>
-                    <ignore />
-                  </action>
-                </pluginExecution>
-                <!-- The M2E plugin for Eclipse does not support the generate goal of 
-                the filesync plugin and shows an error in the POM. We use this plugin configuration 
-                to tell M2E to ignore the lint goal. -->
-                <pluginExecution>
-                  <pluginExecutionFilter>
-                    <groupId>com.googlecode.mavenfilesync</groupId>
-                    <artifactId>maven-filesync-plugin</artifactId>
-                    <versionRange>[1.0.0,)</versionRange>
-                    <goals>
-                      <goal>generate</goal>
                     </goals>
                   </pluginExecutionFilter>
                   <action>
@@ -134,42 +116,6 @@
           </execution>
         </executions>
       </plugin> -->
-      <plugin>
-        <groupId>com.googlecode.mavenfilesync</groupId>
-        <artifactId>maven-filesync-plugin</artifactId>
-        <version>${maven-filesync-plugin.version}</version>
-        <executions>
-          <execution>
-            <goals> 
-              <goal>generate</goal>
-            </goals>
-            <configuration>
-              <defaultDestination>${webapps-dir}</defaultDestination>
-              <mappings>
-                <mapping>
-                  <sourceFolder>src/main/resources</sourceFolder>
-                </mapping>
-                <mapping>
-                  <sourceFolder>src/main/resources/css</sourceFolder>
-                  <destinationFolder>${webapps-dir}/css</destinationFolder>
-                </mapping>
-                <mapping>
-                  <sourceFolder>src/main/resources/images</sourceFolder>
-                  <destinationFolder>${webapps-dir}/images</destinationFolder>
-                </mapping>
-                <mapping>
-                  <sourceFolder>src/main/resources/libs</sourceFolder>
-                  <destinationFolder>${webapps-dir}/libs</destinationFolder>
-                </mapping>
-                <mapping>
-                  <sourceFolder>src/main/javascript/modules</sourceFolder>
-                  <destinationFolder>${webapps-dir}/js/modules</destinationFolder>
-                </mapping>
-              </mappings>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <!-- Documentation: http://searls.github.com/jasmine-maven-plugin/ -->
         <groupId>com.github.searls</groupId>
