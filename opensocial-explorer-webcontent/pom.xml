@@ -40,7 +40,9 @@
     <maven-surefire-report-plugin.version>2.13</maven-surefire-report-plugin.version>
     <saga-maven-plugin.version>1.4.2</saga-maven-plugin.version>
     <maven-filesync-plugin.version>1.0.0</maven-filesync-plugin.version>
-    <webapps-dir>${basedir}/../opensocial-explorer-server-war/target/work/webapp</webapps-dir>
+    <webapps-dir>@../opensocial-explorer-server-war/target</webapps-dir>
+    <jetty-dir>${webapps-dir}/work/webapp</jetty-dir>
+    <tomcat-dir>${webapps-dir}/opensocial-explorer-server-war-${project.version}</tomcat-dir>
   </properties>
 
   <!-- ====================================================================== -->
@@ -144,26 +146,49 @@
               <goal>generate</goal>
             </goals>
             <configuration>
-              <defaultDestination>${webapps-dir}</defaultDestination>
               <mappings>
+                <!-- Jetty Mappings -->
                 <mapping>
                   <sourceFolder>src/main/resources</sourceFolder>
+                  <destinationFolder>${jetty-dir}</destinationFolder>
                 </mapping>
                 <mapping>
                   <sourceFolder>src/main/resources/css</sourceFolder>
-                  <destinationFolder>${webapps-dir}/css</destinationFolder>
+                  <destinationFolder>${jetty-dir}/css</destinationFolder>
                 </mapping>
                 <mapping>
                   <sourceFolder>src/main/resources/images</sourceFolder>
-                  <destinationFolder>${webapps-dir}/images</destinationFolder>
+                  <destinationFolder>${jetty-dir}/images</destinationFolder>
                 </mapping>
                 <mapping>
                   <sourceFolder>src/main/resources/libs</sourceFolder>
-                  <destinationFolder>${webapps-dir}/libs</destinationFolder>
+                  <destinationFolder>${jetty-dir}/libs</destinationFolder>
                 </mapping>
                 <mapping>
                   <sourceFolder>src/main/javascript/modules</sourceFolder>
-                  <destinationFolder>${webapps-dir}/js/modules</destinationFolder>
+                  <destinationFolder>${jetty-dir}/js/modules</destinationFolder>
+                </mapping>
+                
+                <!-- Tomcat Mappings -->
+                <mapping>
+                  <sourceFolder>src/main/resources</sourceFolder>
+                  <destinationFolder>${tomcat-dir}</destinationFolder>
+                </mapping>
+                <mapping>
+                  <sourceFolder>src/main/resources/css</sourceFolder>
+                  <destinationFolder>${tomcat-dir}/css</destinationFolder>
+                </mapping>
+                <mapping>
+                  <sourceFolder>src/main/resources/images</sourceFolder>
+                  <destinationFolder>${tomcat-dir}/images</destinationFolder>
+                </mapping>
+                <mapping>
+                  <sourceFolder>src/main/resources/libs</sourceFolder>
+                  <destinationFolder>${tomcat-dir}/libs</destinationFolder>
+                </mapping>
+                <mapping>
+                  <sourceFolder>src/main/javascript/modules</sourceFolder>
+                  <destinationFolder>${tomcat-dir}/js/modules</destinationFolder>
                 </mapping>
               </mappings>
             </configuration>

@@ -51,6 +51,15 @@ Obviously you are here because you want to modify and hopefully contribut the co
 Eclipse Configuration
 ---------------------
 
+### Using Tomcat
+If you are using Eclipse you can also test and debug the OpenSocial Explorer using Tomcat.  Before you can do that you need to configure Tomcat in your Eclipse development environment.  There are several articles online which illustrate how to do this.  Here are some good ones.
+
+*  [Adding Apache Tomcat Runtimes](http://help.eclipse.org/juno/index.jsp?topic=%2Forg.eclipse.jst.server.ui.doc.user%2Ftopics%2Ftwtomprf.html)
+*  [Creating A Tomcat Server](http://help.eclipse.org/juno/index.jsp?topic=%2Forg.eclipse.jst.server.ui.doc.user%2Ftopics%2Ftomcat.html)
+
+After you have added your Tomcat runtime and created a Tomcat server you need to add the OpenSocial Explorer module/web app.  To do this you need to [edit the server](http://help.eclipse.org/juno/index.jsp?topic=%2Forg.eclipse.jst.server.ui.doc.user%2Ftopics%2Ftomcat.html).  In the server editor click on the Modules tab at the bottom.  Then click on the Add External Web Module... button.  In the Add Web Module dialog click the Browse button and navigate to the opensocial-explorer-server-war projects target directory.  In the target directory select the opensocial-explorer-server-war-[version]-SNAPSHOT directory.  Save the changes in the server editor.  Now when you launch Tomcat from Eclipse you should be able to navigate to [http://localhost:8080](http://localhost:8080) and test the OpenSocial Explorer.
+
+### Syncing Web Content Resournces
 Eclipse users are used to being able to start a webapp in debug mode and use hot code replace to change code and immediately see their changes.  With the way the webapp is constructed for the OpenSocial Explorer this is not possible.  Since hot code replace does not work out of the box, making changes to the web app resources requires you to rerun the build.  To solve this problem we use an Eclipse plugin called [FileSync](http://andrei.gmxhome.de/filesync/index.html) and a [Maven plugin](http://mavenfilesync.googlecode.com/svn/trunk/maven-filesync-plugin/site/index.html) which generates the FileSync configuration files for the OpenSocial Explorer.  Follow the below instrcutions to setup your development environment.
 
 1.)  Install the Eclipse FileSync plugin from the project update site.  See the [installation instructions](http://andrei.gmxhome.de/filesync/index.html) on the project website.
@@ -61,15 +70,17 @@ Eclipse users are used to being able to start a webapp in debug mode and use hot
     $ mvn clean package
 
 
-3.)  Refresh the projects in your Eclipse workspace.  You should be able to right click on the opensocial-explorer-webcontent project and go to Properties -> File synchronization and see the synchronization settings for the web resources.
+3.)  Refresh the projects in your Eclipse workspace.  You should be able to right click on the opensocial-explorer-webcontent project and go to Properties -> File synchronization and see the synchronization settings for the web resources.  The first time you will have to enable File Synchronization in the project properties.
 
-4.)  Run the Jetty goal to start the server.
+4a.)  Run the Jetty goal to start the server.  Note:  In testing file synchronization with the Jetty web container did not work on Windows, see 4b.  This is most likely do to Jetty locking the files on Windows.
 
 
     $ mvn clean package -P run
 
+4b.)  On any OS, you can also configure Eclipse to launch the OpenSocial Explorer using Tomcat.  This works on Windows, unlike the Jetty option.  See above for details on how to configure a Tomcat debug environment in Eclipse.
 
-5.)  Now any changes you make in the opensocial-explorer-webcontent project will be synchronized with the webapp directory Jetty is using.
+
+5.)	  Now any changes you make in the opensocial-explorer-webcontent project will be synchronized with the webapp directory Jetty is using.
 
 
  Contributing Code
