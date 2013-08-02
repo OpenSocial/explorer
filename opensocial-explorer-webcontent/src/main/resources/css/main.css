@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
- 
+
 body {
         padding-top: 60px;
         padding-bottom: 40px;
@@ -94,4 +94,8 @@ div.result {
 .dijitTreeLabel {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: .8em;
+}
+
+.well {
+	padding: 0px;
 }

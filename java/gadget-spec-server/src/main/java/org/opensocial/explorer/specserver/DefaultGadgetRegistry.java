@@ -152,10 +152,15 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
     Collections.addAll(nodesArray, nodes);
     
     constructJSON(nodesArray, this.specTree, gadgetSpec);
-    System.out.println(this.specTree);
   }
   
-  /* Builds a JSON from the locations of the specs. */
+  /**
+   * Builds a JSON from the locations of the specs.
+   * @param path
+   * @param parent
+   * @param gadgetSpec
+   * @throws JSONException
+   */
   private void constructJSON(List<String> path, JSONArray parent, GadgetSpec gadgetSpec) throws JSONException {
     // Base case
     if(path.size() == 1) {
@@ -164,7 +169,7 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
     }
     
     // Does the leftmost of path already exist?
-    Integer index = this.findObject(parent, path.get(0));
+    int index = this.findObject(parent, path.get(0));
     
     // If it doesn't exist, create it as a Folder and recurse with the next element in the path.
     if(index == -1) {
@@ -180,12 +185,18 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
     }
   }
   
-  /* Returns the index of where the JSONObject exists in the JSONArray; Returns -1 if not found. */
-  private Integer findObject(JSONArray array, String node) throws JSONException {
+  /**
+   * @param array
+   * @param node
+   * @return the index of where the JSONObject exists in the JSONArray; Returns -1 if not found.
+   * @throws JSONException
+   */
+  private int findObject(JSONArray array, String node) throws JSONException {
     for(int i=0; i<array.length(); i++) {
       if(array.get(i) instanceof JSONObject) {
         JSONObject temp = array.getJSONObject(i);
-        if (StringUtils.capitalize((String)temp.get("name")).equals(StringUtils.capitalize(node))) {
+        String tempName = (String) temp.get("name");
+        if (tempName.equalsIgnoreCase(node)) {
           return i;
         }
       }
@@ -193,8 +204,12 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
     return -1;
   }
   
-  /* Creates a JSONObject of the spec with :name (String), :id (Integer), and :children (JSONArray).
-     {name: "abc", id: 123, children: [...]} */
+  /**
+   * Creates a JSONObject of the spec with :name (String), :id (Integer), and :children (JSONArray).
+   * @param gadgetSpec
+   * @return JSONObject in the form of {name: "abc", id: 123, children: [...]}
+   * @throws JSONException
+   */
   private JSONObject createSpec(GadgetSpec gadgetSpec) throws JSONException {
     JSONObject temp = new JSONObject();
     temp.put("name", StringUtils.capitalize(gadgetSpec.getTitle()));
@@ -203,8 +218,12 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
     return temp;
   }
   
-  /* Creates a folder in the specTree with :name (String) and :children (JSONArray).
-  {name: "folder1", children: [...]} */
+  /**
+   * Creates a folder in the specTree with :name (String) and :children (JSONArray).
+   * @param name
+   * @return JSONObject in the form of {name: "folder1", children: [...]}
+   * @throws JSONException
+   */
   private JSONObject createFolder(String name) throws JSONException {
     JSONObject temp = new JSONObject();
     temp.put("name", StringUtils.capitalize(name));

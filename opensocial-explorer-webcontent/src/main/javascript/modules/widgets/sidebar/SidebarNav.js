@@ -56,7 +56,14 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
 
           specTree.placeAt(self.domNode);
           specTree.startup();
-          EditorArea.getInstance().setTitle("Welcome");
+          gadgetSpecService.getDefaultGadgetSpec({
+            success: function(data) {
+              EditorArea.getInstance().setTitle(data.title);
+            },
+            error: function(data) {
+              console.error("There was an error");
+            }
+          });
         },
         error : function(data) {
           console.error("There was an error");

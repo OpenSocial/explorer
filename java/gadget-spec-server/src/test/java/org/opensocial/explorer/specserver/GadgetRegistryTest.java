@@ -81,10 +81,22 @@ public class GadgetRegistryTest {
     replay(specFactory);
     
     gadgetRegistry = new DefaultGadgetRegistry(specFactory, null, new String[] { "specs/foo/spec.json" });
-    assertEquals(new JSONArray(
-        "[{'id':'109641752','name':'Specs','children':["
-        +  "{'id':'123','name':'Foo','children':[]}]}]"), 
-        gadgetRegistry.getSpecTree());
+    JSONArray test = new JSONArray();
+    JSONObject specs = new JSONObject();
+    JSONArray specsChildren = new JSONArray();
+    JSONObject foo = new JSONObject();
+    JSONArray fooChildren = new JSONArray();
+    
+    test.put(specs);
+      specs.put("id", "109641752");
+      specs.put("name", "Specs");
+      specs.put("children", specsChildren);
+        specsChildren.put(foo);
+          foo.put("id", "123");
+          foo.put("name", "Foo");
+          foo.put("children", fooChildren);
+   
+    assertEquals(test, gadgetRegistry.getSpecTree());
   }
   
   @Test
@@ -94,11 +106,28 @@ public class GadgetRegistryTest {
     replay(specFactory);
     gadgetRegistry = new DefaultGadgetRegistry(specFactory, null, 
         new String[] { "specs/foo/spec.json", "specs/bar/spec.json"});
-    assertEquals(new JSONArray(
-        "[{'id':'109641752','name':'Specs','children':["
-        +  "{'id':'123','name':'Foo','children':[]},"
-        +  "{'id':'456','name':'Bar','children':[]}]}]"), 
-        gadgetRegistry.getSpecTree());
+    JSONArray test = new JSONArray();
+    JSONObject specs = new JSONObject();
+    JSONArray specsChildren = new JSONArray();
+    JSONObject foo = new JSONObject();
+    JSONArray fooChildren = new JSONArray();
+    JSONObject bar = new JSONObject();
+    JSONArray barChildren = new JSONArray();
+    
+    test.put(specs);
+      specs.put("id", "109641752");
+      specs.put("name", "Specs");
+      specs.put("children", specsChildren);
+        specsChildren.put(foo);
+          foo.put("id", "123");
+          foo.put("name", "Foo");
+          foo.put("children", fooChildren);
+        specsChildren.put(bar);  
+          bar.put("id", "456");
+          bar.put("name", "Bar");
+          bar.put("children", barChildren);
+   
+    assertEquals(test, gadgetRegistry.getSpecTree());
   }
   
   @Test
@@ -108,13 +137,41 @@ public class GadgetRegistryTest {
     replay(specFactory);
     gadgetRegistry = new DefaultGadgetRegistry(specFactory, null, 
         new String[] { "specs/abc/foo/spec.json", "specs/def/bar/spec.json"});
-    assertEquals(new JSONArray(
-        "[{'id':'109641752','name':'Specs','children':["
-        +  "{'id':'96354','name':'Abc','children':["
-        +    "{'id':'123','name':'Foo','children':[]}]},"
-        +  "{'id':'99333','name':'Def','children':["
-        +    "{'id':'456','name':'Bar','children':[]}]}]}]"), 
-        gadgetRegistry.getSpecTree());
+    
+    JSONArray test = new JSONArray();
+    JSONObject specs = new JSONObject();
+    JSONArray specsChildren = new JSONArray();
+    JSONObject abc = new JSONObject();
+    JSONArray abcChildren = new JSONArray();
+    JSONObject foo = new JSONObject();
+    JSONArray fooChildren = new JSONArray();
+    JSONObject def = new JSONObject();
+    JSONArray defChildren = new JSONArray();
+    JSONObject bar = new JSONObject();
+    JSONArray barChildren = new JSONArray();
+    
+    test.put(specs);
+      specs.put("id", "109641752");
+      specs.put("name", "Specs");
+      specs.put("children", specsChildren);
+        specsChildren.put(abc);
+          abc.put("id", "96354");
+          abc.put("name", "Abc");
+          abc.put("children", abcChildren);
+            abcChildren.put(foo);
+              foo.put("id", "123");
+              foo.put("name", "Foo");
+              foo.put("children", fooChildren);
+        specsChildren.put(def);
+          def.put("id", "99333");
+          def.put("name", "Def");
+          def.put("children", defChildren);
+            defChildren.put(bar);
+              bar.put("id", "456");
+              bar.put("name", "Bar");
+              bar.put("children", barChildren);
+   
+    assertEquals(test, gadgetRegistry.getSpecTree());
   }
   
   @Test
@@ -124,12 +181,35 @@ public class GadgetRegistryTest {
     replay(specFactory);
     gadgetRegistry = new DefaultGadgetRegistry(specFactory, null, 
         new String[] { "specs/abc/foo/spec.json", "specs/abc/bar/spec.json"});
-    assertEquals(new JSONArray(
-        "[{'id':'109641752','name':'Specs','children':["
-        +  "{'id':'96354','name':'Abc','children':["
-        +    "{'id':'123','name':'Foo','children':[]},"
-        +    "{'id':'456','name':'Bar','children':[]}]}]}]]"), 
-        gadgetRegistry.getSpecTree());
+    
+    JSONArray test = new JSONArray();
+    JSONObject specs = new JSONObject();
+    JSONArray specsChildren = new JSONArray();
+    JSONObject abc = new JSONObject();
+    JSONArray abcChildren = new JSONArray();
+    JSONObject foo = new JSONObject();
+    JSONArray fooChildren = new JSONArray();
+    JSONObject bar = new JSONObject();
+    JSONArray barChildren = new JSONArray();
+    
+    test.put(specs);
+      specs.put("id", "109641752");
+      specs.put("name", "Specs");
+      specs.put("children", specsChildren);
+        specsChildren.put(abc);
+          abc.put("id", "96354");
+          abc.put("name", "Abc");
+          abc.put("children", abcChildren);
+            abcChildren.put(foo);
+              foo.put("id", "123");
+              foo.put("name", "Foo");
+              foo.put("children", fooChildren);
+            abcChildren.put(bar);
+              bar.put("id", "456");
+              bar.put("name", "Bar");
+              bar.put("children", barChildren);
+   
+    assertEquals(test, gadgetRegistry.getSpecTree());
   }
   
   
