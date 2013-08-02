@@ -23,26 +23,30 @@ import java.util.Map;
 
 import org.apache.shindig.auth.AbstractSecurityToken;
 import org.apache.shindig.auth.AuthenticationMode;
+import org.apache.shindig.auth.SecurityToken;
 import org.openid4java.discovery.Identifier;
 
 import com.google.caja.util.Maps;
 
 /**
- * FIXME: doc this
+ * A container {@link SecurityToken} whose owner and viewer IDs are derived from an OpenID
+ * {@link Identifier}.
  */
 public final class OpenIDSecurityToken extends AbstractSecurityToken {
 
   private EnumSet<Keys> mapKeys;
 
-  public OpenIDSecurityToken(Identifier identifier) {
+  public OpenIDSecurityToken(Identifier identifier, String container) {
     String id = identifier.getIdentifier();
     Map<String, String> values = Maps.newHashMap();
     values.put(Keys.VIEWER.getKey(), id);
     values.put(Keys.OWNER.getKey(), id);
-    values.put(Keys.APP_ID.getKey(), "ose");
-    values.put(Keys.APP_URL.getKey(), "ose");
-    values.put(Keys.CONTAINER.getKey(), "ose"); // FIXME: Don't hardcode the container
-    values.put(Keys.DOMAIN.getKey(), "ose");
+
+    // CONSIDER: Should these be differentiated for any reason?
+    values.put(Keys.APP_ID.getKey(), container);
+    values.put(Keys.APP_URL.getKey(), container);
+    values.put(Keys.CONTAINER.getKey(), container);
+    values.put(Keys.DOMAIN.getKey(), container);
 
     this.mapKeys = EnumSet.allOf(Keys.class);
     this.mapKeys.add(Keys.VIEWER);

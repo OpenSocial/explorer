@@ -18,15 +18,18 @@
  */
 package org.opensocial.explorer.server.config;
 
+import java.util.Map;
 import java.util.Random;
 
 import org.apache.shindig.auth.BlobCrypterSecurityTokenCodec;
 import org.apache.shindig.auth.SecurityTokenCodec;
 import org.apache.shindig.common.Nullable;
+import org.apache.shindig.common.crypto.Crypto;
 import org.apache.shindig.config.ContainerConfigException;
 import org.apache.shindig.config.JsonContainerConfig;
 import org.apache.shindig.expressions.Expressions;
 
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -34,7 +37,7 @@ import com.google.inject.name.Named;
 @Singleton
 public class OSEContainerConfig extends JsonContainerConfig {
 
-  private String key;
+  private final Map<String, String> containerKeys;
 
   @Inject
   public OSEContainerConfig(@Named("shindig.containers.default") String containers,
@@ -44,25 +47,24 @@ public class OSEContainerConfig extends JsonContainerConfig {
                              Expressions expressions,
                              SecurityTokenCodec codec) throws ContainerConfigException {
     super(containers, host, port, contextRoot, expressions);
+    this.containerKeys = Maps.newHashMap();
   }
 
   @Override
   public Object getProperty(String container, String property) {
     if (property.equals(BlobCrypterSecurityTokenCodec.SECURITY_TOKEN_KEY)) {
-      return getEncryptionKey();
+      return getEncryptionKey(container);
     }
     return super.getProperty(container, property);
   }
 
-  private String getEncryptionKey() {
-    // TODO: This should ideally take the container param and keep a map of container -> key
+  private String getEncryptionKey(String container) {
+    String key = this.containerKeys.get(container);
     if (key == null) {
-      byte[] b = new byte[16];
-      new Random().nextBytes(b);
-      key = new String(b);
+      key = new String(Crypto.getRandomBytes(20));
+      this.containerKeys.put(container, key);
     }
     return key;
   }
   
 }
-

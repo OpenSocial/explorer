@@ -18,6 +18,7 @@
  */
 package org.opensocial.explorer.server.security;
 
+import java.util.Collection;
 import java.util.Map;
 
 import org.apache.shindig.auth.AnonymousSecurityToken;
@@ -27,29 +28,39 @@ import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.auth.SecurityTokenCodec;
 import org.apache.shindig.auth.SecurityTokenException;
 import org.apache.shindig.config.ContainerConfig;
+import org.apache.shindig.config.ContainerConfig.ConfigObserver;
 
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class OSESecurityTokenCodec implements SecurityTokenCodec {
+public class OSESecurityTokenCodec implements SecurityTokenCodec, ConfigObserver {
   private static final String SECURITY_TOKEN_TYPE = "gadgets.securityTokenType";
-
-  private final SecurityTokenCodec secureCodec, insecureCodec;
+  private SecurityTokenCodec secureCodec;
+  private SecurityTokenCodec insecureCodec;
+  private Map<String, String> tokenTypes;
   private ContainerConfig config;
 
   @Inject
   public OSESecurityTokenCodec(ContainerConfig config) {
     this.config = config;
-    this.insecureCodec = new BasicSecurityTokenCodec(config);
-    this.secureCodec = new BlobCrypterSecurityTokenCodec(config);
+    this.config.addConfigObserver(this, false);
+    this.tokenTypes = Maps.newHashMap();
+    populateTokenTypes(config, config.getContainers(), this.tokenTypes);
+  }
+
+  private void populateTokenTypes(ContainerConfig config, Collection<String> containerNames,
+          Map<String, String> tokenTypes) {
+    for (String container : containerNames) {
+      tokenTypes.put(container, config.getString(container, SECURITY_TOKEN_TYPE));
+    }
   }
 
   public SecurityToken createToken(Map<String, String> tokenParameters)
           throws SecurityTokenException {
     // FIXME: This is so gross that I have to do this. Shindig needs to be fixed so I can
     // consistently get the container from tokenParameters.
-
     String token = tokenParameters.get(SecurityTokenCodec.SECURITY_TOKEN_NAME);
     if (token == null || token.length() == 0) {
       return new AnonymousSecurityToken();
@@ -58,7 +69,7 @@ public class OSESecurityTokenCodec implements SecurityTokenCodec {
     String[] tokenParts = token.split(":");
     String container;
     if (tokenParts.length == 2) {
-      // BlobCrypter. Part 1 is the container. Part 2 is the encrypted blob.
+      // BlobCrypter. Part 0 is the container. Part 1 is the encrypted blob.
       container = tokenParts[0];
     } else {
       // BasicCrypter. 6 is the magic number that is private static final in
@@ -67,7 +78,6 @@ public class OSESecurityTokenCodec implements SecurityTokenCodec {
     }
 
     return getCodec(container).createToken(tokenParameters);
-
   }
 
   public String encodeToken(SecurityToken token) throws SecurityTokenException {
@@ -79,7 +89,7 @@ public class OSESecurityTokenCodec implements SecurityTokenCodec {
 
   @Deprecated
   public int getTokenTimeToLive() {
-    throw new RuntimeException("I'm super deprecated");
+    throw new UnsupportedOperationException("I'm super deprecated");
   }
 
   public int getTokenTimeToLive(String container) {
@@ -87,19 +97,37 @@ public class OSESecurityTokenCodec implements SecurityTokenCodec {
   }
 
   private SecurityTokenCodec getCodec(String container) {
-    // TODO: Cache all of this so we're not doing the config lookup everytime.
-    String tokenType = this.config.getString(container, SECURITY_TOKEN_TYPE);
+    String tokenType = this.tokenTypes.get(container);
+    return getCodecByType(tokenType);
+  }
 
-    // TODO: Lazy init the codecs instead or returning static references
+  private SecurityTokenCodec getCodecByType(String tokenType) {
     if ("insecure".equals(tokenType)) {
+      if (this.insecureCodec == null) {
+        this.insecureCodec = new BasicSecurityTokenCodec(this.config);
+      }
       return this.insecureCodec;
     }
+
     if ("secure".equals(tokenType)) {
+      if (this.secureCodec == null) {
+        this.secureCodec = new BlobCrypterSecurityTokenCodec(this.config);
+      }
       return this.secureCodec;
     }
 
     throw new RuntimeException("Unknown security token type specified in "
             + ContainerConfig.DEFAULT_CONTAINER + " container configuration. "
             + SECURITY_TOKEN_TYPE + ": " + tokenType);
+  }
+
+  public void containersChanged(ContainerConfig config, Collection<String> changed,
+          Collection<String> removed) {
+    Map<String, String> newTokenTypes = Maps.newHashMap(this.tokenTypes);
+    populateTokenTypes(config, changed, newTokenTypes);
+    for (String removedContainer : removed) {
+      newTokenTypes.remove(removedContainer);
+    }
+    this.tokenTypes = newTokenTypes;
   }
 }

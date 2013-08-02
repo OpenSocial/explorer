@@ -20,7 +20,9 @@ package org.opensocial.explorer.server.modules;
 
 import org.apache.shindig.auth.SecurityTokenCodec;
 import org.apache.shindig.config.ContainerConfig;
+import org.apache.shindig.gadgets.config.ShindigAuthConfigContributor;
 import org.opensocial.explorer.server.config.OSEContainerConfig;
+import org.opensocial.explorer.server.security.OSEAuthConfigContributor;
 import org.opensocial.explorer.server.security.OSESecurityTokenCodec;
 
 import com.google.inject.AbstractModule;
@@ -34,6 +36,7 @@ public class ExplorerModule extends AbstractModule {
   protected void configure() {
     bind(SecurityTokenCodec.class).to(OSESecurityTokenCodec.class);
     bind(ContainerConfig.class).to(OSEContainerConfig.class);
+    bind(ShindigAuthConfigContributor.class).to(OSEAuthConfigContributor.class);
   }
 }
 
