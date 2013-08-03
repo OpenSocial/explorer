@@ -28,14 +28,14 @@ import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.auth.SecurityTokenCodec;
 import org.apache.shindig.auth.SecurityTokenException;
 import org.apache.shindig.config.ContainerConfig;
-import org.apache.shindig.config.ContainerConfig.ConfigObserver;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class OSESecurityTokenCodec implements SecurityTokenCodec, ConfigObserver {
+public class OSESecurityTokenCodec implements SecurityTokenCodec {
   private static final String SECURITY_TOKEN_TYPE = "gadgets.securityTokenType";
   private SecurityTokenCodec secureCodec;
   private SecurityTokenCodec insecureCodec;
@@ -45,7 +45,6 @@ public class OSESecurityTokenCodec implements SecurityTokenCodec, ConfigObserver
   @Inject
   public OSESecurityTokenCodec(ContainerConfig config) {
     this.config = config;
-    this.config.addConfigObserver(this, false);
     this.tokenTypes = Maps.newHashMap();
     populateTokenTypes(config, config.getContainers(), this.tokenTypes);
   }
@@ -101,7 +100,8 @@ public class OSESecurityTokenCodec implements SecurityTokenCodec, ConfigObserver
     return getCodecByType(tokenType);
   }
 
-  private SecurityTokenCodec getCodecByType(String tokenType) {
+  @VisibleForTesting 
+  SecurityTokenCodec getCodecByType(String tokenType) {
     if ("insecure".equals(tokenType)) {
       if (this.insecureCodec == null) {
         this.insecureCodec = new BasicSecurityTokenCodec(this.config);
@@ -119,15 +119,5 @@ public class OSESecurityTokenCodec implements SecurityTokenCodec, ConfigObserver
     throw new RuntimeException("Unknown security token type specified in "
             + ContainerConfig.DEFAULT_CONTAINER + " container configuration. "
             + SECURITY_TOKEN_TYPE + ": " + tokenType);
-  }
-
-  public void containersChanged(ContainerConfig config, Collection<String> changed,
-          Collection<String> removed) {
-    Map<String, String> newTokenTypes = Maps.newHashMap(this.tokenTypes);
-    populateTokenTypes(config, changed, newTokenTypes);
-    for (String removedContainer : removed) {
-      newTokenTypes.remove(removedContainer);
-    }
-    this.tokenTypes = newTokenTypes;
   }
 }

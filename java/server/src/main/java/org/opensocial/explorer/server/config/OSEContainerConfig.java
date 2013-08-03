@@ -19,12 +19,12 @@
 package org.opensocial.explorer.server.config;
 
 import java.util.Map;
-import java.util.Random;
 
 import org.apache.shindig.auth.BlobCrypterSecurityTokenCodec;
 import org.apache.shindig.auth.SecurityTokenCodec;
 import org.apache.shindig.common.Nullable;
 import org.apache.shindig.common.crypto.Crypto;
+import org.apache.shindig.common.util.CharsetUtil;
 import org.apache.shindig.config.ContainerConfigException;
 import org.apache.shindig.config.JsonContainerConfig;
 import org.apache.shindig.expressions.Expressions;
@@ -44,14 +44,16 @@ public class OSEContainerConfig extends JsonContainerConfig {
                              @Nullable @Named("shindig.host") String host,
                              @Nullable @Named("shindig.port") String port,
                              @Nullable @Named("shindig.contextroot") String contextRoot,
-                             Expressions expressions,
-                             SecurityTokenCodec codec) throws ContainerConfigException {
+                             Expressions expressions) throws ContainerConfigException {
     super(containers, host, port, contextRoot, expressions);
     this.containerKeys = Maps.newHashMap();
   }
 
   @Override
   public Object getProperty(String container, String property) {
+    // FIXME: Shindig should allow me to do this by injecting my own BlobCrypter. Instead
+    // BlobCrypterSecurityTokenCodec is tightly coupled to BasicBlobCrypter and BasicBlobCrypter
+    // relies on BlobCrypterSecurityTokenCodec giving it a key when it is contructed.
     if (property.equals(BlobCrypterSecurityTokenCodec.SECURITY_TOKEN_KEY)) {
       return getEncryptionKey(container);
     }
@@ -61,7 +63,7 @@ public class OSEContainerConfig extends JsonContainerConfig {
   private String getEncryptionKey(String container) {
     String key = this.containerKeys.get(container);
     if (key == null) {
-      key = new String(Crypto.getRandomBytes(20));
+      key = CharsetUtil.newUtf8String(Crypto.getRandomBytes(20));
       this.containerKeys.put(container, key);
     }
     return key;
