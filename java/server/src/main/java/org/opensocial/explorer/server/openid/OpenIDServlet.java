@@ -20,6 +20,7 @@ package org.opensocial.explorer.server.openid;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,11 +30,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shindig.auth.SecurityTokenCodec;
+import org.apache.shindig.config.ContainerConfig;
+import org.apache.shindig.config.ContainerConfigException;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
 import org.openid4java.discovery.Identifier;
 import org.opensocial.explorer.specserver.servlet.ExplorerInjectedServlet;
 
+import com.google.caja.util.Maps;
 import com.google.inject.Inject;
 
 /**
@@ -49,6 +53,9 @@ import com.google.inject.Inject;
  * GET /openid/openidcallback
  * - The callback URL for an OpenID provider.  
  * - Clients should not hit this URL directly; rather, they will be redirected to it after a successful call to /openid/authrequest.
+ * 
+ * GET /openid/providers
+ * - Returns a list of OpenID providers supported by the server from which users can choose in order to login with OpenID
  * </pre>
  */
 public class OpenIDServlet extends ExplorerInjectedServlet {
@@ -56,22 +63,26 @@ public class OpenIDServlet extends ExplorerInjectedServlet {
   private static final long serialVersionUID = 7461268606887180514L;
   private static final String CLASS = OpenIDServlet.class.getName();
   private static final Logger LOG = Logger.getLogger(CLASS);
+  private static final String CONTAINER = "ose"; // FIXME: Don't hardcode this.
+  private static final String SECURITY_TOKEN_TYPE = "gadgets.securityTokenType";
   private static transient OpenIDConsumer consumer;
   private static transient SecurityTokenCodec codec;
   private OpenIDProviderStore providerStore;
+  private ContainerConfig config;
 
   @Inject
-  public void injectDependencies(OpenIDConsumer consumer, SecurityTokenCodec codec, OpenIDProviderStore providerStore) {
+  public void injectDependencies(OpenIDConsumer consumer, SecurityTokenCodec codec,
+          OpenIDProviderStore providerStore, ContainerConfig config) {
     checkInitialized();
     OpenIDServlet.codec = codec;
     OpenIDServlet.consumer = consumer;
     this.providerStore = providerStore;
+    this.config = config;
   }
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
           IOException {
-    final String method = "doGet";
     String[] paths = getPaths(req);
     if (paths.length == 0) {
       resp.sendError(HttpServletResponse.SC_NOT_FOUND,
@@ -79,7 +90,7 @@ public class OpenIDServlet extends ExplorerInjectedServlet {
     }
 
     if ("openidcallback".equals(paths[0])) {
-      // Service the callback
+      // Service the callback      
       Identifier identifier = OpenIDServlet.consumer.verifyResponse(req);
       returnIdentifier(identifier, resp);
       return;
@@ -124,12 +135,12 @@ public class OpenIDServlet extends ExplorerInjectedServlet {
     PrintWriter writer = null;
     try {
       JSONObject obj = new JSONObject();
-      // We shouldn't ever need to send this to the client
+      // We shouldn't ever need to send this to the client. The security token is all it needs for now.
       // obj.put("openid", identifier.getIdentifier());
-      obj.put("securityToken", OpenIDServlet.codec.encodeToken(new OpenIDSecurityToken(identifier)));
-      obj.put("securityTokenTTL", OpenIDServlet.codec.getTokenTimeToLive("default")); // TODO: Don't hardcode the container
+      obj.put("securityToken", OpenIDServlet.codec.encodeToken(new OpenIDSecurityToken(identifier, CONTAINER)));
+      obj.put("securityTokenTTL", OpenIDServlet.codec.getTokenTimeToLive(CONTAINER));
       String content = obj.toString();
-      resp.setContentType("text/html");
+      resp.setContentType(HTML_CONTENT_TYPE);
 
       // FIXME: Write some code to automatically close the popup and provide a link for the user to close it.
       writer = resp.getWriter();

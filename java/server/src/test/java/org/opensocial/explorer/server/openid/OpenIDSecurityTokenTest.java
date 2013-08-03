@@ -19,7 +19,6 @@
 package org.opensocial.explorer.server.openid;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import org.apache.shindig.auth.AuthenticationMode;
 import org.easymock.EasyMock;
@@ -28,20 +27,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openid4java.discovery.Identifier;
 
-/**
- * @author <a href="mailto:dev@shindig.apache.org">Shindig Dev</a>
- * @version $Id: $
- */
 public class OpenIDSecurityTokenTest {
+  private static final String ID = "someId";
+  private static final String CONTAINER = "ose";
   private Identifier mockIdentifier;
   private OpenIDSecurityToken token;
 
   @Before
   public void setUp() throws Exception {
     mockIdentifier = EasyMock.createMock(Identifier.class);
-    EasyMock.expect(mockIdentifier.getIdentifier()).andReturn("someId");
+    EasyMock.expect(mockIdentifier.getIdentifier()).andReturn(ID);
     EasyMock.replay(mockIdentifier);
-    token = new OpenIDSecurityToken(mockIdentifier);
+    token = new OpenIDSecurityToken(mockIdentifier, CONTAINER);
   }
 
   @After
@@ -67,27 +64,27 @@ public class OpenIDSecurityTokenTest {
 
   @Test
   public void testGetOwnerId() {
-    assertEquals("someId", token.getOwnerId());
+    assertEquals(ID, token.getOwnerId());
   }
 
   @Test
   public void testGetViewerId() {
-    assertEquals("someId", token.getViewerId());
+    assertEquals(ID, token.getViewerId());
   }
 
   @Test
   public void testGetAppId() {
-    assertEquals("ose", token.getAppId());
+    assertEquals(CONTAINER, token.getAppId());
   }
 
   @Test
   public void testGetDomain() {
-    assertEquals("ose", token.getDomain());
+    assertEquals(CONTAINER, token.getDomain());
   }
 
   @Test
   public void testGetContainer() {
-    assertEquals("default", token.getContainer());
+    assertEquals(CONTAINER, token.getContainer());
   }
 
 }
