@@ -50,6 +50,7 @@
           <include>oauth2.json</include>
           <include>opensocial-explorer.properties</include>
           <include>openid.json</include>
+          <include>ose-container.js</include>
         </includes>
       </resource>
     </resources>

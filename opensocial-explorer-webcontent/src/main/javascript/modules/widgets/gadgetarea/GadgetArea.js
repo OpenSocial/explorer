@@ -271,7 +271,13 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                   // Begin GROSS
                   this.container.sites = this.container.sites_;
                   // End GROSS
-                  dojo.hitch(this.container, 'forceRefreshAllTokens');
+                  
+                  // FIXME: My fix in Shindig 2.5.0 wasn't sufficient. Fixed in Shindig 2.5.1
+                  // Begin more GROSS
+                  sites = sites_ = this.container.sites_;
+                  commonContainer = this.container;
+                  // End more GROSS
+                  dojo.hitch(this.container, 'forceRefreshAllTokens')();
                 },
                 
                 /**
