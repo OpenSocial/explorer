@@ -21,10 +21,10 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'modules/widgets/editorarea/EditorTabs', 'modules/widgets/editorarea/GadgetEditor', 'modules/widgets/editorarea/HtmlEditor', 
         'modules/widgets/editorarea/CssEditor', 'modules/widgets/editorarea/JSEditor', 'modules/widgets/editorarea/JSONEditor', 'modules/widgets/editorarea/EditorTab',
         'dojo/dom-construct', 'dojo/dom-class', 'modules/widgets/gadgetarea/GadgetArea',
-        'modules/gadget-spec-service', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom' ], 
+        'modules/gadget-spec-service', 'modules/url-util', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom' ], 
         function(declare, WidgetBase, TemplatedMixin, query, template, EditorToolbar, EditorTabs, GadgetEditor, 
                 HtmlEditor, CssEditor, JSEditor, JSONEditor, EditorTab, domConstruct, domClass, GadgetArea,
-                gadgetSpecService) {
+                gadgetSpecService, urlUtil) {
   var EditorArea =  declare('EditorAreaWidget', [ WidgetBase, TemplatedMixin ], {
           templateString : template,
           
@@ -133,9 +133,7 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
           },
           
           getContextRoot : function() {
-            var pathArray = document.location.pathname.split("/");
-            pathArray.pop();
-            return pathArray.join("/");
+            return urlUtil.getContextRoot();
           },
           
           getEditorTabs : function() {
