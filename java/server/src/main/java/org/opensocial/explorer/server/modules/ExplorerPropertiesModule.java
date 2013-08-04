@@ -18,6 +18,10 @@
  */
 package org.opensocial.explorer.server.modules;
 
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.Set;
+
 import org.apache.shindig.common.PropertiesModule;
 
 /**
@@ -28,8 +32,41 @@ import org.apache.shindig.common.PropertiesModule;
 public class ExplorerPropertiesModule extends PropertiesModule {
 
   private static final String DEFAULT_PROPERTIES = "config/opensocial-explorer.properties";
+  private Properties properties;
 
   public ExplorerPropertiesModule() {
-    super(DEFAULT_PROPERTIES);
+    super((Properties) null);
+    Properties shindigProperties = readPropertyFile(getDefaultPropertiesPath());
+    Properties oseProperties = readPropertyFile(DEFAULT_PROPERTIES);
+    
+    // Merge the properties together.  OSE properties take precedence
+    this.properties = mergeProperties(shindigProperties, oseProperties);
+  }
+
+  @Override
+  protected Properties getProperties() {
+    return this.properties;
+  }
+  
+  private Properties mergeProperties(Properties...propertiesArray) {
+    if (propertiesArray.length == 0) {
+      return null;
+    }
+    
+    if (propertiesArray.length == 1) {
+      return propertiesArray[0];
+    }
+    
+    Properties merged = new Properties();
+    Iterator<String> keyItr;
+    String key;
+    for (Properties p : propertiesArray) {
+      keyItr = p.stringPropertyNames().iterator();
+      while (keyItr.hasNext()) {
+        key = keyItr.next();
+        merged.setProperty(key, p.getProperty(key));
+      }
+    }
+    return merged;
   }
 }

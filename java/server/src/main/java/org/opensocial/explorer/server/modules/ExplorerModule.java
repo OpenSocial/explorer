@@ -18,8 +18,14 @@
  */
 package org.opensocial.explorer.server.modules;
 
+import org.apache.shindig.auth.SecurityTokenCodec;
+import org.apache.shindig.config.ContainerConfig;
+import org.apache.shindig.gadgets.config.ShindigAuthConfigContributor;
+import org.opensocial.explorer.server.config.OSEContainerConfig;
+import org.opensocial.explorer.server.security.OSEAuthConfigContributor;
+import org.opensocial.explorer.server.security.OSESecurityTokenCodec;
+
 import com.google.inject.AbstractModule;
-import com.google.inject.name.Names;
 
 /**
  * A module that injects some default configuration for the OpenSocial Explorer web application.
@@ -28,7 +34,9 @@ public class ExplorerModule extends AbstractModule {
 
   @Override
   protected void configure() {
-    this.binder().bindConstant().annotatedWith(Names.named("shindig.urlgen.use-templates-default")).to(false);
+    bind(SecurityTokenCodec.class).to(OSESecurityTokenCodec.class);
+    bind(ContainerConfig.class).to(OSEContainerConfig.class);
+    bind(ShindigAuthConfigContributor.class).to(OSEAuthConfigContributor.class);
   }
 }
 
