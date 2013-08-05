@@ -4,5 +4,6 @@ dojoConfig = {
   	location: '../../../../src/main/javascript/modules'
   }],
   isDebug: false,
-  parseOnLoad: true
+  parseOnLoad: true,
+  async: true
 };
