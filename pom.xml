@@ -59,7 +59,7 @@
   <!-- ====================================================================== -->
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <shindig.version>2.5.0-beta6</shindig.version>
+    <shindig.version>2.5.0</shindig.version>
     <pom.version>2.0.0</pom.version>
     <maven-eclipse-plugin.version>2.9</maven-eclipse-plugin.version>
     <maven-site-plugin.version>3.2</maven-site-plugin.version>
