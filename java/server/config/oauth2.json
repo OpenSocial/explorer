@@ -32,11 +32,9 @@
 */
 {
    "gadgetBindings" : {
-   	  "http://does.not.matter/foobar.xml" : {
-         "googleAPI" : {
-            "clientName"          : "googleApi_OSE_client",
-            "allowModuleOverride" : "true"
-         }
+      "googleAPI" : {
+         "clientName"          : "googleApi_OSE_client",
+         "allowModuleOverride" : "true"
       }
    },
    "clients" : {
@@ -45,8 +43,8 @@
          "redirect_uri"  : "%origin%%contextRoot%/gadgets/oauth2callback",
          "type"          : "confidential",
          "grant_type"    : "code",
-         "client_id"     : "<Your Client ID>",
-         "client_secret" : "<Your Client Secret>",
+         "client_id"     : "846532194699.apps.googleusercontent.com",
+         "client_secret" : "afJAmwfgb_qnaDWau00WmTvL",
          "sharedToken"   : "false"
       }
    },
