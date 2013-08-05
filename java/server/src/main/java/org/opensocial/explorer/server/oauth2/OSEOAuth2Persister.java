@@ -49,6 +49,10 @@ import com.google.caja.util.Maps;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+/*
+ * If you have questions about some of the methods in this class reference
+ * org.apache.shindig.gadgets.oauth2.persistence.sample.JSONOAuth2Persister.
+ */
 /**
  * Persists OAuth 2.0 data from a JSON file.
  */
