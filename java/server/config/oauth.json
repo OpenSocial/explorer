@@ -18,13 +18,11 @@
  */
 
 {
-  "http://localhost/YouTube.xml" : {
-    "YouTube" : {
-      "consumer_key" : "<Your Consumer Key>",
-      "consumer_secret" : "<Your Consumer Secret>",
-      "key_type" : "HMAC_SYMMETRIC",
-      "callback_url" : "http://localhost:8080/gadgets/oauthcallback"
-    }
+  "YouTube" : {
+    "consumer_key" : "<Your Consumer Key>",
+    "consumer_secret" : "<Your Consumer Secret>",
+    "key_type" : "HMAC_SYMMETRIC",
+    "callback_url" : "http://localhost:8080/gadgets/oauthcallback"
   }
 }
   

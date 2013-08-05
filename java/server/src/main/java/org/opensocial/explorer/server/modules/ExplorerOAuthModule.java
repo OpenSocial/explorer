@@ -23,7 +23,7 @@ import org.apache.shindig.gadgets.oauth.OAuthStore;
 import org.apache.shindig.gadgets.oauth2.OAuth2Module;
 import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Cache;
 import org.apache.shindig.gadgets.oauth2.persistence.sample.OAuth2PersistenceModule;
-import org.opensocial.explorer.server.oauth.CheatingOAuthStoreProvider;
+import org.opensocial.explorer.server.oauth.OSEOAuthStoreProvider;
 import org.opensocial.explorer.server.oauth2.CheatingMapCache;
 
 import com.google.inject.AbstractModule;
@@ -42,7 +42,7 @@ public class ExplorerOAuthModule extends AbstractModule {
     install(Modules.override(new OAuthModule()).with(new AbstractModule(){
       @Override
       protected void configure() {
-        bind(OAuthStore.class).toProvider(CheatingOAuthStoreProvider.class);
+        bind(OAuthStore.class).toProvider(OSEOAuthStoreProvider.class);
       }}));
     
     // OAuth2
