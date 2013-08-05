@@ -32,11 +32,9 @@
 */
 {
    "gadgetBindings" : {
-   	  "http://does.not.matter/foobar.xml" : {
-         "googleAPI" : {
-            "clientName"          : "googleApi_OSE_client",
-            "allowModuleOverride" : "true"
-         }
+      "googleAPI" : {
+         "clientName"          : "googleApi_OSE_client",
+         "allowModuleOverride" : "true"
       }
    },
    "clients" : {

@@ -22,9 +22,11 @@ import org.apache.shindig.gadgets.oauth.OAuthModule;
 import org.apache.shindig.gadgets.oauth.OAuthStore;
 import org.apache.shindig.gadgets.oauth2.OAuth2Module;
 import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Cache;
+import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Persister;
 import org.apache.shindig.gadgets.oauth2.persistence.sample.OAuth2PersistenceModule;
 import org.opensocial.explorer.server.oauth.OSEOAuthStoreProvider;
-import org.opensocial.explorer.server.oauth2.CheatingMapCache;
+import org.opensocial.explorer.server.oauth2.OSEInMemoryCache;
+import org.opensocial.explorer.server.oauth2.OSEOAuth2Persister;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.util.Modules;
@@ -32,7 +34,6 @@ import com.google.inject.util.Modules;
 /**
  * A module that injects OAuth1.0a and OAuth2 implementations for the OpenSocial Explorer.
  * 
- * FIXME: Inject real implementations and not "cheating" implementations
  */
 public class ExplorerOAuthModule extends AbstractModule {
 
@@ -50,7 +51,8 @@ public class ExplorerOAuthModule extends AbstractModule {
     install(Modules.override(new OAuth2PersistenceModule()).with(new AbstractModule(){
       @Override
       protected void configure() {
-        bind(OAuth2Cache.class).to(CheatingMapCache.class);
+        bind(OAuth2Cache.class).to(OSEInMemoryCache.class);
+        bind(OAuth2Persister.class).to(OSEOAuth2Persister.class);
       }}));
   }
 
