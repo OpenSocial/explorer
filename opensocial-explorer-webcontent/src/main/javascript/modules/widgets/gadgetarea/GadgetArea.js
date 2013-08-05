@@ -267,16 +267,11 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                   this.containerToken = token;
                   this.containerTokenTTL = ttl;
                   shindig.auth.updateSecurityToken(token);
-                  // FIXME: Workaround for a bug in 2.5.0 beta6 of Shindig - fixed in Shindig 2.5.0
+                  // FIXME: Fixed by https://issues.apache.org/jira/browse/SHINDIG-1924
                   // Begin GROSS
-                  this.container.sites = this.container.sites_;
-                  // End GROSS
-                  
-                  // FIXME: My fix in Shindig 2.5.0 wasn't sufficient. Fixed in Shindig 2.5.1
-                  // Begin more GROSS
                   sites = sites_ = this.container.sites_;
                   commonContainer = this.container;
-                  // End more GROSS
+                  // End GROSS
                   dojo.hitch(this.container, 'forceRefreshAllTokens')();
                 },
                 
