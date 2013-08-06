@@ -240,9 +240,8 @@
             <baseDir>http://localhost:${jasmine.serverPort}</baseDir>
             <outputDir>${project.build.directory}/coverage</outputDir>
             <noInstrumentPatterns>
-              <!-- <pattern>.*/spec/.*</pattern> --> <!-- Don't instrument specs -->
+              <pattern>.*/spec/.*</pattern>
             </noInstrumentPatterns>
-            <includeInlineScripts>false</includeInlineScripts>
           </configuration>
         </plugin>      
     </plugins>
