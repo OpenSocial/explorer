@@ -132,6 +132,10 @@
             <exclude>**/resources/libs/bootstrap/**</exclude>
             <exclude>**/*.json</exclude>
             <exclude>**/src/main/specs/specs.txt</exclude>
+            <exclude>**/src/main/specs/**/*.xml</exclude>
+            <exclude>**/src/main/specs/**/*.html</exclude>
+            <exclude>**/src/main/specs/**/*.js</exclude>
+            <exclude>**/src/main/specs/**/*.css</exclude>
             <exclude>**/src/main/javascript/modules/templates/**</exclude>
             <exclude>**/.git/**</exclude>
             <exclude>**/.gitignore</exclude>
