@@ -20,7 +20,6 @@ package org.opensocial.explorer.server.openid;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,14 +30,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shindig.auth.SecurityTokenCodec;
 import org.apache.shindig.config.ContainerConfig;
-import org.apache.shindig.config.ContainerConfigException;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
 import org.openid4java.discovery.Identifier;
 import org.opensocial.explorer.specserver.servlet.ExplorerInjectedServlet;
 
-import com.google.caja.util.Maps;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * A servlet that handles requests for OpenID including receiving the OpenID discovery URL from the
@@ -58,26 +56,23 @@ import com.google.inject.Inject;
  * - Returns a list of OpenID providers supported by the server from which users can choose in order to login with OpenID
  * </pre>
  */
+@Singleton
 public class OpenIDServlet extends ExplorerInjectedServlet {
 
   private static final long serialVersionUID = 7461268606887180514L;
   private static final String CLASS = OpenIDServlet.class.getName();
   private static final Logger LOG = Logger.getLogger(CLASS);
   private static final String CONTAINER = "ose"; // FIXME: Don't hardcode this.
-  private static final String SECURITY_TOKEN_TYPE = "gadgets.securityTokenType";
-  private static transient OpenIDConsumer consumer;
-  private static transient SecurityTokenCodec codec;
+  private OpenIDConsumer consumer;
+  private SecurityTokenCodec codec;
   private OpenIDProviderStore providerStore;
-  private ContainerConfig config;
-
   @Inject
   public void injectDependencies(OpenIDConsumer consumer, SecurityTokenCodec codec,
           OpenIDProviderStore providerStore, ContainerConfig config) {
     checkInitialized();
-    OpenIDServlet.codec = codec;
-    OpenIDServlet.consumer = consumer;
+    this.codec = codec;
+    this.consumer = consumer;
     this.providerStore = providerStore;
-    this.config = config;
   }
 
   @Override
@@ -91,7 +86,7 @@ public class OpenIDServlet extends ExplorerInjectedServlet {
 
     if ("openidcallback".equals(paths[0])) {
       // Service the callback      
-      Identifier identifier = OpenIDServlet.consumer.verifyResponse(req);
+      Identifier identifier = this.consumer.verifyResponse(req);
       returnIdentifier(identifier, resp);
       return;
     }
@@ -99,7 +94,7 @@ public class OpenIDServlet extends ExplorerInjectedServlet {
     if ("authrequest".equals(paths[0])) {
       // Service the authrequest from the client.  This will send a redirect upon success.
       String discoveryUrl = req.getParameter("openid_identifier");
-      OpenIDServlet.consumer.authRequest(discoveryUrl, req, resp);
+      this.consumer.authRequest(discoveryUrl, req, resp);
       return;
     }
     
@@ -137,8 +132,8 @@ public class OpenIDServlet extends ExplorerInjectedServlet {
       JSONObject obj = new JSONObject();
       // We shouldn't ever need to send this to the client. The security token is all it needs for now.
       // obj.put("openid", identifier.getIdentifier());
-      obj.put("securityToken", OpenIDServlet.codec.encodeToken(new OpenIDSecurityToken(identifier, CONTAINER)));
-      obj.put("securityTokenTTL", OpenIDServlet.codec.getTokenTimeToLive(CONTAINER));
+      obj.put("securityToken", this.codec.encodeToken(new OpenIDSecurityToken(identifier, CONTAINER)));
+      obj.put("securityTokenTTL", this.codec.getTokenTimeToLive(CONTAINER));
       String content = obj.toString();
       resp.setContentType(HTML_CONTENT_TYPE);
 
