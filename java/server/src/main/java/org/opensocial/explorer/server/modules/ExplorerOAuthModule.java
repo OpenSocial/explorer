@@ -40,21 +40,26 @@ public class ExplorerOAuthModule extends AbstractModule {
   @Override
   protected void configure() {
     // OAuth1.0a
-    install(Modules.override(new OAuthModule()).with(new AbstractModule(){
-      @Override
-      protected void configure() {
-        bind(OAuthStore.class).toProvider(OSEOAuthStoreProvider.class);
-      }}));
+    install(Modules.override(new OAuthModule()).with(new OAuthModuleOverride()));
     
     // OAuth2
     install(new OAuth2Module());
-    install(Modules.override(new OAuth2PersistenceModule()).with(new AbstractModule(){
-      @Override
-      protected void configure() {
-        bind(OAuth2Cache.class).to(OSEInMemoryCache.class);
-        bind(OAuth2Persister.class).to(OSEOAuth2Persister.class);
-      }}));
+    install(Modules.override(new OAuth2PersistenceModule()).with(new OAuth2PersistenceModuleOverride()));
   }
 
+  private static class OAuthModuleOverride extends AbstractModule {
+    @Override
+    protected void configure() {
+      bind(OAuthStore.class).toProvider(OSEOAuthStoreProvider.class);
+    }
+  }
+
+  private static class OAuth2PersistenceModuleOverride extends AbstractModule {
+    @Override
+    protected void configure() {
+      bind(OAuth2Cache.class).to(OSEInMemoryCache.class);
+      bind(OAuth2Persister.class).to(OSEOAuth2Persister.class);
+    }
+  }
 }
 

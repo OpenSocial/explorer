@@ -46,12 +46,7 @@ public class OSEAuthConfigContributor extends ShindigAuthConfigContributor {
     // BlobCrypterSecurityTokenCodec, so I fake it out by setting the authentication mode to
     // something other than UNAUTHENTICATED. Shindig needs to be fixed to remove the tight coupling
     // between codecs and token implementations.
-    SecurityToken containerToken = new AnonymousSecurityToken(container, 0L, "*") {
-      @Override
-      public String getAuthenticationMode() {
-        return AuthenticationMode.SECURITY_TOKEN_URL_PARAMETER.name();
-      }
-    };
+    SecurityToken containerToken = new ContainerAnonymousSecurityToken(container, 0L, "*");
     
     Map<String, String> authConfig = Maps.newHashMapWithExpectedSize(2);
     try {
@@ -59,6 +54,17 @@ public class OSEAuthConfigContributor extends ShindigAuthConfigContributor {
       authConfig.put("authToken", securityTokenCodec.encodeToken(containerToken));
     } catch (SecurityTokenException e) {
       // CONSIDER: Ignore?
+    }
+  }
+
+  private static class ContainerAnonymousSecurityToken extends AnonymousSecurityToken {
+    public ContainerAnonymousSecurityToken(String container, long moduleId, String appUrl) {
+      super(container, moduleId, appUrl);
+    }
+
+    @Override
+    public String getAuthenticationMode() {
+      return AuthenticationMode.SECURITY_TOKEN_URL_PARAMETER.name();
     }
   }
 }
