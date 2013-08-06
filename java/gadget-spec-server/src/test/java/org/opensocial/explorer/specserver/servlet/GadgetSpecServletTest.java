@@ -86,13 +86,13 @@ public class GadgetSpecServletTest {
     expectRequestAndResponse("/specTree");
     niceControl.replay();
 
-    JSONArray specTreeJson = new JSONArray("[{'foo':'bar'}]");
+    JSONObject specTreeJson = new JSONObject();
     expect(registry.getSpecTree()).andReturn(specTreeJson);
     replay(registry);
 
     servlet.doGet(request, response);
 
-    assertEquals(specTreeJson, new JSONArray(getWriterOutput()));
+    assertEquals(specTreeJson, new JSONObject(getWriterOutput()));
   }
 
   /**

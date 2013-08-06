@@ -16,9 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['dojo/request/xhr', 'dojo/json'], function(xhr, json) {
+define(['dojo/request/xhr', 'dojo/json', 'modules/url-util'], function(xhr, json, urlUtil) {
   function getGadgetSpecBase(id, success, error) {
-    xhr('gadgetspec/' + id, {
+    xhr(urlUtil.getContextRoot() + '/gadgetspec/' + id, {
       handleAs: "json"
     }).then(function(data) {
       if(success) {
@@ -40,7 +40,7 @@ define(['dojo/request/xhr', 'dojo/json'], function(xhr, json) {
     },
     
     createNewGadgetSpec : function(specData, callbacks) {
-      xhr('gadgetspec', {
+      xhr(urlUtil.getContextRoot() + '/gadgetspec', {
         handleAs: "json",
         method: "POST",
         data: json.stringify(specData),
@@ -51,7 +51,7 @@ define(['dojo/request/xhr', 'dojo/json'], function(xhr, json) {
     },
     
     getSpecTree : function(callbacks) {
-      xhr('gadgetspec/specTree', {
+      xhr(urlUtil.getContextRoot() + '/gadgetspec/specTree', {
         handleAs: "json"
       }).then(callbacks.success, callbacks.error);
     }

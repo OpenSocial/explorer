@@ -33,6 +33,7 @@ import com.google.common.collect.Iterables;
  */
 public abstract class ExplorerInjectedServlet extends InjectedServlet {
   protected static final String JSON_CONTENT_TYPE = "application/json";
+  protected static final String HTML_CONTENT_TYPE = "text/html";
 
   private static final long serialVersionUID = 5905320989280705219L;
   private static final Splitter PATH_SPLITTER = Splitter.on('/').trimResults().omitEmptyStrings();

@@ -30,16 +30,25 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     postCreate : function() {
       var self = this;
       gadgetSpecService.getSpecTree({
-        success : function(json) {
+        success : function(data) {
+          var tempArray = [];
+          var rootId = "0";
+          var temp = {
+            name: "root",
+            id: rootId,
+            children: data.tree
+          };
+          tempArray.push(temp);
+          
           var specStore = new Memory({
-            data: json,
+            data: tempArray,
             getChildren: function(object){
               return object.children;
             }
           });
           var specModel = new ObjectStoreModel({
             store: specStore,
-            query: {name:"Specs"},
+            query: {name:"root"},
             mayHaveChildren: function(item){
               return item.children.length > 0;
             }
@@ -47,23 +56,19 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
           var specTree = new Tree({
             model: specModel,
             openOnClick: true,
+            showRoot: false,
             persist: false,
             onClick: function(item) {
               EditorArea.getInstance().displaySpec(item.id);
               EditorArea.getInstance().setTitle(item.name);
             }
           });
-
-          specTree.placeAt(self.domNode);
+          
+          data.defaultPath.unshift(rootId);
           specTree.startup();
-          gadgetSpecService.getDefaultGadgetSpec({
-            success: function(data) {
-              EditorArea.getInstance().setTitle(data.title);
-            },
-            error: function(data) {
-              console.error("There was an error");
-            }
-          });
+          specTree.set("path", data.defaultPath);
+          specTree.placeAt(self.domNode);
+          EditorArea.getInstance().setTitle(data.defaultTitle);
         },
         error : function(data) {
           console.error("There was an error");
