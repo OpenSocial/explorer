@@ -134,9 +134,8 @@ public class OpenIDProvider {
   public boolean equals(Object obj) {
     if(obj instanceof OpenIDProvider) {
       OpenIDProvider test = (OpenIDProvider)obj;
-      boolean result = false;
-      result = getImage() == null ? getImage() == test.getImage() : getImage().equals(test.getImage());
-      result &= getId().equals(test.getId()) && getName().equals(getName()) && getUrl().equals(test.getUrl());
+      boolean result = Objects.equal(image, test.image) && Objects.equal(id, test.id)
+              && Objects.equal(name, test.name) && Objects.equal(url, test.url);
       return result;
     } else {
       return false;

@@ -67,7 +67,7 @@ public class OSEOAuthStore implements OAuthStore {
   /**
    * Token index for the token store.
    */
-  private class TokenInfoIndex {
+  private static class TokenInfoIndex {
     private String serviceName;
     private String tokenName;
     private String userId;
@@ -95,9 +95,9 @@ public class OSEOAuthStore implements OAuthStore {
       if(token != null && token instanceof TokenInfoIndex) {
         boolean result = true;
         TokenInfoIndex testToken = (TokenInfoIndex)token;
-        result &= serviceName != null ? serviceName.equals(testToken.getServiceName()) : serviceName == testToken.getServiceName();
-        result &= tokenName != null ? tokenName.equals(testToken.getTokenName()) : tokenName == testToken.getTokenName();
-        result &= userId != null ? userId.equals(testToken.getUserId()) : userId == testToken.getUserId();
+        result &= Objects.equal(serviceName, testToken.serviceName);
+        result &= Objects.equal(tokenName, testToken.tokenName);
+        result &= Objects.equal(userId, testToken.userId);
         return result;
       }
       return false;
