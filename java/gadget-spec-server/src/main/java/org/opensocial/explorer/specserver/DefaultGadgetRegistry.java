@@ -137,22 +137,38 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
   
   private void setDefaultSpec(JSONArray tree) throws JSONException {
     for(int i=0; i<tree.size(); i++) {
-      JSONObject node = tree.getJSONObject(i);
-      if(node.getBoolean("isDefault")) {
-        specTree.getJSONArray("defaultPath").put(node.get("id"));
-        specTree.put("defaultTitle", node.getString("name"));
-        specTree.put("foundDefault", true);
+      if(specTree.getBoolean("foundDefault")) {
         return;
       } else {
-        JSONArray nodeChildren = node.getJSONArray("children");
-        if (node.getJSONArray("children").size() > 0) {
-          specTree.getJSONArray("defaultPath").put(node.getString("id"));
-          setDefaultSpec(nodeChildren);
-        }
+        JSONObject rootNode = tree.getJSONObject(i);
+        specTree.put("defaultPath", new JSONArray().put(rootNode.getString("id")));
+        setDefaultChildrenSpec(rootNode.getJSONArray("children"));
       }
     }
   }
-
+  
+  private void setDefaultChildrenSpec(JSONArray tree) throws JSONException {
+    for(int i=0; i<tree.size(); i++) {
+      JSONObject node = tree.getJSONObject(i);
+      JSONArray nodeChildren = node.getJSONArray("children");
+      JSONArray path = specTree.getJSONArray("defaultPath");
+      
+      if(specTree.getBoolean("foundDefault")) {
+        return;
+      } else if (node.getBoolean("isDefault")) {
+        path.put(node.get("id"));
+        specTree.put("defaultTitle", node.getString("name"));
+        specTree.put("foundDefault", true);
+        return;
+      } else if (nodeChildren.size() > 0) {
+        path.put(node.getString("id"));
+        setDefaultChildrenSpec(nodeChildren);
+      } else if (i == tree.size() - 1) {
+        path.remove(path.size() - 1);
+      }
+    }
+  }
+  
   private Iterable<String> getSpecRegistryContents() {
     final String method = "getSpecRegistryContents";
     LOG.entering(CLASS, method);
