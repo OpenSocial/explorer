@@ -37,6 +37,7 @@ public interface GadgetSpec extends JSONSerializable {
   static final String GADGET_RESOURCE = "gadgetResource";
   static final String EE_RESOURCE = "eeResource";
   static final String SPEC_ID = "id";
+  static final String SPEC_TITLE = "title";
 
   /**
    * @return the title of the gadget
