@@ -60,7 +60,6 @@ public class OSEOAuth2Persister implements OAuth2Persister {
   
   private static final String CLAZZ = OSEOAuth2Persister.class.getName();
   private static final Logger LOG = Logger.getLogger(CLAZZ);
-  private static final String OAUTH2_CONFIG = "config/oauth2.json";
   private static final String ALLOW_MODULE_OVERRIDE = "allowModuleOverride";
   private static final String AUTHORIZATION_HEADER = "usesAuthorizationHeader";
   private static final String AUTHORIZATION_URL = "authorizationUrl";
@@ -82,25 +81,27 @@ public class OSEOAuth2Persister implements OAuth2Persister {
   private String globalRedirectUri;
   private String contextRoot;
   private JSONObject configFile;
+  private String oauthConfig;
   
   @Inject
   public OSEOAuth2Persister(final OAuth2Encrypter encrypter, final Authority authority,
           final String globalRedirectUri, @Nullable
-          @Named("shindig.contextroot")
-          final String contextRoot) {
+          @Named("shindig.contextroot") final String contextRoot, 
+          final @Named("explorer.oauth20.config") String oauthConfig) {
     this.encrypter = encrypter;
     this.authority = authority;
     this.globalRedirectUri = globalRedirectUri;
     this.contextRoot = contextRoot;
+    this.oauthConfig = oauthConfig;
     loadConfig();
   }
   
   protected void loadConfig() {
     final String method = "loadConfig";
     try {
-      this.configFile = new JSONObject(ResourceLoader.getContent(OAUTH2_CONFIG));
+      this.configFile = new JSONObject(ResourceLoader.getContent(oauthConfig));
     } catch (final Exception e) {
-      LOG.logp(Level.WARNING, CLAZZ, method, "Error loading config from " + OAUTH2_CONFIG, e);
+      LOG.logp(Level.WARNING, CLAZZ, method, "Error loading config from " + oauthConfig, e);
     }
   }
 

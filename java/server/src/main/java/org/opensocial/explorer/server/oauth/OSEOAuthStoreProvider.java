@@ -36,27 +36,28 @@ public class OSEOAuthStoreProvider implements Provider<OSEOAuthStore> {
   
   private static final String CLAZZ = OSEOAuthStoreProvider.class.getName();
   private static final String OAUTH_CALLBACK_URL = "shindig.signing.global-callback-url";
-  private static final String OAUTH_CONFIG = "config/oauth.json";
   private Logger LOG = Logger.getLogger(CLAZZ);
   
   private OSEOAuthStore store;
+  private String oauthConfig;
   
   @Inject
   public OSEOAuthStoreProvider(@Named(OAUTH_CALLBACK_URL) String defaultCallbackUrl,
-          Authority authority) {
+          Authority authority, @Named("explorer.oauth.config") String oauthConfig) {
     this.store = new OSEOAuthStore();
     this.store.setAuthority(authority);
     this.store.setDefaultCallbackUrl(defaultCallbackUrl);
+    this.oauthConfig = oauthConfig;
     loadServices();
   }
   
-  private void loadServices() {
+  protected void loadServices() {
     final String method = "loadServices";
     try {
-      String oauthConfigString = ResourceLoader.getContent(OAUTH_CONFIG);
+      String oauthConfigString = ResourceLoader.getContent(oauthConfig);
       this.store.init(oauthConfigString);
     } catch (IOException e) {
-      LOG.logp(Level.WARNING, CLAZZ, method, "There was an error locating the resource " + OAUTH_CONFIG, e);
+      LOG.logp(Level.WARNING, CLAZZ, method, "There was an error locating the resource " + oauthConfig, e);
     }
   }
 
