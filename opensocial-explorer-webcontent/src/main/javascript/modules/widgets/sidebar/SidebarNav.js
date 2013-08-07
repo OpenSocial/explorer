@@ -17,59 +17,74 @@
  * under the License.
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
-        'dojo/text!./../../templates/SidebarNav.html', 'dojo/dom-construct', 'modules/widgets/sidebar/SpecList',
-        'modules/widgets/editorarea/EditorArea', 'modules/gadget-spec-service'],
-        function(declare, WidgetBase, TemplatedMixin, template, domConstruct, SpecList, EditorArea,
-                gadgetSpecService) {
-            var SidebarNav = declare('SidebarNavWidget', [ WidgetBase, TemplatedMixin ], {
-                templateString : template,
-                
-                constructor : function() {
-                  this.specLists = [];
-                },
-                
-                postCreate : function() {
-                  var self = this;
-                  gadgetSpecService.getSpecTree({
-                    success : function(data) {
-                      for(var i = 0; i < data.length; i++) {
-                        for(var key in data[i]) {
-                          var specList = new SpecList({"categoryName" : key, "specTree" : data[i][key]});
-                          specList.addActivationListener(self.getActivationListener());
-                          self.specLists.push(specList);
-                          domConstruct.place(specList.domNode, self.domNode);
-                          specList.startup();
-                        }
-                      }
-                    },
-                    error : function(data) {
-                      console.error("There was an error");
-                    }
-                  });
-                },
-                
-                getActivationListener : function(){
-                  var self = this;
-                  return {
-                    "pre" : function() {
-                      for(var i = 0; i < self.specLists.length; i++) {
-                        self.specLists[i].deactivateLinks();
-                      }
-                    },
-                    "post" : function(link) {
-                      EditorArea.getInstance().setTitle(link.node.title);
-                    }
-                  };
-                }
-            });
-            var instance;
-            
-            return {
-              getInstance : function() {
-                if(!instance) {
-                  instance = new SidebarNav();
-                }
-                return instance;
-              }
-            };
-        });
+        'dojo/text!./../../templates/SidebarNav.html', 'dojo/dom-construct',
+        'modules/widgets/editorarea/EditorArea', 
+        'modules/gadget-spec-service', 
+        "dojo/store/Memory",
+        "dijit/tree/ObjectStoreModel","dijit/Tree"],
+        function(declare, WidgetBase, TemplatedMixin, template, domConstruct, EditorArea,
+            gadgetSpecService, 
+            Memory, ObjectStoreModel, Tree) {
+  var SidebarNav = declare('SidebarNavWidget', [ WidgetBase, TemplatedMixin ], {
+    templateString : template,
+    postCreate : function() {
+      var self = this;
+      gadgetSpecService.getSpecTree({
+        success : function(data) {
+          var tempArray = [];
+          var rootId = "0";
+          var temp = {
+            name: "root",
+            id: rootId,
+            children: data.tree
+          };
+          tempArray.push(temp);
+          
+          var specStore = new Memory({
+            data: tempArray,
+            getChildren: function(object){
+              return object.children;
+            }
+          });
+          var specModel = new ObjectStoreModel({
+            store: specStore,
+            query: {name:"root"},
+            mayHaveChildren: function(item){
+              return item.children.length > 0;
+            }
+          });
+          var specTree = new Tree({
+            model: specModel,
+            openOnClick: true,
+            showRoot: false,
+            persist: false,
+            onClick: function(item) {
+              EditorArea.getInstance().displaySpec(item.id);
+              EditorArea.getInstance().setTitle(item.name);
+            }
+          });
+          
+          data.defaultPath.unshift(rootId);
+          specTree.startup();
+          specTree.set("path", data.defaultPath);
+          specTree.placeAt(self.domNode);
+          EditorArea.getInstance().setTitle(data.defaultTitle);
+        },
+        error : function(data) {
+          console.error("There was an error");
+        }
+      });
+    }
+  });
+
+  var instance;
+
+  return {
+    getInstance : function() {
+      if(!instance) {
+        instance = new SidebarNav();
+      }
+      return instance;
+    }
+  };
+});

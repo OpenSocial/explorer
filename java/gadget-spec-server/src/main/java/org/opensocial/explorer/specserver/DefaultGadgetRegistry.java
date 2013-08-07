@@ -19,6 +19,8 @@
 package org.opensocial.explorer.specserver;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -26,6 +28,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shindig.common.util.ResourceLoader;
 import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONException;
@@ -61,7 +64,7 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
 
   private Map<String, GadgetSpec> specs;
   private GadgetSpec defaultSpec;
-  private JSONArray specTree;
+  private JSONObject specTree;
   private List<String> specSources;
   private GadgetSpecFactory specFactory;
 
@@ -80,7 +83,7 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
   protected DefaultGadgetRegistry(GadgetSpecFactory factory, String specsLocations,
           List<String> specs) {
     LOG.entering(CLASS, "<constructor>", new Object[] { factory, specsLocations, specs });
-    this.specTree = new JSONArray();
+    this.specTree = new JSONObject();
     this.specs = new HashMap<String, GadgetSpec>();
     this.specSources = specs;
     this.specFactory = factory;
@@ -96,6 +99,8 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
       // to do client-side
       // TODO: What if two specs want to be the default? Last one wins? This also might be easier to
       // do client-side
+      JSONArray tree = new JSONArray();
+      
       for (String specPath : getSpecRegistryContents()) {
         GadgetSpec gadgetSpec = specFactory.create(specPath);
         if (gadgetSpec == null) {
@@ -106,16 +111,46 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
         if (gadgetSpec.isDefault()) {
           defaultSpec = gadgetSpec;
         }
-        addToSpecTree(gadgetSpec);
+        addToTree(gadgetSpec, tree);
       }
+      
+      this.specTree.put("tree", tree);
+      this.specTree.put("defaultPath", new JSONArray());
+      this.specTree.put("defaultTitle", "");
+      this.specTree.put("foundDefault", false);
+      setDefaultSpec(tree);
+      
+      // Need to keep track whether or not the default gadget was found.
+      if(!this.specTree.getBoolean("foundDefault")) {
+        this.specTree.put("defaultPath", new JSONArray());
+      }
+      this.specTree.remove("foundDefault");
+      
     } catch (Exception e) {
       LOG.logp(Level.SEVERE, CLASS, method, e.getMessage(), e);
     }
-
   }
 
-  public JSONArray getSpecTree() {
+  public JSONObject getSpecTree() {
     return specTree;
+  }
+  
+  private void setDefaultSpec(JSONArray tree) throws JSONException {
+    for(int i=0; i<tree.size(); i++) {
+      JSONObject node = tree.getJSONObject(i);
+      if(node.getBoolean("isDefault")) {
+        specTree.getJSONArray("defaultPath").put(node.get("id"));
+        specTree.put("defaultTitle", node.getString("name"));
+        specTree.put("foundDefault", true);
+        return;
+      } else {
+        JSONArray nodeChildren = node.getJSONArray("children");
+        if (node.getJSONArray("children").size() > 0) {
+          specTree.getJSONArray("defaultPath").put(node.getString("id"));
+          setDefaultSpec(nodeChildren);
+        }
+      }
+    }
   }
 
   private Iterable<String> getSpecRegistryContents() {
@@ -141,73 +176,101 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
     return this.specSources;
   }
 
-  private void addToSpecTree(GadgetSpec gadgetSpec) throws JSONException {
+  private void addToTree(GadgetSpec gadgetSpec, JSONArray tree) throws JSONException {
     String specPath = gadgetSpec.getPathToSpec();
     specPath = specPath.replace("/spec.json", "");
     String[] nodes = specPath.split("/");
-    JSONArray parent = specTree;
-    for (int i = 0; i < nodes.length; i++) {
-      String node = nodes[i];
-      if (i == nodes.length - 1) {
-        // Make sure this gets put in the "nodes" array
-        JSONArray nodesArray = getNode(parent, "nodes");
-        nodesArray.put(buildNodeJSON(gadgetSpec));
-      } else {
-        JSONArray existingArray = getNode(parent, node);
-        if (existingArray == null) {
-          JSONObject newPathJSON = buildNewPathJSON(node);
-          parent.put(newPathJSON);
-          parent = newPathJSON.getJSONArray(node);
-        } else {
-          parent = existingArray;
-        }
-      }
-    }
+    List<String> nodesArray = new ArrayList<String>();
+    Collections.addAll(nodesArray, nodes);
+    
+    constructJSON(nodesArray, tree, gadgetSpec);
+    
   }
-
-  private JSONArray getNode(JSONArray parent, String node) throws JSONException {
-    Iterator itr = parent.iterator();
-    Object next;
-    JSONObject obj;
-    while (itr.hasNext()) {
-      next = itr.next();
-      if (next instanceof JSONObject) {
-        obj = (JSONObject) next;
-        if (obj.has(node)) {
-          return obj.getJSONArray(node);
-        }
-      }
-    }
-    return null;
-  }
-
-  /*
-   * { "id":"id", "title":"title", "isDefault":true|false }
+  
+  /**
+   * Builds a JSON from the locations of the specs.
+   * @param path
+   * @param parent
+   * @param gadgetSpec
+   * @throws JSONException
    */
-  private JSONObject buildNodeJSON(GadgetSpec gadgetSpec) throws JSONException {
+  private void constructJSON(List<String> path, JSONArray parent, GadgetSpec gadgetSpec) throws JSONException {
+    // Base case
+    if(path.size() == 1) {
+      parent.put(this.createSpec(gadgetSpec));
+      return;
+    }
+    
+    // Does the leftmost of path already exist?
+    int index = this.findObject(parent, path.get(0));
+    
+    // If it doesn't exist, create it as a Folder and recurse with the next element in the path.
+    if(index == -1) {
+      parent.put(this.createFolder(path.get(0)));
+      path.remove(0);
+      this.constructJSON(path, parent.getJSONObject(parent.size()-1).getJSONArray("children"), gadgetSpec);
+    }
+    
+    // If it does exist, recurse with the next element in the path.
+    if(index != -1) {
+      path.remove(0);
+      this.constructJSON(path, parent.getJSONObject(index).getJSONArray("children"), gadgetSpec);
+    }
+  }
+  
+  /**
+   * @param array
+   * @param node
+   * @return the index of where the JSONObject exists in the JSONArray; Returns -1 if not found.
+   * @throws JSONException
+   */
+  private int findObject(JSONArray array, String node) throws JSONException {
+    for(int i=0; i<array.length(); i++) {
+      if(array.get(i) instanceof JSONObject) {
+        JSONObject temp = array.getJSONObject(i);
+        String tempName = (String) temp.get("name");
+        if (tempName.equalsIgnoreCase(node)) {
+          return i;
+        }
+      }
+    }
+    return -1;
+  }
+  
+  /**
+   * Creates a JSONObject of the spec with :name (String), :id (Integer), and :children (JSONArray).
+   * @param gadgetSpec
+   * @return JSONObject in the form of {name: "abc", id: 123, children: [...]}
+   * @throws JSONException
+   */
+  private JSONObject createSpec(GadgetSpec gadgetSpec) throws JSONException {
     JSONObject temp = new JSONObject();
+    temp.put("name", StringUtils.capitalize(gadgetSpec.getTitle()));
     temp.put("id", gadgetSpec.getId());
-    temp.put("title", gadgetSpec.getTitle());
+    temp.put("children", new JSONArray());
     temp.put("isDefault", gadgetSpec.isDefault());
     return temp;
   }
-
-  /*
-   * { <nodeName>:[ { "nodes":[ ] } ] }
+  
+  /**
+   * Creates a folder in the specTree with :name (String) and :children (JSONArray).
+   * @param name
+   * @return JSONObject in the form of {name: "folder1", children: [...]}
+   * @throws JSONException
    */
-  private JSONObject buildNewPathJSON(String nodeName) throws JSONException {
-    JSONArray nodesArray = new JSONArray();
-    JSONObject nodesObject = new JSONObject();
-    nodesObject.put("nodes", nodesArray);
-
-    JSONArray newPathArray = new JSONArray();
-    JSONObject newPathObject = new JSONObject();
-    newPathArray.add(nodesObject);
-    newPathObject.put(nodeName, newPathArray);
-
-    return newPathObject;
+  private JSONObject createFolder(String name) throws JSONException {
+    JSONObject temp = new JSONObject();
+    temp.put("name", StringUtils.capitalize(name));
+    temp.put("id", this.getFolderId(name));
+    temp.put("children", new JSONArray());
+    temp.put("isDefault", false);
+    return temp;
   }
-
+  
+  public String getFolderId(String name) {
+    return String.valueOf(name.hashCode());
+  }
+  
   public GadgetSpec getDefaultGadget() {
     return defaultSpec;
   }

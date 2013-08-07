@@ -157,6 +157,7 @@ public class DefaultGadgetSpec implements GadgetSpec {
 
   public JSONObject toJSON() throws JSONException {
     JSONObject json = new JSONObject();
+    json.put(SPEC_TITLE, getTitle());
     json.put(SPEC_ID, getId());
     json.put(GADGET_RESOURCE, getGadgetResource().toJSON());
     if (getCssResources() != null) {

@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+}
+       
 div.editor {
 	width: 49.5%;
 	height: 100%;
@@ -83,4 +89,13 @@ div.result {
 .gadgetModal .modal-body {
 	max-height: none;
 	height: 90%;
+}
+
+.dijitTreeLabel {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: .8em;
+}
+
+.well {
+	padding: 0px;
 }

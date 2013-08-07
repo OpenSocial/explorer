@@ -93,7 +93,7 @@
               </pluginExecutions>
             </lifecycleMappingMetadata>
           </configuration>
-        </plugin>
+        </plugin> 
       </plugins>
     </pluginManagement>
     <resources>

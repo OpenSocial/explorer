@@ -19,6 +19,7 @@
 package org.opensocial.explorer.specserver.api;
 
 import org.apache.wink.json4j.JSONArray;
+import org.apache.wink.json4j.JSONObject;
 import org.opensocial.explorer.specserver.DefaultGadgetRegistry;
 
 import com.google.inject.ImplementedBy;
@@ -43,7 +44,7 @@ public interface GadgetRegistry {
    * 
    * @return a {@link JSONArray} tree
    */
-  public JSONArray getSpecTree();
+  public JSONObject getSpecTree();
 
   /**
    * Returns information for a specific {@link GadgetSpec} given its <code>id</code>
