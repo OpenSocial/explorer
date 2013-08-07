@@ -61,7 +61,7 @@ public class OSEOAuth2PersisterTest {
   @Before
   public void setUp() throws Exception {
     this.persister = new OSEOAuth2Persister(createMock(OAuth2Encrypter.class), 
-            createMock(Authority.class), "http://example.com/redirect", "ose");
+            createMock(Authority.class), "http://example.com/redirect", "ose", "config/oauth2.json");
     this.persister.setConfig(createConfig());
   }
 
