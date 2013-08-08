@@ -115,17 +115,8 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
       }
       
       this.specTree.put("tree", tree);
-      this.specTree.put("defaultPath", new JSONArray());
       this.specTree.put("defaultTitle", "");
-      this.specTree.put("foundDefault", false);
-      setDefaultSpec(tree);
-      
-      // Need to keep track whether or not the default gadget was found.
-      if(!this.specTree.getBoolean("foundDefault")) {
-        this.specTree.put("defaultPath", new JSONArray());
-      }
-      this.specTree.remove("foundDefault");
-      
+      this.specTree.put("defaultPath", setDefaultPath(tree));
     } catch (Exception e) {
       LOG.logp(Level.SEVERE, CLASS, method, e.getMessage(), e);
     }
@@ -135,40 +126,31 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
     return specTree;
   }
   
-  private void setDefaultSpec(JSONArray tree) throws JSONException {
-    for(int i=0; i<tree.size(); i++) {
-      if(specTree.getBoolean("foundDefault")) {
-        return;
-      } else {
-        JSONObject rootNode = tree.getJSONObject(i);
-        specTree.put("defaultPath", new JSONArray().put(rootNode.getString("id")));
-        setDefaultChildrenSpec(rootNode.getJSONArray("children"));
-      }
-    }
-  }
-  
-  private void setDefaultChildrenSpec(JSONArray tree) throws JSONException {
+  private JSONArray setDefaultPath(JSONArray tree) throws JSONException {
     for(int i=0; i<tree.size(); i++) {
       JSONObject node = tree.getJSONObject(i);
       JSONArray nodeChildren = node.getJSONArray("children");
-      JSONArray path = specTree.getJSONArray("defaultPath");
-      
-      if(specTree.getBoolean("foundDefault")) {
-        return;
-      } else if (node.getBoolean("isDefault")) {
-        path.put(node.get("id"));
+
+      if (node.getBoolean("isDefault")) {
         specTree.put("defaultTitle", node.getString("name"));
-        specTree.put("foundDefault", true);
-        return;
+        return new JSONArray().put(node.get("id"));
       } else if (nodeChildren.size() > 0) {
-        path.put(node.getString("id"));
-        setDefaultChildrenSpec(nodeChildren);
-      } else if (i == tree.size() - 1) {
-        path.remove(path.size() - 1);
+        JSONArray foundPath = setDefaultPath(nodeChildren);
+        if(!foundPath.isEmpty()) {
+          return merge(new JSONArray().put(node.get("id")), foundPath);
+        }
       }
     }
+    return new JSONArray();
   }
   
+  private JSONArray merge(JSONArray base, JSONArray toAdd) throws JSONException {
+    for(Object element : toAdd) {
+      base.put(element);
+    }
+    return base;
+  }
+
   private Iterable<String> getSpecRegistryContents() {
     final String method = "getSpecRegistryContents";
     LOG.entering(CLASS, method);

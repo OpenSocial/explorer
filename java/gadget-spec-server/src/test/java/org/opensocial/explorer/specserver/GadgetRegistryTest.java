@@ -629,4 +629,83 @@ public class GadgetRegistryTest {
     
     assertEquals(specTree, gadgetRegistry.getSpecTree());
   }
+  
+  @Test
+  public void testLargeArray() throws Exception {
+    setupGadgetSpecCreation("specs/a/one/spec.json", "12", "one");
+    setupGadgetSpecCreation("specs/a/b/two/spec.json", "34", "two");
+    setupGadgetSpecCreation("specs/a/b/three/spec.json", "56", "three");
+    setupDefaultGadgetSpecCreation("specs/four/spec.json", "78", "four");
+    replay(specFactory);
+    gadgetRegistry = new DefaultGadgetRegistry(specFactory, null, 
+        new String[] {"specs/a/one/spec.json", "specs/a/b/two/spec.json", "specs/a/b/three/spec.json", "specs/four/spec.json"});
+    
+    JSONObject specTree = new JSONObject();
+    JSONArray tree = new JSONArray();
+    JSONObject specs = new JSONObject();
+    JSONArray specsChildren = new JSONArray();
+    JSONObject a = new JSONObject();
+    JSONArray aChildren = new JSONArray();
+    JSONObject b = new JSONObject();
+    JSONArray bChildren = new JSONArray();
+    
+    
+    JSONObject one = new JSONObject();
+    JSONArray oneChildren = new JSONArray();
+    
+    JSONObject two = new JSONObject();
+    JSONArray twoChildren = new JSONArray();
+    
+    JSONObject three = new JSONObject();
+    JSONArray threeChildren = new JSONArray();
+    
+    JSONObject four = new JSONObject();
+    JSONArray fourChildren = new JSONArray();
+    
+    JSONArray path = new JSONArray();
+    
+    
+    specTree.put("tree", tree);
+      tree.put(specs);
+        specs.put("id", "109641752");
+        specs.put("name", "Specs");
+        specs.put("isDefault", false);
+        specs.put("children", specsChildren);
+          specsChildren.put(a);
+            a.put("id", "97");
+            a.put("name", "A");
+            a.put("isDefault", false);
+            a.put("children", aChildren);
+              aChildren.put(one);
+                one.put("id", "12");
+                one.put("name", "One");
+                one.put("isDefault", false);
+                one.put("children", oneChildren);
+              aChildren.put(b);
+                b.put("id", "98");
+                b.put("name", "B");
+                b.put("isDefault", false);
+                b.put("children", bChildren);
+                  bChildren.put(two);
+                    two.put("id", "34");
+                    two.put("name", "Two");
+                    two.put("isDefault", false);
+                    two.put("children", twoChildren);
+                  bChildren.put(three);
+                    three.put("id", "56");
+                    three.put("name", "Three");
+                    three.put("isDefault", false);
+                    three.put("children", threeChildren);
+          specsChildren.put(four);
+            four.put("id", "78");
+            four.put("name", "Four");
+            four.put("isDefault", true);
+            four.put("children", fourChildren);
+    specTree.put("defaultPath", path);
+      path.put("109641752");
+      path.put("78");
+    specTree.put("defaultTitle", "Four");
+    
+    assertEquals(specTree, gadgetRegistry.getSpecTree());
+  }
 }
