@@ -115,17 +115,10 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
       }
       
       this.specTree.put("tree", tree);
-      this.specTree.put("defaultPath", new JSONArray());
       this.specTree.put("defaultTitle", "");
-      this.specTree.put("foundDefault", false);
-      setDefaultSpec(tree);
-      
-      // Need to keep track whether or not the default gadget was found.
-      if(!this.specTree.getBoolean("foundDefault")) {
-        this.specTree.put("defaultPath", new JSONArray());
-      }
-      this.specTree.remove("foundDefault");
-      
+      JSONArray defaultPath = setDefaultPath(tree);
+      Collections.reverse(defaultPath);
+      this.specTree.put("defaultPath", defaultPath);
     } catch (Exception e) {
       LOG.logp(Level.SEVERE, CLASS, method, e.getMessage(), e);
     }
@@ -135,22 +128,22 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
     return specTree;
   }
   
-  private void setDefaultSpec(JSONArray tree) throws JSONException {
+  private JSONArray setDefaultPath(JSONArray tree) throws JSONException {
     for(int i=0; i<tree.size(); i++) {
       JSONObject node = tree.getJSONObject(i);
-      if(node.getBoolean("isDefault")) {
-        specTree.getJSONArray("defaultPath").put(node.get("id"));
+      JSONArray nodeChildren = node.getJSONArray("children");
+
+      if (node.getBoolean("isDefault")) {
         specTree.put("defaultTitle", node.getString("name"));
-        specTree.put("foundDefault", true);
-        return;
-      } else {
-        JSONArray nodeChildren = node.getJSONArray("children");
-        if (node.getJSONArray("children").size() > 0) {
-          specTree.getJSONArray("defaultPath").put(node.getString("id"));
-          setDefaultSpec(nodeChildren);
+        return new JSONArray().put(node.get("id"));
+      } else if (nodeChildren.size() > 0) {
+        JSONArray foundPath = setDefaultPath(nodeChildren);
+        if(!foundPath.isEmpty()) {
+          return foundPath.put(node.get("id"));
         }
       }
     }
+    return new JSONArray();
   }
 
   private Iterable<String> getSpecRegistryContents() {
