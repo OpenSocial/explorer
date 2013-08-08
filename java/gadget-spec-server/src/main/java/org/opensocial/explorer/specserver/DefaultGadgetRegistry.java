@@ -116,7 +116,9 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
       
       this.specTree.put("tree", tree);
       this.specTree.put("defaultTitle", "");
-      this.specTree.put("defaultPath", setDefaultPath(tree));
+      JSONArray defaultPath = setDefaultPath(tree);
+      Collections.reverse(defaultPath);
+      this.specTree.put("defaultPath", defaultPath);
     } catch (Exception e) {
       LOG.logp(Level.SEVERE, CLASS, method, e.getMessage(), e);
     }
@@ -137,18 +139,11 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
       } else if (nodeChildren.size() > 0) {
         JSONArray foundPath = setDefaultPath(nodeChildren);
         if(!foundPath.isEmpty()) {
-          return merge(new JSONArray().put(node.get("id")), foundPath);
+          return foundPath.put(node.get("id"));
         }
       }
     }
     return new JSONArray();
-  }
-  
-  private JSONArray merge(JSONArray base, JSONArray toAdd) throws JSONException {
-    for(Object element : toAdd) {
-      base.put(element);
-    }
-    return base;
   }
 
   private Iterable<String> getSpecRegistryContents() {
