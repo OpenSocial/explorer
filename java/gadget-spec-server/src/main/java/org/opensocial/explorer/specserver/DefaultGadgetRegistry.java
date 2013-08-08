@@ -128,6 +128,14 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
     return specTree;
   }
   
+  /**
+   * Provides the ID path of the default gadget in the JSON gadget tree . This method
+   * will return the path in reverse order. If there is no default gadget, an
+   * empty JSONArray will be returned.
+   * @param tree
+   * @return JSONArray
+   * @throws JSONException
+   */
   private JSONArray setDefaultPath(JSONArray tree) throws JSONException {
     for(int i=0; i<tree.size(); i++) {
       JSONObject node = tree.getJSONObject(i);
