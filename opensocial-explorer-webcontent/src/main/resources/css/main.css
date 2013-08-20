@@ -16,6 +16,37 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+#addGadgetBtn {
+	margin: 5px 5px 5px 5px;
+}
+#creation-body {
+	text-align: center;
+}
+
+#creation-footer {
+	text-align: center;
+}
+
+#creation-header {
+	text-align: center;
+}
+
+.creation {
+	width: 70%;
+} 
+
+#creation-title {
+	margin-bottom: 20px;
+}
+
+#creation-author {
+	margin-bottom: 20px;
+}
+
+#creation-selection {
+	margin-bottom: 20px;
+	width: 40%;
+}
 
 body {
         padding-top: 60px;

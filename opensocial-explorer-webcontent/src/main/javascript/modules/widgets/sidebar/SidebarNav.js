@@ -19,42 +19,81 @@
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dojo/text!./../../templates/SidebarNav.html', 'dojo/dom-construct',
         'modules/widgets/editorarea/EditorArea', 
-        'modules/gadget-spec-service', 
-        "dojo/store/Memory",
-        "dijit/tree/ObjectStoreModel","dijit/Tree"],
+        'modules/gadget-spec-service', 'modules/widgets/sidebar/CreationModalDialog',
+        "dojo/store/Memory", "dojo/store/Observable",
+        "dijit/tree/ObjectStoreModel","dijit/Tree", "dojo/dom", "dojo/query", "dojo/domReady!"],
         function(declare, WidgetBase, TemplatedMixin, template, domConstruct, EditorArea,
-            gadgetSpecService, 
-            Memory, ObjectStoreModel, Tree) {
+            gadgetSpecService, CreationModalDialog,
+            Memory, Observable, ObjectStoreModel, Tree, dom, query) {
   var SidebarNav = declare('SidebarNavWidget', [ WidgetBase, TemplatedMixin ], {
     templateString : template,
+    specStore : null,
+    specModel : null,
+    specTree: null,
+    
+    addSpec : function(title) {
+      var randomId = Math.random().toString();
+      if(this.specStore.query({name: "My Specs"}).length == 0) {
+        this.specStore.put({id: "12345", isDefault: false, name:"My Specs", parent :"root", hasChildren: true});
+        this.specStore.put({id: randomId, isDefault: false, name: title, parent: "12345", hasChildren: false});
+      } else {
+        this.specStore.put({id: randomId, isDefault: false, name: title, parent: "12345", hasChildren: false});
+      }
+      
+      var path = this.getPath([], randomId);
+      var addedObject = this.specStore.query({id: randomId})[0];
+      this.specTree.set("path", path);
+      
+      EditorArea.getInstance().displaySpec(addedObject.id);
+      EditorArea.getInstance().setTitle(addedObject.name);
+    },
+    
+    getPath : function(path, startId) {
+      var object = this.specStore.query({id: startId})[0];
+      if(object.id == "root") {
+        path.unshift(object.id);
+        return path;
+      } else {
+        path.unshift(object.id);
+        return this.getPath(path, object.parent);
+      }
+    },
+    
+    getDefaultId : function() {
+      var object = this.specStore.query({isDefault: true})[0];
+      return object.id;
+    }, 
+    
+    getDefaultName : function() {
+      var object = this.specStore.query({isDefault: true})[0];
+      return object.name;
+    }, 
+    
     postCreate : function() {
       var self = this;
       gadgetSpecService.getSpecTree({
-        success : function(data) {
-          var tempArray = [];
-          var rootId = "0";
-          var temp = {
-            name: "root",
-            id: rootId,
-            children: data.tree
-          };
-          tempArray.push(temp);
+        success : function(json) {
+          json.unshift({name: "Root", id: "root"});
           
-          var specStore = new Memory({
-            data: tempArray,
+          self.specStore = new Memory({
+            data: json,
             getChildren: function(object){
-              return object.children;
+              return this.query({parent: object.id});
             }
           });
-          var specModel = new ObjectStoreModel({
-            store: specStore,
-            query: {name:"root"},
+          
+          self.specStore = new Observable(self.specStore);
+          
+          self.specModel = new ObjectStoreModel({
+            store: self.specStore,
+            query: {id:"root"},
             mayHaveChildren: function(item){
-              return item.children.length > 0;
-            }
+              return item.hasChildren;
+            } 
           });
-          var specTree = new Tree({
-            model: specModel,
+          
+          self.specTree = new Tree({
+            model: self.specModel,
             openOnClick: true,
             showRoot: false,
             persist: false,
@@ -64,11 +103,16 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
             }
           });
           
-          data.defaultPath.unshift(rootId);
-          specTree.startup();
-          specTree.set("path", data.defaultPath);
-          specTree.placeAt(self.domNode);
-          EditorArea.getInstance().setTitle(data.defaultTitle);
+          var modal = new CreationModalDialog();
+          modal.placeAt(self.domNode);
+          
+          query('#addGadgetBtn', self.domNode).on('click', function(e) {
+            modal.show();
+          });
+          self.specTree.startup();
+          self.specTree.set("path", self.getPath([], self.getDefaultId()));
+          self.specTree.placeAt(self.domNode);
+          EditorArea.getInstance().setTitle(self.getDefaultName());
         },
         error : function(data) {
           console.error("There was an error");
