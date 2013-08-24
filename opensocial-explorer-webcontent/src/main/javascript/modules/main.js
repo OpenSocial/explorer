@@ -20,7 +20,7 @@
  * Main JS file the OpenSocial Explorer.
  */
 require(['modules/widgets/editorarea/EditorArea', 'modules/widgets/gadgetarea/GadgetArea', 'modules/widgets/sidebar/SidebarNav', 
-         'modules/widgets/openid/OpenIDLoginDialog', 'dojo/query', 'dojo/dom-class', 'dojo/_base/event', 
+         'modules/widgets/openid/OpenIDLoginDialog', 'dojo/query', 'dojo/dom-class',  'dojo/_base/event', 
          'dojo/NodeList-manipulate', 'dojo/NodeList-dom', 'dojo/NodeList-traverse', 'dojo/domReady!'], 
          function(EditorArea, GadgetArea, SidebarNav, OpenIDLoginDialog, query, domClass, event) {
     var editorArea = EditorArea.getInstance(),
@@ -33,9 +33,7 @@ require(['modules/widgets/editorarea/EditorArea', 'modules/widgets/gadgetarea/Ga
     query('#openid-login').on('click', function(e) {
       openIDLogin.show();
     });
-    
-    query('#spec-nav').append(sidebarNav.domNode);
-    sidebarNav.startup();
+
     query('#main').prepend(gadgetArea.domNode);
     gadgetArea.startup();
     query('#main').prepend(editorArea.domNode);

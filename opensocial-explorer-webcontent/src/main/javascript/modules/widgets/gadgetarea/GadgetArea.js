@@ -65,7 +65,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                 },
                 
                 startup : function() {
-                  this.gadgetToolbar = new GadgetToolbar({"gadgetArea" : this});
+                  this.gadgetToolbar = new GadgetToolbar();
                   domConstruct.place(this.gadgetToolbar.domNode, this.domNode);
                   this.gadgetToolbar.startup();
                   var self = this;

@@ -18,20 +18,12 @@
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dojo/query', 'dojo/text!./../../templates/GadgetToolbar.html',
-        'modules/widgets/gadgetarea/GadgetMenuButton', 'modules/widgets/gadgetarea/PreferencesDialog', 'dojo/dom-construct', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
-        function(declare, WidgetBase, TemplatedMixin, query, template, GadgetMenuButton, PreferencesDialog, domConstruct) {
-            return declare('GadgetToolbarWidget', [ WidgetBase, TemplatedMixin ], {
+        'modules/widgets/gadgetarea/GadgetMenuButton', 'modules/widgets/gadgetarea/PreferencesDialog', 
+        'dojo/dom-construct', 'dijit/_WidgetsInTemplateMixin', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
+        function(declare, WidgetBase, TemplatedMixin, query, template, GadgetMenuButton, PreferencesDialog, domConstruct,
+                WidgetsInTemplateMixin) {
+            return declare('GadgetToolbarWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin ], {
                 templateString : template,
-                
-                startup : function() {
-                  this.prefDialog = new PreferencesDialog();
-                  domConstruct.place(this.prefDialog.domNode, this.domNode);
-                  this.prefDialog.startup();
-                  
-                  this.gadgetMenuButton = new GadgetMenuButton({"gadgetArea" : this.gadgetArea, "prefDialog" : this.prefDialog});
-                  query('.navbar-inner .nav-collapse .navbar-form', this.domNode).append(this.gadgetMenuButton.domNode);
-                  this.gadgetMenuButton.startup();
-                },
                 
                 getTitle : function(metadata) {
                   var title = 'Gadget';
