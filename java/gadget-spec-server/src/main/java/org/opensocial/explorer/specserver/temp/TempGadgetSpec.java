@@ -38,15 +38,25 @@ import org.opensocial.explorer.specserver.api.GadgetSpec;
  * simply throw UnsupportedOperationExceptions.
  */
 public class TempGadgetSpec extends DefaultGadgetSpec {
-
-  public TempGadgetSpec(GadgetResource gadgetResource, Map<String, GadgetResource> cssResources,
+  // For Gadget
+  public TempGadgetSpec(String title, GadgetResource gadgetResource, Map<String, GadgetResource> cssResources,
           Map<String, GadgetResource> jsResources, Map<String, GadgetResource> htmlResources) {
     super(gadgetResource, cssResources, jsResources, htmlResources);
+    this.title = title;
   }
+  // For EE
+  public TempGadgetSpec(String title, GadgetResource gadgetResource, Map<String, GadgetResource> cssResources,
+      Map<String, GadgetResource> jsResources, Map<String, GadgetResource> htmlResources, GadgetResource eeResource) {
+    super(gadgetResource, cssResources, jsResources, htmlResources);
+    this.title = title;
+    this.eeResource = eeResource;
+}
 
   public static GadgetSpec parse(JSONObject json) throws JSONException {
     Map<String, GadgetResource> cssResources, jsResources, htmlResources;
 
+    String title = json.getString(SPEC_TITLE);
+    
     JSONArray css = json.getJSONArray(CSS_RESOURCES);
     cssResources = TempGadgetResource.parse(css);
 
@@ -58,17 +68,24 @@ public class TempGadgetSpec extends DefaultGadgetSpec {
 
     JSONObject gadget = json.getJSONObject(GADGET_RESOURCE);
     GadgetResource gadgetResource = TempGadgetResource.parse(gadget);
-
-    return new TempGadgetSpec(gadgetResource, cssResources, jsResources, htmlResources);
+    
+    if(json.has(EE_RESOURCE)) {
+      JSONObject ee = json.getJSONObject(EE_RESOURCE);
+      GadgetResource eeResource = TempGadgetResource.parse(ee);
+      return new TempGadgetSpec(title, gadgetResource, cssResources, jsResources, htmlResources, eeResource);
+    } else {
+      return new TempGadgetSpec(title, gadgetResource, cssResources, jsResources, htmlResources);
+    }
   }
 
   /**
    * @throws UnsupportedOperationException
    */
+  /*
   public String getTitle() {
     throw new UnsupportedOperationException("Not implemented");
   }
-
+*/
   /**
    * @throws UnsupportedOperationException
    */

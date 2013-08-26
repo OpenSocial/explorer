@@ -17,34 +17,95 @@
  * under the License.
  */
 define(['dojo/_base/declare', 'modules/widgets/ModalDialog', 
-        'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
-        'dojo/query', 'dojo/text!./../../templates/CreationModalDialog.html','dojo/dom',
+        'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'modules/widgets/editorarea/EditorArea',
+        'dojo/query', 'dojo/text!./../../templates/CreationModalDialog.html', 'dojo/text!./../../templates/StubXML.xml', 
+        'dojo/text!./../../templates/StubEEXML.xml', 'dojo/text!./../../templates/StubHTML.html',
+        'dojo/dom', 'modules/gadget-spec-service',
         'dojo/dom-class', 'dojo/dom-style','dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
-        function(declare, ModalDialog, WidgetBase, TemplatedMixin, 
-            query, template, dom, domClass, domStyle) {
-  return declare('ModalDialogWidget', [ ModalDialog, WidgetBase, TemplatedMixin ], {
+        function(declare, ModalDialog, WidgetBase, TemplatedMixin, EditorArea,
+            query, template, stubxml, stubeexml, stubhtml, dom, gadgetSpecService, domClass, domStyle) {
+  return declare('CreationModalDialogWidget', [ModalDialog], {
     templateString : template,
-    startup : function() {
+    
+    onSubmit : function() {
       var self = this;
-
-      query('.modal-header .close', this.domNode).on('click', function(e) {
+      var title = this.creationTitle.value;
+      var option = this.creationSelection.value;
+      var filename = title.replace(/\s/g, '').toLowerCase();
+      var userInput = {
+          _TITLE_: title,
+          _FILENAME_: filename,
+          _AUTHOR_: this.creationAuthor.value,
+          _DESCRIPTION_: this.creationDescription.value
+      };
+      
+      require(['modules/widgets/sidebar/SidebarNav'], function(SidebarNav) {
+        if(option == "Gadget") {
+          self.postNewGadgetSpec.call(self, userInput, function(data) {
+            SidebarNav.getInstance().addSpec(title, data.id);
+          });
+        } else {
+          self.postNewEESpec.call(self, userInput, function(data) {
+            SidebarNav.getInstance().addSpec(title, data.id);
+          });
+        }
         self.hide();
+        self.clear();
+      }); 
+    },
+    
+    postNewGadgetSpec : function(userInput, thenFunction) {
+      var self = this;
+      var postData = {
+          title:          userInput._TITLE_,
+          cssResources:   [{content: "", name: userInput._FILENAME_ + ".css"}],
+          jsResources:    [{content: "", name: userInput._FILENAME_ + ".js"}],
+          htmlResources:  [{content: self.replaceResourceStubs(stubhtml, userInput),
+                            name: userInput._FILENAME_ + ".html"}],
+          gadgetResource: {content: self.replaceResourceStubs(stubxml, userInput), 
+                           name: userInput._FILENAME_ + ".xml"}
+      };
+      
+      gadgetSpecService.createNewGadgetSpec(postData, {
+        success : thenFunction,
+        error : function(data) {
+          console.error("There was an error");
+        }
       });
-
-      query('#creation-submit', this.domNode).on('click', function(e) {
-        require(['modules/widgets/sidebar/SidebarNav'], function(SidebarNav) {
-          SidebarNav.getInstance().addSpec(dom.byId("creation-title").value);
-          self.hide();
-          self.clear();
-        }); 
+    },
+    
+    postNewEESpec : function(userInput, thenFunction) {
+      var self = this;
+      var postData = {
+          title:          userInput._TITLE_,
+          cssResources:   [{content: "", name: userInput._FILENAME_ + ".css"}],
+          jsResources:    [{content: "", name: userInput._FILENAME_ + ".js"}],
+          htmlResources:  [{content: self.replaceResourceStubs(stubhtml, userInput),
+                            name: userInput._FILENAME_ + ".html"}],
+          gadgetResource: {content: self.replaceResourceStubs(stubeexml, userInput), 
+                           name: userInput._FILENAME_ + ".xml"},
+          eeResource:     {content: "{\n}", name: userInput._FILENAME_ + ".json"}  
+      };
+      
+      gadgetSpecService.createNewGadgetSpec(postData, {
+        success : thenFunction,
+        error : function(data) {
+          console.error("There was an error");
+        }
+      });
+    },
+    
+    replaceResourceStubs : function(str, mapObj) {
+      var re = new RegExp(Object.keys(mapObj).join("|"),"gi");
+      return str.replace(re, function(matched){
+          return mapObj[matched];
       });
     },
 
     clear: function() {
-      dom.byId("creation-title").value = "";
-      dom.byId("creation-author").value = "";
-      dom.byId("creation-description").value = "";
-      dom.byId("creation-selection").selectedIndex = 0;
+      query(".creation", this.domNode).forEach(function(node) {
+        node.value = "";
+      });
     }
   });
 });

@@ -16,32 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
+define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin',
         'dojo/text!./../../templates/SidebarNav.html', 'dojo/dom-construct',
         'modules/widgets/editorarea/EditorArea', 
         'modules/gadget-spec-service', 'modules/widgets/sidebar/CreationModalDialog',
         "dojo/store/Memory", "dojo/store/Observable",
-        "dijit/tree/ObjectStoreModel","dijit/Tree", "dojo/dom", "dojo/query", "dojo/domReady!"],
-        function(declare, WidgetBase, TemplatedMixin, template, domConstruct, EditorArea,
+        "dijit/tree/ObjectStoreModel","dijit/Tree", "dojo/dom", "dojo/dom-class", "dojo/query", "dojo/domReady!"],
+        function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, template, domConstruct, EditorArea,
             gadgetSpecService, CreationModalDialog,
-            Memory, Observable, ObjectStoreModel, Tree, dom, query) {
-  var SidebarNav = declare('SidebarNavWidget', [ WidgetBase, TemplatedMixin ], {
+            Memory, Observable, ObjectStoreModel, Tree, dom, domClass, query) {
+  var SidebarNav = declare('SidebarNavWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin ], {
     templateString : template,
     specStore : null,
     specModel : null,
     specTree: null,
     
-    addSpec : function(title) {
-      var randomId = Math.random().toString();
+    addSpec : function(title, specId) {
       if(this.specStore.query({name: "My Specs"}).length == 0) {
-        this.specStore.put({id: "12345", isDefault: false, name:"My Specs", parent :"root", hasChildren: true});
-        this.specStore.put({id: randomId, isDefault: false, name: title, parent: "12345", hasChildren: false});
-      } else {
-        this.specStore.put({id: randomId, isDefault: false, name: title, parent: "12345", hasChildren: false});
+        this.specStore.put({id: "myspecs", isDefault: false, name:"My Specs", parent :"root", hasChildren: true});
       }
+      this.specStore.put({id: specId, isDefault: false, name: title, parent: "myspecs", hasChildren: false});
       
-      var path = this.getPath([], randomId);
-      var addedObject = this.specStore.query({id: randomId})[0];
+      var path = this.getPath([], specId);
+      var addedObject = this.specStore.query({id: specId})[0];
       this.specTree.set("path", path);
       
       EditorArea.getInstance().displaySpec(addedObject.id);
@@ -67,7 +64,13 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     getDefaultName : function() {
       var object = this.specStore.query({isDefault: true})[0];
       return object.name;
-    }, 
+    },
+    
+    toggleModal: function() {
+      domClass.remove(this.creationModal.domNode, 'hide');
+      domClass.add(this.creationModal.domNode, 'in');
+      query('body').append('<div class="modal-backdrop fade in"></div>');
+    },
     
     postCreate : function() {
       var self = this;
@@ -103,12 +106,6 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
             }
           });
           
-          var modal = new CreationModalDialog();
-          modal.placeAt(self.domNode);
-          
-          query('#addGadgetBtn', self.domNode).on('click', function(e) {
-            modal.show();
-          });
           self.specTree.startup();
           self.specTree.set("path", self.getPath([], self.getDefaultId()));
           self.specTree.placeAt(self.domNode);

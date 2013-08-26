@@ -184,7 +184,7 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
   private boolean isNodeExisting(String node, JSONArray array) throws JSONException {
     for(int i=0; i<array.length(); i++) {
       JSONObject temp = array.getJSONObject(i);
-      String tempName = (String) temp.get("name");
+      String tempName = temp.getString("name");
       if (tempName.equalsIgnoreCase(node)) {
         return true;
       }

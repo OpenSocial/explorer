@@ -110,9 +110,9 @@ define(['modules/widgets/editorarea/EditorToolbar', 'dojo/query', 'dojo/dom-clas
     it('can show and hide the embedded experiences button', function() {
       var specService = createSpecServiceSpy();
       var editorToolbar = createEditorToolbar(specService);
-      editorToolbar.showEEButton();
+      editorToolbar.showRenderEEButton();
       expect(domClass.contains('renderEEBtn', 'hide')).toEqual(false);
-      editorToolbar.hideEEButton();
+      editorToolbar.hideRenderEEButton();
       expect(domClass.contains('renderEEBtn', 'hide')).toEqual(true);
       editorToolbar.destroy();
     })

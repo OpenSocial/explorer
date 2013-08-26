@@ -5,15 +5,15 @@
 	</div>
 	
 	<div id="creation-body" class="modal-body">
-		<select id="creation-selection">
+		<select data-dojo-attach-point="creationSelection" id="creation-selection">
 			<option>Gadget</option>
 			<option>Embedded Experience</option>
 		</select>
-		<input class="creation" id="creation-title" type="text" placeholder="Title">
-		<input class="creation" id="creation-author"type="text" placeholder="Author">
-		<textarea class="creation" id="creation-description" rows="3" placeholder="Description"></textarea>
+		<input data-dojo-attach-point="creationTitle" class="creation" id="creation-title" type="text" placeholder="Title">
+		<input data-dojo-attach-point="creationAuthor" class="creation" id="creation-author"type="text" placeholder="Author">
+		<textarea data-dojo-attach-point="creationDescription" class="creation" id="creation-description" rows="3" placeholder="Description"></textarea>
 	</div>
 	<div id="creation-footer" class="modal-footer">
-		<button id="creation-submit" class="btn btn-success">Create!</button>
+		<button data-dojo-attach-point="creationSubmit" data-dojo-attach-event="onclick: onSubmit" id="creation-submit" class="btn btn-success">Create!</button>
 	</div>
 </div>
