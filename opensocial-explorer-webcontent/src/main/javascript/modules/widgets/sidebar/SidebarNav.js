@@ -25,7 +25,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         function(declare, WidgetBase, TemplatedMixin, template, domConstruct, EditorArea,
             gadgetSpecService, 
             Memory, ObjectStoreModel, Tree) {
-  var SidebarNav = declare('SidebarNavWidget', [ WidgetBase, TemplatedMixin ], {
+  return declare('SidebarNavWidget', [ WidgetBase, TemplatedMixin ], {
     templateString : template,
     postCreate : function() {
       var self = this;
@@ -76,15 +76,4 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
       });
     }
   });
-
-  var instance;
-
-  return {
-    getInstance : function() {
-      if(!instance) {
-        instance = new SidebarNav();
-      }
-      return instance;
-    }
-  };
 });

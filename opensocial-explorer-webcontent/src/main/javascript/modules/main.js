@@ -25,7 +25,6 @@ require(['modules/widgets/editorarea/EditorArea', 'modules/widgets/gadgetarea/Ga
          function(EditorArea, GadgetArea, SidebarNav, OpenIDLoginDialog, query, domClass, event) {
     var editorArea = EditorArea.getInstance(),
         gadgetArea = GadgetArea.getInstance(),
-        sidebarNav = SidebarNav.getInstance(),
         openIDLogin = OpenIDLoginDialog.getInstance();
     
     openIDLogin.startup();
