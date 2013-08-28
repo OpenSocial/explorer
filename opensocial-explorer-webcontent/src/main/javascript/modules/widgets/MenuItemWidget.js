@@ -73,7 +73,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                 },
                 
                 getSubMenuItem : function(menuName) {
-                  return this.subMenu.getMenuItem(menuName);
+                  return this.subMenu ? this.subMenu.getMenuItem(menuName) : undefined;
                 }
             });
         });
