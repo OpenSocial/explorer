@@ -1,19 +1,18 @@
 <div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div id="creation-header" class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div id="creation-header" class="modal-header center">
+		<button data-dojo-attach-point="creationExit" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3>Create New</h3>
 	</div>
-	
-	<div id="creation-body" class="modal-body">
-		<select data-dojo-attach-point="creationSelection" id="creation-selection">
+	<div id="creation-body" class="modal-body center">
+		<select data-dojo-attach-point="creationSelection">
 			<option>Gadget</option>
 			<option>Embedded Experience</option>
 		</select>
-		<input data-dojo-attach-point="creationTitle" class="creation" id="creation-title" type="text" placeholder="Title">
-		<input data-dojo-attach-point="creationAuthor" class="creation" id="creation-author"type="text" placeholder="Author">
-		<textarea data-dojo-attach-point="creationDescription" class="creation" id="creation-description" rows="3" placeholder="Description"></textarea>
+		<input data-dojo-attach-point="creationTitle" class="creation" type="text" placeholder="Title">
+		<input data-dojo-attach-point="creationAuthor" class="creation" type="text" placeholder="Author">
+		<textarea data-dojo-attach-point="creationDescription" class="creation" rows="3" placeholder="Description"></textarea>
 	</div>
-	<div id="creation-footer" class="modal-footer">
+	<div id="creation-footer" class="modal-footer center">
 		<button data-dojo-attach-point="creationSubmit" data-dojo-attach-event="onclick: onSubmit" id="creation-submit" class="btn btn-success">Create!</button>
 	</div>
 </div>

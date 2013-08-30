@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Module>
-  <ModulePrefs title="_TITLE_" author="_AUTHOR_" description="_DESCRIPTION_">
-  </ModulePrefs>
-  <Content type="html" href="_FILENAME_.html">
-  <![CDATA[
-  ]]>
-  </Content>
-</Module>

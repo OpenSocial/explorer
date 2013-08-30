@@ -28,22 +28,16 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                 startup : function() {
                   var self = this;
                   query('#renderBtn', this.domNode).on('click', function(e){
-                    self.postGadgetSpec.call(self, function(data) {
+                    self.postGadgetSpec(function(data) {
                       self.editorArea.renderGadget(data.id);
-                      require(['modules/widgets/sidebar/SidebarNav'], function(SidebarNav) {
-                        var selectedObject = SidebarNav.getInstance().specTree.get("selectedItems")[0];
-                        selectedObject.id = data.id;
-                      });
+                      self.setNewId(data);
                     });
                   });
                   
                   query('#renderEEBtn', this.domNode).on('click', function(e){
-                    self.postGadgetSpec.call(self, function(data) {
+                    self.postGadgetSpec(function(data) {
                       self.editorArea.renderEmbeddedExperience(data.id);
-                      require(['modules/widgets/sidebar/SidebarNav'], function(SidebarNav) {
-                        var selectedObject = SidebarNav.getInstance().specTree.get("selectedItems")[0];
-                        selectedObject.id = data.id;
-                      });
+                      self.setNewId(data);
                     });
                   });
                 },
@@ -80,6 +74,14 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                 
                 hideRenderGadgetButton: function() {
                   domClass.add("renderBtn", "hide");
+                },
+                
+                setNewId: function(responseData) {
+                  var self = this;
+                  require(['modules/widgets/sidebar/SidebarNav'], function(SidebarNav) {
+                    var selectedObject = SidebarNav.getInstance().specTree.get("selectedItems")[0];
+                    selectedObject.id = responseData.id;
+                  });
                 }
             });
         });

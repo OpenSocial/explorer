@@ -66,9 +66,11 @@ define(['modules/widgets/editorarea/EditorToolbar', 'dojo/query', 'dojo/dom-clas
     it("can render a gadget", function() {
       var specService = createSpecServiceSpy();
       var editorToolbar = createEditorToolbar(specService);
+      spyOn(editorToolbar, "setNewId").andReturn(undefined);
       document.getElementById('renderBtn').click();
       expect(editorArea.renderGadget).toHaveBeenCalledWith('abc123');
       expect(specService.createNewGadgetSpec).toHaveBeenCalledWith({"gadget" : "gadget.xml"}, jasmine.any(Object));
+      expect(editorToolbar.setNewId).toHaveBeenCalled();
       editorToolbar.destroy();
     });
 
@@ -84,9 +86,11 @@ define(['modules/widgets/editorarea/EditorToolbar', 'dojo/query', 'dojo/dom-clas
     it("can render an embedded experience", function() {
       var specService = createSpecServiceSpy();
       var editorToolbar = createEditorToolbar(specService);
+      spyOn(editorToolbar, "setNewId").andReturn(undefined);
       document.getElementById('renderEEBtn').click();
       expect(editorArea.renderEmbeddedExperience).toHaveBeenCalledWith('abc123');
       expect(specService.createNewGadgetSpec).toHaveBeenCalledWith({"gadget" : "gadget.xml"}, jasmine.any(Object));
+      expect(editorToolbar.setNewId).toHaveBeenCalled();
       editorToolbar.destroy();
     });
 

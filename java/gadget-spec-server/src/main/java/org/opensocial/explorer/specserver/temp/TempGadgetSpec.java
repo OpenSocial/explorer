@@ -81,14 +81,6 @@ public class TempGadgetSpec extends DefaultGadgetSpec {
   /**
    * @throws UnsupportedOperationException
    */
-  /*
-  public String getTitle() {
-    throw new UnsupportedOperationException("Not implemented");
-  }
-*/
-  /**
-   * @throws UnsupportedOperationException
-   */
   public String getPathToSpec() {
     throw new UnsupportedOperationException("Not implemented");
   }

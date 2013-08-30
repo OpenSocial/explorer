@@ -18,8 +18,8 @@
  */
 define(['dojo/_base/declare', 'modules/widgets/ModalDialog', 
         'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'modules/widgets/editorarea/EditorArea',
-        'dojo/query', 'dojo/text!./../../templates/CreationModalDialog.html', 'dojo/text!./../../templates/StubXML.xml', 
-        'dojo/text!./../../templates/StubEEXML.xml', 'dojo/text!./../../templates/StubHTML.html',
+        'dojo/query', 'dojo/text!./../../templates/CreationModalDialog.html', 'dojo/text!./../../stubs/StubXML.xml', 
+        'dojo/text!./../../stubs/StubEEXML.xml', 'dojo/text!./../../stubs/StubHTML.html',
         'dojo/dom', 'modules/gadget-spec-service',
         'dojo/dom-class', 'dojo/dom-style','dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, ModalDialog, WidgetBase, TemplatedMixin, EditorArea,
@@ -33,40 +33,39 @@ define(['dojo/_base/declare', 'modules/widgets/ModalDialog',
       var option = this.creationSelection.value;
       var filename = title.replace(/\s/g, '').toLowerCase();
       var userInput = {
-          _TITLE_: title,
-          _FILENAME_: filename,
-          _AUTHOR_: this.creationAuthor.value,
-          _DESCRIPTION_: this.creationDescription.value
+          title: title,
+          filename: filename,
+          author: this.creationAuthor.value,
+          description: this.creationDescription.value
       };
       
-      require(['modules/widgets/sidebar/SidebarNav'], function(SidebarNav) {
-        if(option == "Gadget") {
-          self.postNewGadgetSpec.call(self, userInput, function(data) {
-            SidebarNav.getInstance().addSpec(title, data.id);
-          });
-        } else {
-          self.postNewEESpec.call(self, userInput, function(data) {
-            SidebarNav.getInstance().addSpec(title, data.id);
-          });
-        }
-        self.hide();
-        self.clear();
-      }); 
+      if(option == "Gadget") {
+        this.postNewGadgetSpec(userInput, function(data) {
+          self.addToSidebar(data, title);
+        });
+      } else {
+        this.postNewEESpec(userInput, function(data) {
+          self.addToSidebar(data, title);
+        });
+      } 
+      
+      self.hide();
+      self.clear(); 
     },
     
     postNewGadgetSpec : function(userInput, thenFunction) {
       var self = this;
       var postData = {
-          title:          userInput._TITLE_,
-          cssResources:   [{content: "", name: userInput._FILENAME_ + ".css"}],
-          jsResources:    [{content: "", name: userInput._FILENAME_ + ".js"}],
+          title:          userInput.title,
+          cssResources:   [{content: "", name: userInput.filename + ".css"}],
+          jsResources:    [{content: "", name: userInput.filename + ".js"}],
           htmlResources:  [{content: self.replaceResourceStubs(stubhtml, userInput),
-                            name: userInput._FILENAME_ + ".html"}],
+                            name: userInput.filename + ".html"}],
           gadgetResource: {content: self.replaceResourceStubs(stubxml, userInput), 
-                           name: userInput._FILENAME_ + ".xml"}
+                           name: userInput.filename + ".xml"}
       };
       
-      gadgetSpecService.createNewGadgetSpec(postData, {
+      this.getGadgetSpecService().createNewGadgetSpec(postData, {
         success : thenFunction,
         error : function(data) {
           console.error("There was an error");
@@ -77,17 +76,17 @@ define(['dojo/_base/declare', 'modules/widgets/ModalDialog',
     postNewEESpec : function(userInput, thenFunction) {
       var self = this;
       var postData = {
-          title:          userInput._TITLE_,
-          cssResources:   [{content: "", name: userInput._FILENAME_ + ".css"}],
-          jsResources:    [{content: "", name: userInput._FILENAME_ + ".js"}],
+          title:          userInput.title,
+          cssResources:   [{content: "", name: userInput.filename + ".css"}],
+          jsResources:    [{content: "", name: userInput.filename + ".js"}],
           htmlResources:  [{content: self.replaceResourceStubs(stubhtml, userInput),
-                            name: userInput._FILENAME_ + ".html"}],
+                            name: userInput.filename + ".html"}],
           gadgetResource: {content: self.replaceResourceStubs(stubeexml, userInput), 
-                           name: userInput._FILENAME_ + ".xml"},
-          eeResource:     {content: "{\n}", name: userInput._FILENAME_ + ".json"}  
+                           name: userInput.filename + ".xml"},
+          eeResource:     {content: "{\n}", name: userInput.filename + ".json"}  
       };
       
-      gadgetSpecService.createNewGadgetSpec(postData, {
+      this.getGadgetSpecService().createNewGadgetSpec(postData, {
         success : thenFunction,
         error : function(data) {
           console.error("There was an error");
@@ -95,17 +94,28 @@ define(['dojo/_base/declare', 'modules/widgets/ModalDialog',
       });
     },
     
+    addToSidebar: function(data, title) {
+      var self = this;
+      require(['modules/widgets/sidebar/SidebarNav'], function(SidebarNav) {
+        SidebarNav.getInstance().addSpec(title, data.id);
+      });
+    },
+    
     replaceResourceStubs : function(str, mapObj) {
-      var re = new RegExp(Object.keys(mapObj).join("|"),"gi");
-      return str.replace(re, function(matched){
-          return mapObj[matched];
+      return str.replace(/[$]{([^{}]+)}/g, function(match, key){
+          return mapObj[key];
       });
     },
 
     clear: function() {
-      query(".creation", this.domNode).forEach(function(node) {
+      var self = this;
+      query(".creation", self.domNode).forEach(function(node) {
         node.value = "";
       });
+    },
+    
+    getGadgetSpecService : function() {
+      return gadgetSpecService;
     }
   });
 });

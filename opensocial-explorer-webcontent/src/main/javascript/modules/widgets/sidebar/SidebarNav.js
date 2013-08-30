@@ -72,9 +72,9 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
       query('body').append('<div class="modal-backdrop fade in"></div>');
     },
     
-    postCreate : function() {
+    startup : function() {
       var self = this;
-      gadgetSpecService.getSpecTree({
+      this.getGadgetSpecService().getSpecTree({
         success : function(json) {
           json.unshift({name: "Root", id: "root"});
           
@@ -115,6 +115,10 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
           console.error("There was an error");
         }
       });
+    },
+    
+    getGadgetSpecService : function() {
+      return gadgetSpecService;
     }
   });
 
