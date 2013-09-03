@@ -86,13 +86,13 @@ public class GadgetSpecServletTest {
     expectRequestAndResponse("/specTree");
     niceControl.replay();
 
-    JSONObject specTreeJson = new JSONObject();
+    JSONArray specTreeJson = new JSONArray();
     expect(registry.getSpecTree()).andReturn(specTreeJson);
     replay(registry);
 
     servlet.doGet(request, response);
 
-    assertEquals(specTreeJson, new JSONObject(getWriterOutput()));
+    assertEquals(specTreeJson, new JSONArray(getWriterOutput()));
   }
 
   /**
@@ -213,7 +213,8 @@ public class GadgetSpecServletTest {
   @Test
   public void testPostSpec() throws Exception {
     expectRequestAndResponse("POST", "");
-    String postBody = "{'cssResources':[{'content':'csscontentstring','name':'cssfilename.css'}],"
+    String postBody = "{'title':'testing',"
+            + "'cssResources':[{'content':'csscontentstring','name':'cssfilename.css'}],"
             + "'jsResources':[{'content':'jscontentstring','name':'jsfilename.css'}],"
             + "'gadgetResource':{'content':'gadgetcontentstring','name':'gadgetfilename.xml'},"
             + "'htmlResources':[{'content':'htmlcontentstring','name':'htmlfilename.html'}]}";
@@ -224,6 +225,7 @@ public class GadgetSpecServletTest {
     replay(registry);
 
     servlet.doPost(request, response);
+    String tempvar = getWriterOutput();
 
     JSONObject responseJson = new JSONObject(getWriterOutput());
     assertTrue(responseJson.has("id"));

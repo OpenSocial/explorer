@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+  <ModulePrefs title="${title}" author="${author}" description="${description}">
+    <Require feature="embedded-experiences"></Require>
+    <Require feature="dynamic-height"></Require>
+  </ModulePrefs>
+  <Content type="html" href="${filename}.html">
+  <![CDATA[
+  ]]>
+  </Content>
+</Module>

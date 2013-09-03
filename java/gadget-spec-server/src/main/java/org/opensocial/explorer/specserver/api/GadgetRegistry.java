@@ -44,7 +44,7 @@ public interface GadgetRegistry {
    * 
    * @return a {@link JSONArray} tree
    */
-  public JSONObject getSpecTree();
+  public JSONArray getSpecTree();
 
   /**
    * Returns information for a specific {@link GadgetSpec} given its <code>id</code>

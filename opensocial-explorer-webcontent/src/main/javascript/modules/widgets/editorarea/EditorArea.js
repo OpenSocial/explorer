@@ -64,10 +64,12 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
             this.editorTabs.startup();
             this.createTabsAndEditors(data, this.editorTabs);
             if (data.eeResource) {
-              this.editorToolbar.showEEButton();
+              this.editorToolbar.showRenderEEButton();
+              this.editorToolbar.hideRenderGadgetButton();
               this.renderEmbeddedExperience(data.id);
             } else {
-              this.editorToolbar.hideEEButton();
+              this.editorToolbar.showRenderGadgetButton();
+              this.editorToolbar.hideRenderEEButton();
               this.renderGadget(data.id);
             }
           },

@@ -137,6 +137,7 @@
             <exclude>**/src/main/specs/**/*.js</exclude>
             <exclude>**/src/main/specs/**/*.css</exclude>
             <exclude>**/src/main/javascript/modules/templates/**</exclude>
+            <exclude>**/src/main/javascript/modules/stubs/**</exclude>
             <exclude>**/.git/**</exclude>
             <exclude>**/.gitignore</exclude>
             <exclude>**/README.md</exclude>

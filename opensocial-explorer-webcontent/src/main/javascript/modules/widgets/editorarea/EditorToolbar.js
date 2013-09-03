@@ -18,24 +18,26 @@
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dojo/query', 'dojo/text!./../../templates/EditorToolbar.html', 'dojo/on',
-        'dojo/dom-class', 'modules/gadget-spec-service', 'dojo/NodeList-manipulate', 
-        'dojo/NodeList-dom', 'dojo/ready', 'dojo/domReady!'],
-        function(declare, WidgetBase, TemplatedMixin, query, template, on, domClass,
-                gadgetSpecService) {
+        'dojo/dom-class', 'modules/gadget-spec-service', 
+        'dojo/NodeList-manipulate', 'dojo/NodeList-dom', 'dojo/ready', 'dojo/domReady!'],
+        function(declare, WidgetBase, TemplatedMixin, query, 
+                 template, on, domClass, gadgetSpecService) {
             return declare('EditorToolbarWidget', [ WidgetBase, TemplatedMixin ], {
                 templateString : template,
                 
                 startup : function() {
                   var self = this;
                   query('#renderBtn', this.domNode).on('click', function(e){
-                    self.postGadgetSpec.call(self, function(data) {
+                    self.postGadgetSpec(function(data) {
                       self.editorArea.renderGadget(data.id);
+                      self.setNewId(data);
                     });
                   });
                   
                   query('#renderEEBtn', this.domNode).on('click', function(e){
-                    self.postGadgetSpec.call(self, function(data) {
+                    self.postGadgetSpec(function(data) {
                       self.editorArea.renderEmbeddedExperience(data.id);
+                      self.setNewId(data);
                     });
                   });
                 },
@@ -58,12 +60,28 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                   return gadgetSpecService;
                 },
                 
-                showEEButton: function() {
+                showRenderEEButton: function() {
                   domClass.remove("renderEEBtn", "hide");
                 },
                 
-                hideEEButton: function() {
+                hideRenderEEButton: function() {
                   domClass.add("renderEEBtn", "hide");
+                },
+                
+                showRenderGadgetButton: function() {
+                  domClass.remove("renderBtn", "hide");
+                },
+                
+                hideRenderGadgetButton: function() {
+                  domClass.add("renderBtn", "hide");
+                },
+                
+                setNewId: function(responseData) {
+                  var self = this;
+                  require(['modules/widgets/sidebar/SidebarNav'], function(SidebarNav) {
+                    var selectedObject = SidebarNav.getInstance().specTree.get("selectedItems")[0];
+                    selectedObject.id = responseData.id;
+                  });
                 }
             });
         });
