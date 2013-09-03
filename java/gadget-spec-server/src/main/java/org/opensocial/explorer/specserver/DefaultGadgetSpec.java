@@ -42,7 +42,7 @@ public class DefaultGadgetSpec implements GadgetSpec {
   protected GadgetResource gadgetResource, eeResource;
   protected Map<String, GadgetResource> cssResources, htmlResources, jsResources;
   private JSONObject specJson;
-  private String title;
+  protected String title;
 
   public DefaultGadgetSpec(String pathToSpec) throws IOException, JSONException, GadgetSpecLoadingException {
     this.pathToSpec = pathToSpec;
@@ -51,12 +51,12 @@ public class DefaultGadgetSpec implements GadgetSpec {
 
   // Used to create temporary gadget specs in memory
   protected DefaultGadgetSpec(GadgetResource gadgetXml, Map<String, GadgetResource> cssResources,
-          Map<String, GadgetResource> jsResources, Map<String, GadgetResource> htmlResources) {
+      Map<String, GadgetResource> jsResources, Map<String, GadgetResource> htmlResources) {
     this.gadgetResource = gadgetXml;
     this.cssResources = cssResources;
     this.jsResources = jsResources;
     this.htmlResources = htmlResources;
-  }
+}
 
   private void loadSpec(String pathToSpec) throws IOException, JSONException, GadgetSpecLoadingException {
     String content = ResourceLoader.getContent(pathToSpec);

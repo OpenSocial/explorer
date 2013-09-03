@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+  <ModulePrefs title="${title}" author="${author}" description="${description}">
+  </ModulePrefs>
+  <Content type="html" href="${filename}.html">
+  <![CDATA[
+  ]]>
+  </Content>
+</Module>
