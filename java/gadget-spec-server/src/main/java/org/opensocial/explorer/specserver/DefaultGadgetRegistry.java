@@ -156,28 +156,25 @@ public class DefaultGadgetRegistry implements GadgetRegistry {
     String tempId = "root"; // Temp variable to keep track of parent ID.
     for(int i=0; i<path.size(); i++) {
       JSONObject newNode = new JSONObject();
-      // If node already exists in specTree, continue to next.
-      if(this.isNodeExisting(path.get(i), parent)) {
-        tempId = getFolderId(path.get(i));
-        continue;
-      // If node is a GadgetSpec (last in path), add to specTree.
-      } else if(i == path.size()-1) {
-        newNode.put("name", StringUtils.capitalize(gadgetSpec.getTitle()));
-        newNode.put("id", gadgetSpec.getId());
+      if(!this.isNodeExisting(path.get(i), parent)) {
+        // If node is a GadgetSpec (last in path)
+        if(i == path.size()-1) {
+          newNode.put("name", StringUtils.capitalize(gadgetSpec.getTitle()));
+          newNode.put("hasChildren", false);
+          newNode.put("isDefault", gadgetSpec.isDefault());
+          newNode.put("id", gadgetSpec.getId());
+        } 
+        // Id node is a unique folder
+        else {
+          newNode.put("name", StringUtils.capitalize(path.get(i)));
+          newNode.put("hasChildren", true);
+          newNode.put("isDefault", false);
+          newNode.put("id", getFolderId(path.get(i)));
+        }
         newNode.put("parent", tempId);
-        newNode.put("isDefault", gadgetSpec.isDefault());
-        newNode.put("hasChildren", false);
-        parent.put(newNode);
-      // Else, node is a unique folder, so add it to specTree.
-      } else {
-        newNode.put("name", StringUtils.capitalize(path.get(i)));
-        newNode.put("parent", tempId);
-        tempId = getFolderId(path.get(i));
-        newNode.put("id", tempId);
-        newNode.put("isDefault", false);
-        newNode.put("hasChildren", true);
         parent.put(newNode);
       }
+      tempId = getFolderId(path.get(i));
     }
   }
   
