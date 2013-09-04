@@ -17,60 +17,19 @@
  * under the License.
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin',
-        'dojo/text!./../../templates/SidebarNav.html', 'dojo/dom-construct',
+        'dojo/text!./../../templates/SidebarNav.html', 'dojo/dom-construct', 'dojo/Evented', 
         'modules/widgets/editorarea/EditorArea', 
         'modules/gadget-spec-service', 'modules/widgets/sidebar/CreationModalDialog',
         "dojo/store/Memory", "dojo/store/Observable",
         "dijit/tree/ObjectStoreModel","dijit/Tree", "dojo/dom", "dojo/dom-class", "dojo/query", "dojo/domReady!"],
-        function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, template, domConstruct, EditorArea,
+        function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, template, domConstruct, Evented, EditorArea,
             gadgetSpecService, CreationModalDialog,
             Memory, Observable, ObjectStoreModel, Tree, dom, domClass, query) {
-  var SidebarNav = declare('SidebarNavWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin ], {
+  return declare('SidebarNavWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, Evented ], {
     templateString : template,
     specStore : null,
     specModel : null,
     specTree: null,
-    
-    addSpec : function(title, specId) {
-      if(this.specStore.query({name: "My Specs"}).length == 0) {
-        this.specStore.put({id: "myspecs", isDefault: false, name:"My Specs", parent :"root", hasChildren: true});
-      }
-      this.specStore.put({id: specId, isDefault: false, name: title, parent: "myspecs", hasChildren: false});
-      
-      var path = this.getPath([], specId);
-      var addedObject = this.specStore.query({id: specId})[0];
-      this.specTree.set("path", path);
-      
-      EditorArea.getInstance().displaySpec(addedObject.id);
-      EditorArea.getInstance().setTitle(addedObject.name);
-    },
-    
-    getPath : function(path, startId) {
-      var object = this.specStore.query({id: startId})[0];
-      if(object.id == "root") {
-        path.unshift(object.id);
-        return path;
-      } else {
-        path.unshift(object.id);
-        return this.getPath(path, object.parent);
-      }
-    },
-    
-    getDefaultId : function() {
-      var object = this.specStore.query({isDefault: true})[0];
-      return object.id;
-    }, 
-    
-    getDefaultName : function() {
-      var object = this.specStore.query({isDefault: true})[0];
-      return object.name;
-    },
-    
-    toggleModal: function() {
-      domClass.remove(this.creationModal.domNode, 'hide');
-      domClass.add(this.creationModal.domNode, 'in');
-      query('body').append('<div class="modal-backdrop fade in"></div>');
-    },
     
     startup : function() {
       var self = this;
@@ -101,8 +60,9 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
             showRoot: false,
             persist: false,
             onClick: function(item) {
-              EditorArea.getInstance().displaySpec(item.id);
-              EditorArea.getInstance().setTitle(item.name);
+              // self.emit('treeNodeClick', item);
+              eArea.displaySpec(item.id);
+              eArea.setTitle(item.name);
             }
           });
           
@@ -117,19 +77,49 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
       });
     },
     
+    addSpec : function(title, specId) {
+      if(this.specStore.query({name: "My Specs"}).length == 0) {
+        this.specStore.put({id: "myspecs", isDefault: false, name:"My Specs", parent :"root", hasChildren: true});
+      }
+      this.specStore.put({id: specId, isDefault: false, name: title, parent: "myspecs", hasChildren: false});
+      
+      var path = this.getPath([], specId);
+      var addedObject = this.specStore.query({id: specId})[0];
+      this.specTree.set("path", path);
+      eArea.setTitle(addedObject.name);
+      eArea.displaySpec(addedObject.id);
+      
+    },
+    
+    getPath : function(path, startId) {
+      var object = this.specStore.query({id: startId})[0];
+      if(object.id == "root") {
+        path.unshift(object.id);
+        return path;
+      } else {
+        path.unshift(object.id);
+        return this.getPath(path, object.parent);
+      }
+    },
+    
+    getDefaultId : function() {
+      var object = this.specStore.query({isDefault: true})[0];
+      return object.id;
+    }, 
+    
+    getDefaultName : function() {
+      var object = this.specStore.query({isDefault: true})[0];
+      return object.name;
+    },
+    
+    toggleModal: function() {
+      domClass.remove(this.creationModal.domNode, 'hide');
+      domClass.add(this.creationModal.domNode, 'in');
+      query('body').append('<div class="modal-backdrop fade in"></div>');
+    },
+    
     getGadgetSpecService : function() {
       return gadgetSpecService;
     }
   });
-
-  var instance;
-
-  return {
-    getInstance : function() {
-      if(!instance) {
-        instance = new SidebarNav();
-      }
-      return instance;
-    }
-  };
 });

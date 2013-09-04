@@ -17,14 +17,14 @@
  * under the License.
  */
 define(['dojo/_base/declare', 'modules/widgets/ModalDialog', 
-        'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'modules/widgets/editorarea/EditorArea',
+        'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin', 'modules/widgets/editorarea/EditorArea',
         'dojo/query', 'dojo/text!./../../templates/CreationModalDialog.html', 'dojo/text!./../../stubs/StubXML.xml', 
         'dojo/text!./../../stubs/StubEEXML.xml', 'dojo/text!./../../stubs/StubHTML.html',
         'dojo/dom', 'modules/gadget-spec-service',
         'dojo/dom-class', 'dojo/dom-style','dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
-        function(declare, ModalDialog, WidgetBase, TemplatedMixin, EditorArea,
+        function(declare, ModalDialog, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, EditorArea,
             query, template, stubxml, stubeexml, stubhtml, dom, gadgetSpecService, domClass, domStyle) {
-  return declare('CreationModalDialogWidget', [ModalDialog], {
+  return declare('CreationModalDialogWidget', [ModalDialog, WidgetsInTemplateMixin], {
     templateString : template,
     
     onSubmit : function() {
@@ -96,9 +96,7 @@ define(['dojo/_base/declare', 'modules/widgets/ModalDialog',
     
     addToSidebar: function(data, title) {
       var self = this;
-      require(['modules/widgets/sidebar/SidebarNav'], function(SidebarNav) {
-        SidebarNav.getInstance().addSpec(title, data.id);
-      });
+      sNav.addSpec(title, data.id);
     },
     
     replaceResourceStubs : function(str, mapObj) {

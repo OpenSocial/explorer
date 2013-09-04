@@ -16,72 +16,51 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
-        'dojo/query', 'dojo/text!./../../templates/EditorToolbar.html', 'dojo/on',
+define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin', 'modules/widgets/editorarea/EditorArea',
+        'dojo/query', 'dojo/text!./../../templates/EditorToolbar.html', 'dojo/on', 'dojo/Evented',
         'dojo/dom-class', 'modules/gadget-spec-service', 
         'dojo/NodeList-manipulate', 'dojo/NodeList-dom', 'dojo/ready', 'dojo/domReady!'],
-        function(declare, WidgetBase, TemplatedMixin, query, 
-                 template, on, domClass, gadgetSpecService) {
-            return declare('EditorToolbarWidget', [ WidgetBase, TemplatedMixin ], {
-                templateString : template,
-                
-                startup : function() {
-                  var self = this;
-                  query('#renderBtn', this.domNode).on('click', function(e){
-                    self.postGadgetSpec(function(data) {
-                      self.editorArea.renderGadget(data.id);
-                      self.setNewId(data);
-                    });
-                  });
-                  
-                  query('#renderEEBtn', this.domNode).on('click', function(e){
-                    self.postGadgetSpec(function(data) {
-                      self.editorArea.renderEmbeddedExperience(data.id);
-                      self.setNewId(data);
-                    });
-                  });
-                },
-                
-                setTitle: function(title) {
-                  query('.brand', this.domNode)[0].innerHTML = title;
-                },
-                
-                postGadgetSpec : function(thenFunction) {
-                  var self = this;
-                  this.getGadgetSpecService().createNewGadgetSpec(this.editorArea.getGadgetSpec(),{
-                    success : thenFunction,
-                    error : function(data) {
-                      console.error("There was an error");
-                    }
-                  });
-                },
+        function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, EditorArea, query, 
+            template, on, Evented, domClass, gadgetSpecService) {
+  return declare('EditorToolbarWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, Evented ], {
+    templateString : template,
+    
+    onRenderGadgetClick: function() {
+      this.emit("renderGadgetClick", {});
+    },
+    
+    onRenderEEClick: function() {
+      this.emit("renderEEClick", {});
+    },
+    
+    setTitle: function(title) {
+      query('.brand', this.domNode)[0].innerHTML = title;
+    },
 
-                getGadgetSpecService : function() {
-                  return gadgetSpecService;
-                },
-                
-                showRenderEEButton: function() {
-                  domClass.remove("renderEEBtn", "hide");
-                },
-                
-                hideRenderEEButton: function() {
-                  domClass.add("renderEEBtn", "hide");
-                },
-                
-                showRenderGadgetButton: function() {
-                  domClass.remove("renderBtn", "hide");
-                },
-                
-                hideRenderGadgetButton: function() {
-                  domClass.add("renderBtn", "hide");
-                },
-                
-                setNewId: function(responseData) {
-                  var self = this;
-                  require(['modules/widgets/sidebar/SidebarNav'], function(SidebarNav) {
-                    var selectedObject = SidebarNav.getInstance().specTree.get("selectedItems")[0];
-                    selectedObject.id = responseData.id;
-                  });
-                }
-            });
-        });
+    setNewId: function(responseData) {
+      var self = this;
+      var selectedObject = sNav.specTree.get("selectedItems")[0];
+      selectedObject.id = responseData.id;
+    },
+
+    getGadgetSpecService : function() {
+      return gadgetSpecService;
+    },
+
+    showRenderEEButton: function() {
+      domClass.remove("renderEEBtn", "hide");
+    },
+
+    hideRenderEEButton: function() {
+      domClass.add("renderEEBtn", "hide");
+    },
+
+    showRenderGadgetButton: function() {
+      domClass.remove("renderBtn", "hide");
+    },
+
+    hideRenderGadgetButton: function() {
+      domClass.add("renderBtn", "hide");
+    }
+  });
+});
