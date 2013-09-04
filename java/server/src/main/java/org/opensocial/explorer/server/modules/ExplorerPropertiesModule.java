@@ -48,7 +48,7 @@ public class ExplorerPropertiesModule extends PropertiesModule {
     return this.properties;
   }
   
-  private Properties mergeProperties(Properties...propertiesArray) {
+  protected Properties mergeProperties(Properties...propertiesArray) {
     if (propertiesArray.length == 0) {
       return null;
     }
