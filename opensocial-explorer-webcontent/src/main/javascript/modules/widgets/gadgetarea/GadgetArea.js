@@ -19,52 +19,23 @@
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dojo/_base/array', 'dojo/text!./../../templates/GadgetArea.html', 'modules/widgets/gadgetarea/GadgetToolbar',
         'dojo/dom-construct','modules/widgets/Loading', 'modules/opensocial-data', 'modules/widgets/gadgetarea/GadgetModalDialog',
-        'dojo/_base/window', 'dojo/dom', 'dojo/json'],
+        'dojo/_base/window', 'dojo/dom', 'dojo/json', 'modules/ExplorerContainer', 'dojo/on'],
         function(declare, WidgetBase, TemplatedMixin,
                 arrayUtil, template, GadgetToolbar, domConstruct, Loading, osData, GadgetModalDialog, win, dom,
-                JSON) {
+                JSON, ExplorerContainer, on) {
             var GadgetArea = declare('GadgetAreaWidget', [ WidgetBase, TemplatedMixin ], {
                 templateString : template,
                 containerToken : null,
                 containerTokenTTL : 3600,
                 
                 constructor : function() {
-                  this.siteCounter = 0;
                   
-                  var config = {},
-                      self = this,
-                      lifecycle = {};
-                  this.containerToken = gadgets.config.get('shindig.auth')['authToken'];
-                  config[osapi.container.ContainerConfig.RENDER_DEBUG] = '1';
-                  config[osapi.container.ContainerConfig.SET_PREFERENCES] = this.setPrefs();
-                  config[osapi.container.ContainerConfig.GET_CONTAINER_TOKEN] = dojo.hitch(this, 'getContainerToken');
-                  this.container = new osapi.container.Container(config);
-                  lifecycle[osapi.container.CallbackType.ON_RENDER] = function(gadgetUrl, sideId) {
-                    self.loadingWidget.hide();
-                  };
-                  this.container.addGadgetLifecycleCallback('org.opensocial.explorer', lifecycle);
-                  
-                  // Hook-up actions
-                  this.container.actions.registerShowActionsHandler(function(actionObjArray) { 
-                    self.showActions(actionObjArray, self.gadgetToolbar, self.container, function(actionId){
-                      self.container.actions.runAction(actionId);
-                    });
-                  });
-                  this.container.actions.registerHideActionsHandler(function(actionObjArray) { 
-                    self.hideActions(actionObjArray, self.gadgetToolbar);
-                  });
-                  this.container.actions.registerNavigateGadgetHandler(function(gadgetUrl, opt_params) {
-                    self.navigateForActions(self, gadgetUrl, opt_params);
-                  });
-                  
-                  //Hook-up open-views
-                  this.container.views.createElementForUrl = this.handleNavigateUrl();
-                  this.container.views.createElementForGadget = this.handleNavigateGadget();
-                  this.container.views.createElementForEmbeddedExperience = this.handleNavigateEE();
-                  this.container.views.destroyElement = this.handleDestroyElement();
                 },
                 
                 startup : function() {
+                  this.expContainer = new ExplorerContainer({"siteParent" : this.domNode});
+                  
+                  this.container = this.expContainer.getContainer();
                   this.gadgetToolbar = new GadgetToolbar();
                   domConstruct.place(this.gadgetToolbar.domNode, this.domNode);
                   this.gadgetToolbar.startup();
@@ -77,7 +48,17 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                   this.loadingWidget = new Loading();
                   domConstruct.place(this.loadingWidget.domNode, this.domNode);
                   this.loadingWidget.startup();
+                  on(this.expContainer, 'rendergadget', function(gadgetUrl, siteId) {
+                    self.loadingWidget.hide();
+                  });
                   
+                  on(this.expContainer, 'setpreferences', function(site, url, prefs) {
+                    self.gadgetToolbar.getPrefDialog().setPrefs(prefs);
+                  });
+                  
+                  on(this.expContainer, 'addaction', function(action) {
+                    self.gadgetToolbar.addAction(action);
+                  });
                 },
                 
                 getContainer : function() {
@@ -100,14 +81,15 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                 },
                 
                 renderGadget : function(url, opt_renderParams) {
-                  var renderParams = opt_renderParams || {},
-                      viewParams = {"gadgetUrl" : url};
-                  this.loadingWidget.show();                  
-                  this.site = this.createSite();
-                  renderParams[osapi.container.RenderParam.HEIGHT] = '100%';
-                  renderParams[osapi.container.RenderParam.WIDTH] = '100%';
-                  this.container.navigateGadget(this.site, url, viewParams, 
-                          renderParams);
+//                  var renderParams = opt_renderParams || {},
+//                      viewParams = {"gadgetUrl" : url};
+//                  this.loadingWidget.show();                  
+//                  this.site = this.createSite();
+//                  renderParams[osapi.container.RenderParam.HEIGHT] = '100%';
+//                  renderParams[osapi.container.RenderParam.WIDTH] = '100%';
+//                  this.container.navigateGadget(this.site, url, viewParams, 
+//                          renderParams);
+                  this.expContainer.renderGadget(url, opt_renderParams);
                 },
                 
                 setPrefs : function() {
@@ -118,29 +100,30 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                 },
                 
                 renderEmbeddedExperience : function(url, dataModel) {
-                  this.closeOpenSite();
-                  this.loadingWidget.show();  
-                  var self = this;
-                  this.container.preloadGadget(url, function(metadata) {
-                    if(metadata && metadata[url]) {
-                      self.gadgetToolbar.setGadgetMetadata(metadata[url]);
-                      var siteNode = self.createNodeForSite.call(self),
-                      oDataModel = JSON.parse(dataModel),
-                      renderParams = {};
-                      oDataModel.gadget = url;
-                      renderParams[osapi.container.ee.RenderParam.GADGET_RENDER_PARAMS] = {};
-                      renderParams[osapi.container.ee.RenderParam.GADGET_RENDER_PARAMS][osapi.container.RenderParam.HEIGHT] = '100%';
-                      renderParams[osapi.container.ee.RenderParam.GADGET_RENDER_PARAMS][osapi.container.RenderParam.WIDTH] = '100%';
-                      renderParams[osapi.container.ee.RenderParam.GADGET_VIEW_PARAMS] = {"gadgetUrl" : url}; 
-
-                      self.container.ee.navigate(siteNode, oDataModel, renderParams, function(site){
-                        // Set the site so we can clean it up when we switch gadgets
-                        self.site = site;
-                      });
-                    } else {
-                      console.error('There was an error preloading the embedded experience.');
-                    }
-                  });
+//                  this.closeOpenSite();
+//                  this.loadingWidget.show();  
+//                  var self = this;
+//                  this.container.preloadGadget(url, function(metadata) {
+//                    if(metadata && metadata[url]) {
+//                      self.gadgetToolbar.setGadgetMetadata(metadata[url]);
+//                      var siteNode = self.createNodeForSite.call(self),
+//                      oDataModel = JSON.parse(dataModel),
+//                      renderParams = {};
+//                      oDataModel.gadget = url;
+//                      renderParams[osapi.container.ee.RenderParam.GADGET_RENDER_PARAMS] = {};
+//                      renderParams[osapi.container.ee.RenderParam.GADGET_RENDER_PARAMS][osapi.container.RenderParam.HEIGHT] = '100%';
+//                      renderParams[osapi.container.ee.RenderParam.GADGET_RENDER_PARAMS][osapi.container.RenderParam.WIDTH] = '100%';
+//                      renderParams[osapi.container.ee.RenderParam.GADGET_VIEW_PARAMS] = {"gadgetUrl" : url}; 
+//
+//                      self.container.ee.navigate(siteNode, oDataModel, renderParams, function(site){
+//                        // Set the site so we can clean it up when we switch gadgets
+//                        self.site = site;
+//                      });
+//                    } else {
+//                      console.error('There was an error preloading the embedded experience.');
+//                    }
+//                  });
+                  this.expContainer.renderEmbeddedExperience(url, dataModel);
                 },
                 
                 createSite : function() {
