@@ -17,96 +17,119 @@
  * under the License.
  */
 define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'dojo/dom-construct',
-        'modules/widgets/controlgroups/StringControlGroup', 'modules/widgets/controlgroups/BooleanControlGroup', 'modules/widgets/controlgroups/EnumControlGroup', 
-        'modules/widgets/controlgroups/ListControlGroup', 'dojo/on', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
-        function(declare, ModalDialog, query, domConstruct, StringControlGroup, BooleanControlGroup, EnumControlGroup, ListControlGroup, on) {
-            return declare('ModalDialogWidget', [ ModalDialog ], {
+        'modules/widgets/controlgroups/StringControlGroup', 'modules/widgets/controlgroups/BooleanControlGroup', 
+        'modules/widgets/controlgroups/EnumControlGroup', 'modules/widgets/controlgroups/ListControlGroup', 'dojo/on', 
+        'dojo/topic', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
+        function(declare, ModalDialog, query, domConstruct, StringControlGroup, BooleanControlGroup, EnumControlGroup, 
+                ListControlGroup, on, topic) {
+            return declare('PreferencesDialogWidget', [ ModalDialog ], {
                 
-                constructor : function() {
-                  this.controlGroups = {};
-                  this.prefsChangedListeners = [];
-                },
+              constructor : function() {
+                this.controlGroups = {};
+                this.prefsChangedListeners = [];
+                var self = this;
+                this.showHandle = topic.subscribe('org.opensocial.explorer.prefdialog.show', function(){
+                  self.show();
+                });
+                this.hideHandle = topic.subscribe('org.opensocial.explorer.prefdialog.hide', function(){
+                  self.hide();
+                });
+              },
                 
-                postCreate : function() {
-                  var form = domConstruct.create('div', {"class" : "form-horizontal"}),
-                      self = this,
-                      closeBtn = domConstruct.create('button', {"class" : "btn", "innerHTML" : "Close"}),
-                      saveBtn = domConstruct.create('button', {"class" : "btn btn-primary", "innerHTML" : "Save"}),
-                      footer = query('.modal-footer', this.domNode);
-                  query('.modal-body', this.domNode).append(form);
-                  on(closeBtn, 'click', function(e) {
-                    self.hide();
-                  });
-                  on(saveBtn, 'click', function(e) {
-                    self.hide();
-                    self.notifyPrefsChangedListeners.call(self);
-                  });
-                  footer.append(saveBtn);
-                  footer.append(closeBtn);
-                },
+              destroy : function() {
+                this.showHandle.remove();
+                this.hideHandle.remove();
+                this.inherited(arguments);
+              },
                 
-                startup : function() {
-                  this.setHeaderTitle('Preferences');
-                  this.inherited(arguments);
-                },
+              postCreate : function() {
+                var form = domConstruct.create('div', {"class" : "form-horizontal"}),
+                    self = this,
+                    closeBtn = domConstruct.create('button', {"class" : "btn", "innerHTML" : "Close"}),
+                    saveBtn = domConstruct.create('button', {"class" : "btn btn-primary", "innerHTML" : "Save"}),
+                    footer = query('.modal-footer', this.domNode);
+                query('.modal-body', this.domNode).append(form);
+                on(closeBtn, 'click', function(e) {
+                  self.hide();
+                });
+                on(saveBtn, 'click', function(e) {
+                  self.hide();
+                  self.notifyPrefsChangedListeners.call(self);
+                });
+                footer.append(saveBtn);
+                footer.append(closeBtn);
+              },
                 
-                addPrefsToUI : function(prefs) {
-                  query('.form-horizontal > *', this.domNode).remove();
-                  //TODO we probably need to destroy the widgets created as well
-                  for(var key in prefs) {
-                    var pref = prefs[key];
-                    this.addPrefToUI(pref);
-                  }
-                },
+              startup : function() {
+                this.setHeaderTitle('Preferences');
+                this.inherited(arguments);
+              },
                 
-                addPrefToUI : function(pref) {
-                  var controlGroup;
-                  if(pref.dataType === 'BOOL') {
-                    controlGroup = new BooleanControlGroup(pref);
-                  } else if(pref.dataType === 'ENUM') {
-                    controlGroup = new EnumControlGroup(pref);
-                  } else if(pref.dataType === 'STRING') {
-                    controlGroup = new StringControlGroup(pref);
-                  } else if(pref.dataType === 'LIST') {
-                    controlGroup = new ListControlGroup(pref);
-                  }
+              addPrefsToUI : function(prefs) {
+                query('.form-horizontal > *', this.domNode).remove();
+                //TODO we probably need to destroy the widgets created as well
+                for(var key in prefs) {
+                  var pref = prefs[key];
+                  this.addPrefToUI(pref);
+                }
+              },
+                
+              addPrefToUI : function(pref) {
+                var controlGroup;
+                if(pref.dataType === 'BOOL') {
+                  controlGroup = new BooleanControlGroup(pref);
+                } else if(pref.dataType === 'ENUM') {
+                  controlGroup = new EnumControlGroup(pref);
+                } else if(pref.dataType === 'STRING') {
+                  controlGroup = new StringControlGroup(pref);
+                } else if(pref.dataType === 'LIST') {
+                  controlGroup = new ListControlGroup(pref);
+                }
+                if(controlGroup) {
+                  var form = query('.modal-body .form-horizontal', this.domNode);
+                  form.append(controlGroup.domNode);
+                  controlGroup.startup();
+                  this.controlGroups[pref.name] = controlGroup;
+                }
+              },
+                
+              notifyPrefsChangedListeners : function() {
+                if(!this.isValid()) {
+                  return;
+                }
+                var prefs = {};
+                for(var key in this.controlGroups) {
+                  prefs[this.controlGroups[key].name] = this.controlGroups[key].getValue();
+                }
+                for(var j = 0; j < this.prefsChangedListeners.length; j++) {
+                  this.prefsChangedListeners[j](prefs);
+                }
+              },
+                
+              getPrefs : function() {
+                var prefs = {};
+                for(var key in this.controlGroups) {
+                  prefs[this.controlGroups[key].name] = this.controlGroups[key].getValue();
+                }
+                return prefs;
+              },
+                
+              isValid : function() {
+                //TODO go through and validate each field to make sure that the required prefs have values
+                return true;
+              },
+                
+              addPrefsChangedListener : function(listener) {
+                this.prefsChangedListeners.push(listener);
+              },
+                
+              setPrefs : function(prefs) {
+                for(var key in prefs) {
+                  var controlGroup = this.controlGroups[key];
                   if(controlGroup) {
-                    var form = query('.modal-body .form-horizontal', this.domNode);
-                    form.append(controlGroup.domNode);
-                    controlGroup.startup();
-                    this.controlGroups[pref.name] = controlGroup;
-                  }
-                },
-                
-                notifyPrefsChangedListeners : function() {
-                  if(!this.isValid()) {
-                    return;
-                  }
-                  var prefs = {};
-                  for(var key in this.controlGroups) {
-                    prefs[this.controlGroups[key].name] = this.controlGroups[key].getValue();
-                  }
-                  for(var j = 0; j < this.prefsChangedListeners.length; j++) {
-                    this.prefsChangedListeners[j](prefs);
-                  }
-                },
-                
-                isValid : function() {
-                  //TODO go through and validate each field to make sure that the required prefs have values
-                  return true;
-                },
-                
-                addPrefsChangedListener : function(listener) {
-                  this.prefsChangedListeners.push(listener);
-                },
-                
-                setPrefs : function(prefs) {
-                  for(var key in prefs) {
-                    var controlGroup = this.controlGroups[key];
-                    if(controlGroup) {
-                      controlGroup.setValue(prefs[key]);
-                    }
+                    controlGroup.setValue(prefs[key]);
                   }
                 }
-            });
-        });
+              }
+          });
+      });

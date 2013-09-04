@@ -30,7 +30,7 @@ define(['modules/widgets/sidebar/SidebarNav'], function(SidebarNav){
     });
   
     it("can be started", function() {
-      var sidebar = SidebarNav.getInstance();
+      var sidebar = new SidebarNav();
       
       spyOn(sidebar, 'getGadgetSpecService').andReturn({
         getSpecTree : function(callbacks) {
@@ -58,7 +58,7 @@ define(['modules/widgets/sidebar/SidebarNav'], function(SidebarNav){
     }); 
     
     it("can add a new spec", function() {
-      var sidebar = SidebarNav.getInstance();
+      var sidebar = new SidebarNav();
       
       spyOn(sidebar, 'getGadgetSpecService').andReturn({
         getSpecTree : function(callbacks) {

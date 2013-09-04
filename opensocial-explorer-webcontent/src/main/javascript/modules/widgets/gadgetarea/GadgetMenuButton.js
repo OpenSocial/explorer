@@ -18,16 +18,12 @@
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dojo/text!./../../templates/GadgetMenuButton.html',
-        'modules/widgets/gadgetarea/GadgetDropDownMenu', 'dojo/dom-construct'],
-        function(declare, WidgetBase, TemplatedMixin, template, GadgetDropDownMenu, domConstruct) {
-            return declare('GadgetMenuButtonWidget', [ WidgetBase, TemplatedMixin ], {
+        'modules/widgets/gadgetarea/GadgetDropDownMenu', 'dojo/dom-construct',
+        'dijit/_WidgetsInTemplateMixin'],
+        function(declare, WidgetBase, TemplatedMixin, template, GadgetDropDownMenu, domConstruct,
+                WidgetsInTemplateMixin) {
+            return declare('GadgetMenuButtonWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin ], {
                 templateString : template,
-
-                startup : function() {
-                  this.gadgetDropDown = new GadgetDropDownMenu({"gadgetArea" : this.gadgetArea, "prefDialog" : this.prefDialog});
-                  domConstruct.place(this.gadgetDropDown.domNode, this.domNode);
-                  this.gadgetDropDown.startup();
-                },
                 
                 constructMenu : function(metadata) {
                   this.gadgetDropDown.setViews(metadata.views);

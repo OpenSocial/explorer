@@ -18,55 +18,33 @@
  */
 define(['dojo/_base/lang', 'dojo/_base/declare', 'modules/widgets/DropDownMenu',
         'dojo/query', 'dojo/dom-class', 'modules/widgets/MenuItemWidget', 'modules/opensocial-data',
-        'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
-        function(lang, declare, DropDownMenu, query, domClass, MenuItemWidget, osData) {
-            return declare('GadgetDropDownMenuWidget', [ DropDownMenu ], {
+        'dojo/text!./../../templates/GadgetDropDownMenu.html', 'dijit/_WidgetsInTemplateMixin',
+        'dojo/on', 'dojo/topic', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
+        function(lang, declare, DropDownMenu, query, domClass, MenuItemWidget, osData, template, WidgetsInTemplateMixin,
+                on, topic) {
+            return declare('GadgetDropDownMenuWidget', [ DropDownMenu, WidgetsInTemplateMixin ], {
+                templateString : template,
+                
                 startup : function() {
-                  var self = this,
-                      subMenuItems = [];
-                  domClass.add(this.domNode, 'gadgetMenuDropDown');
-                  this.preferencesMenuItem = new MenuItemWidget({"name" : "Preferences", "onclick" : function(e) {
-                    self.prefDialog.show();
-                  }});
-                  this.addMenuItem(this.preferencesMenuItem);
-                  this.viewsMenu = new MenuItemWidget({"name" : "Views"});
-                  this.addMenuItem(this.viewsMenu);
-                  this.selectionMenu = new MenuItemWidget({"name" : "Selection"});
-                  this.addMenuItem(this.createSelectionMenu());
-                  
-                  // Setup menus for actions.
-                  this.actionsMenu = new MenuItemWidget({"name" : "Actions"});
-                  this.addMenuItem(this.actionsMenu);
-                  this.actionsMenu.setSubMenuContent([], 'pull-left');
-                  this.addMenuItem(this.createLocationMenu());
-                },
-                
-                createSelectionMenu : function() {
-                  var items = [],
-                      self = this;
-                  items.push(new MenuItemWidget({"name" : "opensocial.Person", "onclick" : function(e) {
+                  var self = this;
+                  on(this.personMenuOption.domNode,'click', function(e) {
                     self.publishSelection('opensocial.Person');
-                  }}));
-                  items.push(new MenuItemWidget({"name" : "opensocial.File", "onclick" : function(e) {
+                  });
+                  on(this.fileMenuOption.domNode,'click', function(e) {
                     self.publishSelection('opensocial.File');
-                  }}));
-                  items.push(new MenuItemWidget({"name" : "opensocial.Message", "onclick" : function(e) {
+                  });
+                  on(this.messageMenuOption.domNode,'click', function(e) {
                     self.publishSelection('opensocial.Message');
-                  }}));
-                  return new MenuItemWidget({"name" : "Selection", "menuItems" : {"items" : items, "direction" : "pull-left"}});
-                },
-                
-                createLocationMenu : function() {
-                  var items = [];
-                  items.push(new MenuItemWidget({"name" : "Side", "onclick" : function(e) {
+                  });
+                  on(this.sideMenuOption.domNode,'click', function(e) {
                     query('div.editor').removeClass('topBottom');
                     query('div.result').removeClass('topBottom');
                     query('.CodeMirror-scroll').removeClass('topBottom');
                     require(['modules/widgets/editorarea/EditorArea'], function(EditorArea){
                       EditorArea.getInstance().getEditorTabs().refreshEditors();
                     });
-                  }}));
-                  items.push(new MenuItemWidget({"name" : "Bottom", "onclick" : function(e) {
+                  });
+                  on(this.bottomMenuOption.domNode,'click', function(e) {
                     query('div.editor').addClass('topBottom');
                     query('div.result').addClass('topBottom');
                     query('.CodeMirror-scroll').addClass('topBottom');
@@ -75,15 +53,19 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'modules/widgets/DropDownMenu',
                     require(['modules/widgets/editorarea/EditorArea'], function(EditorArea){
                       EditorArea.getInstance().getEditorTabs().refreshEditors();
                     });
-                  }}));
-                  return new MenuItemWidget({"name" : "Location" , "menuItems" : {"items" : items, "direction" : "pull-left"}});
+                  });
+                  on(this.preferencesMenuItem.domNode, 'click', function(e) {
+                    topic.publish('org.opensocial.explorer.prefdialog.show');
+                  });
                 },
                 
                 setViews : function(views) {
                   var items = [];
                   for(var key in views) {
                     items.push(new MenuItemWidget({"name" : key, "onclick" : lang.hitch(this, function(key){
-                      this.gadgetArea.reRenderGadget({"view" : key});
+                      require(['modules/widgets/gadgetarea/GadgetArea'], function(GadgetArea) {
+                        GadgetArea.getInstance().reRenderGadget({"view" : key});
+                      });
                     }, key)}));
                   }
                   this.viewsMenu.setSubMenuContent(items, 'pull-left');
