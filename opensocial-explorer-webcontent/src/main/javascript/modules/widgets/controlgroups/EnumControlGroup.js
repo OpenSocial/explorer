@@ -34,6 +34,7 @@ define(['dojo/_base/declare', 'modules/widgets/controlgroups/ControlGroup',
                             {"value" : this.orderedEnumValues[i].value, "innerHTML" : this.orderedEnumValues[i].displayValue}, select);
                     if(this.orderedEnumValues[i].displayValue === this.defaultValue) {
                       domAttr.set(option, 'selected', 'selected');
+                      this.currentValue = this.defaultValue;
                     }
                   }
                   domConstruct.place(select, query('.controls', this.domNode)[0]);

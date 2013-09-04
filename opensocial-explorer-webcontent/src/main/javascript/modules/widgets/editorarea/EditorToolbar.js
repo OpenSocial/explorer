@@ -77,11 +77,8 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                 },
                 
                 setNewId: function(responseData) {
-                  var self = this;
-                  require(['modules/widgets/sidebar/SidebarNav'], function(SidebarNav) {
-                    var selectedObject = SidebarNav.getInstance().specTree.get("selectedItems")[0];
-                    selectedObject.id = responseData.id;
-                  });
+                  var selectedObject = sidebarNav.specTree.get("selectedItems")[0];
+                  selectedObject.id = responseData.id;
                 }
             });
         });

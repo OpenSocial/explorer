@@ -95,10 +95,7 @@ define(['dojo/_base/declare', 'modules/widgets/ModalDialog',
     },
     
     addToSidebar: function(data, title) {
-      var self = this;
-      require(['modules/widgets/sidebar/SidebarNav'], function(SidebarNav) {
-        SidebarNav.getInstance().addSpec(title, data.id);
-      });
+      sidebarNav.addSpec(title, data.id);
     },
     
     replaceResourceStubs : function(str, mapObj) {

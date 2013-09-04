@@ -20,12 +20,12 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
         'dojo/text!./../../templates/SidebarNav.html', 'dojo/dom-construct',
         'modules/widgets/editorarea/EditorArea', 
         'modules/gadget-spec-service', 'modules/widgets/sidebar/CreationModalDialog',
-        "dojo/store/Memory", "dojo/store/Observable",
-        "dijit/tree/ObjectStoreModel","dijit/Tree", "dojo/dom", "dojo/dom-class", "dojo/query", "dojo/domReady!"],
+        'dojo/store/Memory', 'dojo/store/Observable',
+        'dijit/tree/ObjectStoreModel', 'dijit/Tree', 'dojo/dom', 'dojo/dom-class', 'dojo/query', 'dojo/domReady!'],
         function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, template, domConstruct, EditorArea,
             gadgetSpecService, CreationModalDialog,
             Memory, Observable, ObjectStoreModel, Tree, dom, domClass, query) {
-  var SidebarNav = declare('SidebarNavWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin ], {
+  return declare('SidebarNavWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin ], {
     templateString : template,
     specStore : null,
     specModel : null,
@@ -121,15 +121,4 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
       return gadgetSpecService;
     }
   });
-
-  var instance;
-
-  return {
-    getInstance : function() {
-      if(!instance) {
-        instance = new SidebarNav();
-      }
-      return instance;
-    }
-  };
 });
