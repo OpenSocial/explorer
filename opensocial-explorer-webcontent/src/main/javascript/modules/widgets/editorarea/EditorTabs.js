@@ -19,9 +19,9 @@
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dojo/_base/array', 'dojo/text!./../../templates/EditorTabs.html',
         'dojo/dom-construct', 'modules/widgets/editorarea/CssEditor', 'modules/widgets/editorarea/GadgetEditor', 'modules/widgets/editorarea/HtmlEditor', 'modules/widgets/editorarea/JSEditor',
-        'modules/widgets/editorarea/JSONEditor'],
+        'modules/widgets/editorarea/JSONEditor', 'dojo/query'],
         function(declare, WidgetBase, TemplatedMixin,
-                arrayUtil, template, domConstruct, CssEditor, GadgetEditor, HtmlEditor, JSEditor, JSONEditor) {
+                arrayUtil, template, domConstruct, CssEditor, GadgetEditor, HtmlEditor, JSEditor, JSONEditor, query) {
             return declare('EditorTabsWidget', [ WidgetBase, TemplatedMixin ], {
                 templateString : template,
                 
@@ -53,10 +53,12 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                 },
                 
                 getGadgetSpec : function() {
+                  var title = query("#gadget-name").innerHTML();
                   var spec = {
                           "htmlResources" : [],
                           "cssResources" : [],
-                          "jsResources" : []
+                          "jsResources" : [],
+                          "title" : title
                   };
                   for(var i = 0; i < this.tabs.length; i++) {
                     var tab = this.tabs[i];
@@ -75,6 +77,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                     }
                   }
                   return spec;
+                  
                 },
                 
                 refreshEditors : function() {

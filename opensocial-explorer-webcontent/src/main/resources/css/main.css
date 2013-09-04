@@ -16,12 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+ 
+.center {
+	text-align: center;
+}
+
+.creation {
+	width: 70%;
+} 
 
 body {
-        padding-top: 60px;
-        padding-bottom: 40px;
+	padding-top: 60px;
+	padding-bottom: 40px;
 }
-       
+
 div.editor {
 	width: 49.5%;
 	height: 100%;
