@@ -16,31 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin', 'modules/widgets/editorarea/EditorArea',
+define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin',
         'dojo/query', 'dojo/text!./../../templates/EditorToolbar.html', 'dojo/on', 'dojo/Evented',
         'dojo/dom-class', 'modules/gadget-spec-service', 
         'dojo/NodeList-manipulate', 'dojo/NodeList-dom', 'dojo/ready', 'dojo/domReady!'],
-        function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, EditorArea, query, 
+        function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, query, 
             template, on, Evented, domClass, gadgetSpecService) {
   return declare('EditorToolbarWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, Evented ], {
     templateString : template,
-    
     onRenderGadgetClick: function() {
-      this.emit("renderGadgetClick", {});
+      this.emit("renderGadgetClick");
     },
     
     onRenderEEClick: function() {
-      this.emit("renderEEClick", {});
+      this.emit("renderEEClick");
     },
     
     setTitle: function(title) {
       query('.brand', this.domNode)[0].innerHTML = title;
-    },
-
-    setNewId: function(responseData) {
-      var self = this;
-      var selectedObject = sNav.specTree.get("selectedItems")[0];
-      selectedObject.id = responseData.id;
     },
 
     getGadgetSpecService : function() {

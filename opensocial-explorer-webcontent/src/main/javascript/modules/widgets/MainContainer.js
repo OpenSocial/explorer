@@ -16,10 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin',
+define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin',
          'dojo/query', 'dojo/on', 'dojo/text!./../templates/MainContainer.html'], 
          function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, query, on, template) {
   return declare('MainContainerWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin ], {
     templateString : template,
+
+    postCreate: function() {
+      var self = this;
+      on(this.sidebarNav, 'show', function(node) {
+        self.editorArea.displaySpec(node.id);
+        self.editorArea.setTitle(node.name); 
+      }); 
+      
+      on(this.editorArea, 'renderGadget', function(id) {
+        self.gadgetArea.loadGadget(document.location.protocol + '//' + document.location.host + self.editorArea.getContextRoot() + '/gadgetspec/' + id + '/' + self.editorArea.getGadgetSpec().gadgetResource.name);
+        self.sidebarNav.setNewId(id);
+      });
+      
+      on(this.editorArea, 'renderEE', function(id) {
+        self.gadgetArea.renderEmbeddedExperience(document.location.protocol + '//' + document.location.host + self.editorArea.getContextRoot() + '/gadgetspec/' + id + '/' + self.editorArea.getGadgetSpec().gadgetResource.name, self.editorArea.getGadgetSpec().eeResource.content);
+        self.sidebarNav.setNewId(id);
+      });
+    }
   });
 });

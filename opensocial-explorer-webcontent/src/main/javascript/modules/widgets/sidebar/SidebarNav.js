@@ -16,21 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin',
-        'dojo/text!./../../templates/SidebarNav.html', 'dojo/dom-construct', 'dojo/Evented', 
-        'modules/widgets/editorarea/EditorArea', 
-        'modules/gadget-spec-service', 'modules/widgets/sidebar/CreationModalDialog',
-        "dojo/store/Memory", "dojo/store/Observable",
-        "dijit/tree/ObjectStoreModel","dijit/Tree", "dojo/dom", "dojo/dom-class", "dojo/query", "dojo/domReady!"],
-        function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, template, domConstruct, Evented, EditorArea,
-            gadgetSpecService, CreationModalDialog,
-            Memory, Observable, ObjectStoreModel, Tree, dom, domClass, query) {
+define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 
+        'dijit/_WidgetsInTemplateMixin', 'dojo/text!./../../templates/SidebarNav.html', 
+        'dojo/dom-construct', 'dojo/Evented', 'modules/widgets/sidebar/CreationModalDialog',
+        'modules/gadget-spec-service', 'dojo/store/Memory', 'dojo/store/Observable', 'dojo/on',
+        'dijit/tree/ObjectStoreModel', 'dijit/Tree', 'dojo/dom', 'dojo/dom-class', 'dojo/query', 'dojo/domReady!'],
+        function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, template, domConstruct, Evented,
+            CreationModalDialog, gadgetSpecService, Memory, Observable, on, ObjectStoreModel, Tree, dom, domClass, query) {
   return declare('SidebarNavWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, Evented ], {
     templateString : template,
     specStore : null,
     specModel : null,
     specTree: null,
-    
     startup : function() {
       var self = this;
       this.getGadgetSpecService().getSpecTree({
@@ -59,21 +56,22 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
             openOnClick: true,
             showRoot: false,
             persist: false,
-            onClick: function(item) {
-              // self.emit('treeNodeClick', item);
-              eArea.displaySpec(item.id);
-              eArea.setTitle(item.name);
+            onClick: function(node) {
+              self.emit('show', node);
             }
           });
           
           self.specTree.startup();
           self.specTree.set("path", self.getPath([], self.getDefaultId()));
           self.specTree.placeAt(self.domNode);
-          EditorArea.getInstance().setTitle(self.getDefaultName());
         },
         error : function(data) {
           console.error("There was an error");
         }
+      });
+      
+      on(this.creationModal, 'newSpec', function(title, data) {
+        self.addSpec(title, data.id);
       });
     },
     
@@ -84,11 +82,9 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
       this.specStore.put({id: specId, isDefault: false, name: title, parent: "myspecs", hasChildren: false});
       
       var path = this.getPath([], specId);
-      var addedObject = this.specStore.query({id: specId})[0];
+      var newNode = this.specStore.query({id: specId})[0];
       this.specTree.set("path", path);
-      eArea.setTitle(addedObject.name);
-      eArea.displaySpec(addedObject.id);
-      
+      this.emit('show', newNode);
     },
     
     getPath : function(path, startId) {
@@ -110,6 +106,11 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
     getDefaultName : function() {
       var object = this.specStore.query({isDefault: true})[0];
       return object.name;
+    },
+    
+    setNewId: function(id) {
+      var focusedNode = this.specTree.get('selectedItems')[0];
+      focusedNode.id = id;
     },
     
     toggleModal: function() {

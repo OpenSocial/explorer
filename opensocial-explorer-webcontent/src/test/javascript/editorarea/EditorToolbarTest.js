@@ -25,95 +25,41 @@ define(['modules/widgets/editorarea/EditorToolbar', 'dojo/query', 'dojo/dom-clas
       div.style.display = 'none';
       div.id = 'testDiv';
       document.body.appendChild(div);
-
-      editorArea = jasmine.createSpyObj('editorArea', ['renderGadget', 'getGadgetSpec',
-        'renderEmbeddedExperience']);
-      editorArea.getGadgetSpec.andCallFake(function() {
-        return {"gadget" : "gadget.xml"};
-      });
     });
   
     afterEach(function() {
       document.body.removeChild(document.getElementById('testDiv'));
     });
 
-    function createSpecServiceSpy() {
-      var specService = jasmine.createSpyObj('specService', ['createNewGadgetSpec']);
-      specService.createNewGadgetSpec.andCallFake(function(gadgetSpec, callbacks) {
-        callbacks.success({"id" : "abc123"});
-      });
-      return specService;
-    };
-
-    function createErrorSpecServiceSpy() {
-        var specService = jasmine.createSpyObj('specService', ['createNewGadgetSpec']);
-        specService.createNewGadgetSpec.andCallFake(function(gadgetSpec, callbacks) {
-          callbacks.error();
-        });
-        return specService;
-    };
-
-    function createEditorToolbar(specService) {
-      var editorToolbar = new EditorToolbar({'editorArea' : editorArea});
-      spyOn(editorToolbar, 'getGadgetSpecService').andCallFake(function() {
-        return specService;
-      });
+    it("can respond to a render gadget click", function() {
+      var editorToolbar = new EditorToolbar();
+      spyOn(editorToolbar, "emit").andCallThrough();
       document.getElementById('testDiv').appendChild(editorToolbar.domNode);
-      editorToolbar.startup();
-      return editorToolbar;
-    };
-
-    it("can render a gadget", function() {
-      var specService = createSpecServiceSpy();
-      var editorToolbar = createEditorToolbar(specService);
-      spyOn(editorToolbar, "setNewId").andReturn(undefined);
       document.getElementById('renderBtn').click();
-      expect(editorArea.renderGadget).toHaveBeenCalledWith('abc123');
-      expect(specService.createNewGadgetSpec).toHaveBeenCalledWith({"gadget" : "gadget.xml"}, jasmine.any(Object));
-      expect(editorToolbar.setNewId).toHaveBeenCalled();
+      expect(editorToolbar.emit).toHaveBeenCalledWith("renderGadgetClick");
       editorToolbar.destroy();
     });
 
-    it("can handle an error when rendering a gadget", function() {
-      var specService = createErrorSpecServiceSpy();
-      var editorToolbar = createEditorToolbar(specService);
-      document.getElementById('renderBtn').click();
-      expect(editorArea.renderGadget).not.toHaveBeenCalled();
-      expect(specService.createNewGadgetSpec).toHaveBeenCalledWith({"gadget" : "gadget.xml"}, jasmine.any(Object));
-      editorToolbar.destroy();
-    });
-
-    it("can render an embedded experience", function() {
-      var specService = createSpecServiceSpy();
-      var editorToolbar = createEditorToolbar(specService);
-      spyOn(editorToolbar, "setNewId").andReturn(undefined);
+    it("can respond to a render ee gadget click", function() {
+      var editorToolbar = new EditorToolbar();
+      spyOn(editorToolbar, "emit").andCallThrough();
+      document.getElementById('testDiv').appendChild(editorToolbar.domNode);
       document.getElementById('renderEEBtn').click();
-      expect(editorArea.renderEmbeddedExperience).toHaveBeenCalledWith('abc123');
-      expect(specService.createNewGadgetSpec).toHaveBeenCalledWith({"gadget" : "gadget.xml"}, jasmine.any(Object));
-      expect(editorToolbar.setNewId).toHaveBeenCalled();
-      editorToolbar.destroy();
-    });
-
-    it("can handle an error when rendering an embedded experience", function() {
-      var specService = createErrorSpecServiceSpy();
-      var editorToolbar = createEditorToolbar(specService)
-      document.getElementById('renderEEBtn').click();
-      expect(editorArea.renderEmbeddedExperience).not.toHaveBeenCalled();
-      expect(specService.createNewGadgetSpec).toHaveBeenCalledWith({"gadget" : "gadget.xml"}, jasmine.any(Object));
+      expect(editorToolbar.emit).toHaveBeenCalledWith("renderEEClick");
       editorToolbar.destroy();
     });
 
     it('can set the title in the editor toolbar', function() {
-      var specService = createSpecServiceSpy();
-      var editorToolbar = createEditorToolbar(specService);
+      var editorToolbar = new EditorToolbar();
+      document.getElementById('testDiv').appendChild(editorToolbar.domNode);
       editorToolbar.setTitle('testing');
       expect(query('.brand', this.domNode)[0].innerHTML).toEqual('testing');
       editorToolbar.destroy();
     });
 
     it('can show and hide the embedded experiences button', function() {
-      var specService = createSpecServiceSpy();
-      var editorToolbar = createEditorToolbar(specService);
+      var editorToolbar = new EditorToolbar();
+      document.getElementById('testDiv').appendChild(editorToolbar.domNode);
       editorToolbar.showRenderEEButton();
       expect(domClass.contains('renderEEBtn', 'hide')).toEqual(false);
       editorToolbar.hideRenderEEButton();

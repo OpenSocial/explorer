@@ -16,16 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin',
+define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin', 'dojo/Evented', 'dojo/topic',
          'dojo/query', 'dojo/on', 'dojo/text!./../../templates/EditorArea.html', 'modules/widgets/editorarea/EditorToolbar',
          'modules/widgets/editorarea/EditorTabs', 'modules/widgets/editorarea/GadgetEditor', 'modules/widgets/editorarea/HtmlEditor', 
          'modules/widgets/editorarea/CssEditor', 'modules/widgets/editorarea/JSEditor', 'modules/widgets/editorarea/JSONEditor', 'modules/widgets/editorarea/EditorTab',
-         'dojo/dom-construct', 'dojo/dom-class', 'modules/widgets/gadgetarea/GadgetArea',
-         'modules/gadget-spec-service', 'modules/url-util', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom' ], 
-         function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, query, on, template, EditorToolbar, EditorTabs, GadgetEditor, 
-             HtmlEditor, CssEditor, JSEditor, JSONEditor, EditorTab, domConstruct, domClass, GadgetArea,
+         'dojo/dom-construct', 'dojo/dom-class', 'modules/gadget-spec-service', 'modules/url-util', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom' ], 
+         function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, Evented, topic, query, on, template, EditorToolbar, EditorTabs, GadgetEditor, 
+             HtmlEditor, CssEditor, JSEditor, JSONEditor, EditorTab, domConstruct, domClass,
              gadgetSpecService, urlUtil) {
-  return declare('EditorAreaWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin ], {
+  return declare('EditorAreaWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, Evented ], {
     templateString : template,
 
     startup : function() {
@@ -42,16 +41,18 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
 
       on(this.editorToolbar, "renderGadgetClick", function() {
         self.postGadgetSpec(function(data) {
-          self.renderGadget(data.id);
-          self.editorToolbar.setNewId(data);
+          self.emit('renderGadget', data.id);
         });
       });
 
       on(this.editorToolbar, "renderEEClick", function() {
         self.postGadgetSpec(function(data) {
-          self.renderEmbeddedExperience(data.id);
-          self.editorToolbar.setNewId(data);
+          self.emit('renderEE', data.id);
         });
+      });
+      
+      topic.subscribe("refreshEditors", function() {
+        self.getEditorTabs().refreshEditors();
       });
     },
 
@@ -88,11 +89,11 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
       if (data.eeResource) {
         this.editorToolbar.showRenderEEButton();
         this.editorToolbar.hideRenderGadgetButton();
-        this.renderEmbeddedExperience(data.id);
+        this.emit('renderEE', data.id);
       } else {
         this.editorToolbar.showRenderGadgetButton();
         this.editorToolbar.hideRenderEEButton();
-        this.renderGadget(data.id);
+        this.emit('renderGadget', data.id);
       }
     },
 
@@ -144,16 +145,7 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
     getGadgetSpec : function() {
       return this.editorTabs.getGadgetSpec();
     },
-
-    renderGadget : function(id) {
-      GadgetArea.getInstance().loadGadget(document.location.protocol + '//' + document.location.host + this.getContextRoot() + '/gadgetspec/' + id + '/' + this.getGadgetSpec().gadgetResource.name);
-    },
-
-    renderEmbeddedExperience : function(id) {
-      GadgetArea.getInstance().renderEmbeddedExperience(document.location.protocol + '//' + document.location.host + this.getContextRoot() + '/gadgetspec/' + id + '/' + this.getGadgetSpec().gadgetResource.name, 
-          this.getGadgetSpec().eeResource.content);
-    },
-
+    
     getContextRoot : function() {
       return urlUtil.getContextRoot();
     },

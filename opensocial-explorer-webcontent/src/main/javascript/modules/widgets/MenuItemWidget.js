@@ -24,6 +24,9 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
             return declare('MenuItemWidget', [ WidgetBase, TemplatedMixin ], {
                 templateString : template,
                 
+                class : '',
+                _setClassAttr: { node: "containerNode", type: "class" },
+                
                 postCreate : function() {
                   
                 },
@@ -70,7 +73,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                 },
                 
                 getSubMenuItem : function(menuName) {
-                  return this.subMenu.getMenuItem(menuName);
+                  return this.subMenu ? this.subMenu.getMenuItem(menuName) : undefined;
                 }
             });
         });
