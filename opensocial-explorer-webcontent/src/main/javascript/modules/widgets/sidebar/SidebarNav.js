@@ -70,13 +70,17 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         }
       });
       
+      on(this.addGadgetBtn, 'click', function() {
+        self.toggleModal();
+      });
+      
       on(this.creationModal, 'newSpec', function(title, data) {
         self.addSpec(title, data.id);
       });
     },
     
     addSpec : function(title, specId) {
-      if(this.specStore.query({name: "My Specs"}).length == 0) {
+      if(this.specStore.query({name: "My Specs"}).length === 0) {
         this.specStore.put({id: "myspecs", isDefault: false, name:"My Specs", parent :"root", hasChildren: true});
       }
       this.specStore.put({id: specId, isDefault: false, name: title, parent: "myspecs", hasChildren: false});

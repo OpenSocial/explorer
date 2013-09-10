@@ -24,12 +24,16 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
             template, on, Evented, domClass, gadgetSpecService) {
   return declare('EditorToolbarWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, Evented ], {
     templateString : template,
-    onRenderGadgetClick: function() {
-      this.emit("renderGadgetClick");
-    },
     
-    onRenderEEClick: function() {
-      this.emit("renderEEClick");
+    postCreate: function() {
+      var self = this;
+      on(this.renderGadgetButton, 'click', function() {
+        self.emit("renderGadgetClick");
+      });
+      
+      on(this.renderEEButton, 'click', function() {
+        self.emit("renderEEClick");
+      });
     },
     
     setTitle: function(title) {
@@ -41,19 +45,19 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
     },
 
     showRenderEEButton: function() {
-      domClass.remove("renderEEBtn", "hide");
+      domClass.remove(this.renderEEButton, "hide");
     },
 
     hideRenderEEButton: function() {
-      domClass.add("renderEEBtn", "hide");
+      domClass.add(this.renderEEButton, "hide");
     },
 
     showRenderGadgetButton: function() {
-      domClass.remove("renderBtn", "hide");
+      domClass.remove(this.renderGadgetButton, "hide");
     },
 
     hideRenderGadgetButton: function() {
-      domClass.add("renderBtn", "hide");
+      domClass.add(this.renderGadgetButton, "hide");
     }
   });
 });

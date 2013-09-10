@@ -20,12 +20,24 @@ define(['dojo/_base/declare', 'modules/widgets/ModalDialog',
         'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin', 'dojo/Evented',
         'dojo/query', 'dojo/text!./../../templates/CreationModalDialog.html', 'dojo/text!./../../stubs/StubXML.xml', 
         'dojo/text!./../../stubs/StubEEXML.xml', 'dojo/text!./../../stubs/StubHTML.html',
-        'dojo/dom', 'modules/gadget-spec-service',
+        'dojo/dom', 'modules/gadget-spec-service', 'dojo/on',
         'dojo/dom-class', 'dojo/dom-style','dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, ModalDialog, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, Evented,
-            query, template, stubxml, stubeexml, stubhtml, dom, gadgetSpecService, domClass, domStyle) {
+            query, template, stubxml, stubeexml, stubhtml, dom, gadgetSpecService, on, domClass, domStyle) {
   return declare('CreationModalDialogWidget', [ModalDialog, WidgetsInTemplateMixin, Evented], {
     templateString : template,
+    
+    postCreate: function() {
+      var self = this;
+      on(this.creationSubmit, 'click', function() {
+        self.onSubmit();
+      });
+      
+      on(this.creationExit, 'click', function() {
+        self.hide();
+      });
+    },
+    
     onSubmit : function() {
       var self = this;
       var title = this.creationTitle.value;

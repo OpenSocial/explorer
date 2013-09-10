@@ -26,6 +26,15 @@ define(['modules/widgets/sidebar/CreationModalDialog', 'modules/widgets/sidebar/
       expect(dialog.domNode.getAttribute('class')).toBe('modal fade in');
       dialog.hide();
       expect(dialog.domNode.getAttribute('class')).toBe('modal fade hide');
+      dialog.destroy();
+    });
+    
+    it("closes upon user toggle of the exit button", function() {
+      var dialog = new CreationModalDialog();
+      dialog.show();
+      expect(dialog.domNode.getAttribute('class')).toBe('modal fade in');
+      dialog.creationExit.click();
+      expect(dialog.domNode.getAttribute('class')).toBe('modal fade hide');
     });
     
     it("has text fields that reset upon submission", function() {
