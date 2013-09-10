@@ -26,6 +26,15 @@ define(['modules/widgets/sidebar/CreationModalDialog', 'modules/widgets/sidebar/
       expect(dialog.domNode.getAttribute('class')).toBe('modal fade in');
       dialog.hide();
       expect(dialog.domNode.getAttribute('class')).toBe('modal fade hide');
+      dialog.destroy();
+    });
+    
+    it("closes upon user toggle of the exit button", function() {
+      var dialog = new CreationModalDialog();
+      dialog.show();
+      expect(dialog.domNode.getAttribute('class')).toBe('modal fade in');
+      dialog.creationExit.click();
+      expect(dialog.domNode.getAttribute('class')).toBe('modal fade hide');
     });
     
     it("has text fields that reset upon submission", function() {
@@ -36,7 +45,7 @@ define(['modules/widgets/sidebar/CreationModalDialog', 'modules/widgets/sidebar/
           callbacks.success(data);
         }
       });
-      spyOn(dialog, 'addToSidebar').andReturn(undefined);
+      spyOn(dialog, 'emit').andCallThrough();
      
       dialog.creationSelection.value = "Gadget";
       dialog.creationTitle.value = "Sample Gadget";
@@ -66,7 +75,7 @@ define(['modules/widgets/sidebar/CreationModalDialog', 'modules/widgets/sidebar/
       dialog.creationSelection.value = "Gadget";
       spyOn(dialog, 'onSubmit').andCallThrough();
       spyOn(dialog, 'postNewGadgetSpec').andCallThrough();
-      spyOn(dialog, 'addToSidebar').andReturn(undefined);
+      spyOn(dialog, 'emit').andCallThrough();
       spyOn(dialog, 'getGadgetSpecService').andReturn({
         createNewGadgetSpec : function(fakeData, callbacks) {
           var data = {id: "12345"};
@@ -74,13 +83,12 @@ define(['modules/widgets/sidebar/CreationModalDialog', 'modules/widgets/sidebar/
         }
       });
         
-       
       dialog.creationSubmit.click();
       
       expect(dialog.onSubmit).toHaveBeenCalled();
       expect(dialog.postNewGadgetSpec).toHaveBeenCalled();
       expect(dialog.getGadgetSpecService).toHaveBeenCalled();
-      expect(dialog.addToSidebar).toHaveBeenCalled();
+      expect(dialog.emit).toHaveBeenCalled();
       dialog.destroy();
     });
     
@@ -100,7 +108,7 @@ define(['modules/widgets/sidebar/CreationModalDialog', 'modules/widgets/sidebar/
       dialog.creationSelection.value = "Embedded Experience";
       spyOn(dialog, 'onSubmit').andCallThrough();
       spyOn(dialog, 'postNewEESpec').andCallThrough();
-      spyOn(dialog, 'addToSidebar').andReturn(undefined);
+      spyOn(dialog, 'emit').andCallThrough();
       spyOn(dialog, 'getGadgetSpecService').andReturn({
         createNewGadgetSpec : function(fakeData, callbacks) {
           var data = {id: "12345"};
@@ -113,7 +121,7 @@ define(['modules/widgets/sidebar/CreationModalDialog', 'modules/widgets/sidebar/
       expect(dialog.onSubmit).toHaveBeenCalled();
       expect(dialog.postNewEESpec).toHaveBeenCalled();
       expect(dialog.getGadgetSpecService).toHaveBeenCalled();
-      expect(dialog.addToSidebar).toHaveBeenCalled();
+      expect(dialog.emit).toHaveBeenCalled();
       dialog.destroy();
     });  
   });
