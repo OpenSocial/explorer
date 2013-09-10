@@ -20,42 +20,44 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'doj
         'dojo/on', 'modules/widgets/openid/AuthProvider', 'dojo/_base/array', 'modules/openid-service', 
         'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, ModalDialog, query, domConstruct, on, AuthProvider, array, openIdService) {
-          var OpenIDLoginDialog = declare('OpenIDLoginDialog', [ ModalDialog ], {
-              
-            startup : function() {
-              this.setHeaderTitle('Sign-in or Create New Account');
-              this.inherited(arguments);
-            },
-              
-            show : function() {
-              if(!this.providers) {
-                var modalBodies = query('.modal-body', this.domNode);
-                var self = this;
-                openIdService.getProviders({
-                  success : function(data) {
-                    self.providers = data;
-                    for(var key in data) {
-                      var openIdLoginControl = new AuthProvider(data[key]);
-                      modalBodies.append(openIdLoginControl.domNode);
-                      openIdLoginControl.startup();
-                    }
-                  },
-                  error : function(error) {
-                    console.error('Error fetching providers.');
-                  }
-                });
-              }
-              this.inherited(arguments);
-            }
-          });
-    var instance;
+  var OpenIDLoginDialog = declare('OpenIDLoginDialog', [ ModalDialog ], {
 
-    return {
-      getInstance : function() {
-        if(!instance) {
-          instance = new OpenIDLoginDialog();
-        }
-        return instance;
+    startup : function() {
+      this.setHeaderTitle('Sign-in or Create New Account');
+      this.inherited(arguments);
+    },
+
+    show : function() {
+      if(!this.providers) {
+        var modalBodies = query('.modal-body', this.domNode);
+        var self = this;
+        openIdService.getProviders({
+          success : function(data) {
+            self.providers = data;
+            for(var key in data) {
+              if(data.hasOwnProperty(key)) {
+                var openIdLoginControl = new AuthProvider(data[key]);
+                modalBodies.append(openIdLoginControl.domNode);
+                openIdLoginControl.startup();
+              }
+            }
+          },
+          error : function(error) {
+            console.error('Error fetching providers.');
+          }
+        });
       }
-    };            
+      this.inherited(arguments);
+    }
+  });
+  var instance;
+
+  return {
+    getInstance : function() {
+      if(!instance) {
+        instance = new OpenIDLoginDialog();
+      }
+      return instance;
+    }
+  };            
 });

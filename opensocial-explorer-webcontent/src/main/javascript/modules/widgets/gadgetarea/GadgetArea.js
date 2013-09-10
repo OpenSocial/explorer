@@ -33,7 +33,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       var config = {},
       self = this,
       lifecycle = {};
-      this.containerToken = gadgets.config.get('shindig.auth')['authToken'];
+      this.containerToken = gadgets.config.get('shindig.auth').authToken;
       config[osapi.container.ContainerConfig.RENDER_DEBUG] = '1';
       config[osapi.container.ContainerConfig.SET_PREFERENCES] = this.setPrefs();
       config[osapi.container.ContainerConfig.GET_CONTAINER_TOKEN] = dojo.hitch(this, 'getContainerToken');

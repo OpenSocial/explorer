@@ -19,6 +19,7 @@
 package org.opensocial.explorer.specserver;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import org.apache.shindig.common.util.ResourceLoader;
 import org.apache.wink.json4j.JSONException;
@@ -46,7 +47,7 @@ public class DefaultGadgetResource implements GadgetResource, OnDiskResource {
   protected DefaultGadgetResource(String name) {
     this.name = name;
     String extension = this.name.substring(this.name.lastIndexOf('.') + 1);
-    this.contentType = ContentType.valueOf(extension.toUpperCase());
+    this.contentType = ContentType.valueOf(extension.toUpperCase(Locale.ENGLISH));
   }
 
   public String getName() {
