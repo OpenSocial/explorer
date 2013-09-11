@@ -67,8 +67,8 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
             openPopup : function(fGetPopup) {
               var popup = fGetPopup();
               popup.win_.setResponseObj_ = lang.hitch(this, function(responseObj) {
-                  this.securityToken = responseObj['securityToken'];
-                  this.securityTokenTTL = responseObj['securityTokenTTL'];
+                  this.securityToken = responseObj.securityToken;
+                  this.securityTokenTTL = responseObj.securityTokenTTL;
                 });
             },
                 
