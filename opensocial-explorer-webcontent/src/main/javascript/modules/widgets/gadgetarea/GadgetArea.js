@@ -59,6 +59,34 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                   on(this.expContainer, 'addaction', function(action) {
                     self.gadgetToolbar.addAction(action);
                   });
+                  
+                  on(this.expContainer, 'removeaction', function(action) {
+                    gadgetToolbar.removeAction(action);
+                  });
+                  
+                  on(this.expContainer, 'navigateurl', function(rel, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
+                    return self.createDialog('URL', opt_viewTarget);
+                  });
+                  
+                  on(this.expContainer, 'navigategadget', function(metadata, rel, opt_view, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
+                    var title = 'Gadget';
+                    if(metadata.modulePrefs && metadata.modulePrefs.title) {
+                      title = metadata.modulePrefs.title;
+                    }
+                    return self.createDialog(title, opt_viewTarget);
+                  });
+                  
+                  on(this.expContainer, 'navigateee', function(el, opt_gadgetInfo, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
+                    var title = 'Embedded Experiences';
+                    if(opt_gadgetInfo && opt_gadgetInfo.modulePrefs && opt_gadgetInfo.modulePrefs.title) {
+                      title = opt_gadgetInfo.modulePrefs.title;
+                    }
+                    return self.createDialog(title, opt_viewTarget);
+                  });
+                  
+                  on(this.expContainer, 'destroyelement', function(site) {
+                    self.gadgetDialog.hide(site);
+                  });
                 },
                 
                 getContainer : function() {
@@ -66,29 +94,14 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                 },
                 
                 loadGadget : function(url) {
-                  this.closeOpenSite();
-                  this.loadingWidget.show();                  
+                  this.loadingWidget.show();
                   var self = this;
-                  this.container.preloadGadget(url, function(metadata) {
-                    if(metadata[url] && !metadata[url].error) {
-                      // TODO: Check to see if the gadget requires OAuth and ensure we are logged in if it does
-                      self.gadgetToolbar.setGadgetMetadata(metadata[url]);
-                      self.renderGadget(url);
-                    } else { 
-                      console.error('There was an error fetching the metadata');
-                    }
+                  this.expContainer.loadGadget(url).then(function(metadata) {
+                    self.gadgetToolbar.setGadgetMetadata(metadata[url]);
                   });
                 },
                 
                 renderGadget : function(url, opt_renderParams) {
-//                  var renderParams = opt_renderParams || {},
-//                      viewParams = {"gadgetUrl" : url};
-//                  this.loadingWidget.show();                  
-//                  this.site = this.createSite();
-//                  renderParams[osapi.container.RenderParam.HEIGHT] = '100%';
-//                  renderParams[osapi.container.RenderParam.WIDTH] = '100%';
-//                  this.container.navigateGadget(this.site, url, viewParams, 
-//                          renderParams);
                   this.expContainer.renderGadget(url, opt_renderParams);
                 },
                 
@@ -100,132 +113,11 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                 },
                 
                 renderEmbeddedExperience : function(url, dataModel) {
-//                  this.closeOpenSite();
-//                  this.loadingWidget.show();  
-//                  var self = this;
-//                  this.container.preloadGadget(url, function(metadata) {
-//                    if(metadata && metadata[url]) {
-//                      self.gadgetToolbar.setGadgetMetadata(metadata[url]);
-//                      var siteNode = self.createNodeForSite.call(self),
-//                      oDataModel = JSON.parse(dataModel),
-//                      renderParams = {};
-//                      oDataModel.gadget = url;
-//                      renderParams[osapi.container.ee.RenderParam.GADGET_RENDER_PARAMS] = {};
-//                      renderParams[osapi.container.ee.RenderParam.GADGET_RENDER_PARAMS][osapi.container.RenderParam.HEIGHT] = '100%';
-//                      renderParams[osapi.container.ee.RenderParam.GADGET_RENDER_PARAMS][osapi.container.RenderParam.WIDTH] = '100%';
-//                      renderParams[osapi.container.ee.RenderParam.GADGET_VIEW_PARAMS] = {"gadgetUrl" : url}; 
-//
-//                      self.container.ee.navigate(siteNode, oDataModel, renderParams, function(site){
-//                        // Set the site so we can clean it up when we switch gadgets
-//                        self.site = site;
-//                      });
-//                    } else {
-//                      console.error('There was an error preloading the embedded experience.');
-//                    }
-//                  });
                   this.expContainer.renderEmbeddedExperience(url, dataModel);
-                },
-                
-                createSite : function() {
-                  var siteNode = this.createNodeForSite();
-                  return this.container.newGadgetSite(siteNode);
-                },
-                
-                createNodeForSite: function() {
-                  // Let's be nice and reuse the same div for the site.
-                  var siteNode = dom.byId("gadgetSite" + this.siteCounter.toString());
-                  if (!siteNode) {
-                    this.siteCounter += 1;
-                    siteNode = domConstruct.create("div", {"id" : "gadgetSite" + this.siteCounter.toString()});
-                    domConstruct.place(siteNode, this.domNode);
-                  }
-                  return siteNode;
-                },
-                
-                closeOpenSite: function() {
-                  if(this.site) {
-                    // IMPORTANT: The gadget must be unloaded before it is closed.
-                    // Otherwise, getUrl() is undefined and no lifecycle events are fired
-                    // for unload!!!
-                    this.container.unloadGadget(this.site.getActiveSiteHolder().getUrl());
-                    this.container.closeGadget(this.site);
-                    domConstruct.destroy("gadgetSite" + this.siteCounter.toString());
-                  }
                 },
                 
                 reRenderGadget : function(opt_renderParams) {
                   this.renderGadget(this.site.getActiveSiteHolder().getUrl(), opt_renderParams);
-                },
-                
-                showActions : function(actionObjArray, gadgetToolbar, container, runAction) {
-                  for (var i = 0; i < actionObjArray.length; i++) {
-                    var action = actionObjArray[i];
-                    
-                    // Decorate the action with a function to be called when the action is executed
-                    if (action.path && action.path.length > 0) {
-                      action.runAction = function() {
-                        runAction(action.id);
-                      };
-                    } else if (action.dataType && action.dataType.length > 0) {
-                      action.runAction = function() {
-                        var selection = osData.get(action.dataType);
-                        container.selection.setSelection(selection);
-                        runAction(action.id);
-                      };
-                    } else {
-                      gadgets.error("Invalid action contribution: " + gadgets.json.stringify(action));
-                      break;
-                    }
-                    gadgetToolbar.addAction(action);
-                  }
-                },
-                
-                hideActions : function(actionObjArray, gadgetToolbar) {
-                  for (var i = 0; i < actionObjArray.length; i++) {
-                    var action = actionObjArray[i];
-                    gadgetToolbar.removeAction(action);
-                  }
-                },
-                
-                navigateForActions : function(gadgetArea, gadgetUrl, opt_params) {
-                  // We can effectively ignore gadgetUrl, because we'll get it from the site's holder in reRenderGadget
-                  gadgetArea.reRenderGadget(opt_params);
-                },
-                
-                handleNavigateUrl : function() {
-                  var self = this;
-                  return function(rel, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
-                    return self.createDialog('URL', opt_viewTarget);
-                  };
-                },
-                
-                handleNavigateGadget : function() {
-                  var self = this;
-                  return function (metadata, rel, opt_view, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
-                    var title = 'Gadget';
-                    if(metadata.modulePrefs && metadata.modulePrefs.title) {
-                      title = metadata.modulePrefs.title;
-                    }
-                    return self.createDialog(title, opt_viewTarget);
-                  };
-                },
-                
-                handleNavigateEE : function() {
-                  var self = this;
-                  return function(rel, opt_gadgetInfo, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
-                    var title = 'Embedded Experiences';
-                    if(opt_gadgetInfo && opt_gadgetInfo.modulePrefs && opt_gadgetInfo.modulePrefs.title) {
-                      title = opt_gadgetInfo.modulePrefs.title;
-                    }
-                    return self.createDialog(title, opt_viewTarget);
-                  };
-                },
-                
-                handleDestroyElement : function() {
-                  var self = this;
-                  return function(site) {
-                    self.gadgetDialog.hide(site);
-                  };
                 },
                 
                 createDialog : function(title, viewTarget) {
@@ -247,23 +139,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
                  * security tokens to ensure owner/viewer information is up-to-date.
                  */
                 updateContainerSecurityToken : function(token, ttl) {
-                  this.containerToken = token;
-                  this.containerTokenTTL = ttl;
-                  shindig.auth.updateSecurityToken(token);
-                  // FIXME: Fixed by https://issues.apache.org/jira/browse/SHINDIG-1924
-                  // Begin GROSS
-                  sites = sites_ = this.container.sites_;
-                  commonContainer = this.container;
-                  // End GROSS
-                  dojo.hitch(this.container, 'forceRefreshAllTokens')();
-                },
-                
-                /**
-                 * Will get called when Shindig needs to get a new container security token
-                 */
-                getContainerToken : function(result) {
-                  // TODO: Do work to get a new container token
-                  result(this.containerToken, this.containerTokenTTL);
+                  this.expContainer.updateContainerSecurityToken(token, ttl);
                 }
             });
             
