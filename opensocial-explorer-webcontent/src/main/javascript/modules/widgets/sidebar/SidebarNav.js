@@ -70,6 +70,10 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         }
       });
       
+      on(this.addGadgetBtn, 'click', function() {
+        self.toggleModal();
+      });
+      
       on(this.creationModal, 'newSpec', function(title, data) {
         self.addSpec(title, data.id);
       });

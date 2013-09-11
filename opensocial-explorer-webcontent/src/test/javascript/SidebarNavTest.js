@@ -57,6 +57,34 @@ define(['modules/widgets/sidebar/SidebarNav'], function(SidebarNav){
       sidebar.destroy;
     }); 
     
+    it("shows the creation modal when the add button is toggled", function() {
+      var sidebar = new SidebarNav();
+      
+      spyOn(sidebar, 'getGadgetSpecService').andReturn({
+        getSpecTree : function(callbacks) {
+          var data = [
+            {"id":"109641752",
+              "hasChildren":true,
+              "isDefault":false,
+              "name":"Specs",
+              "parent":"root"},
+            {"id":"-1583082176",
+              "hasChildren":false,
+              "isDefault":true,
+              "name":"Welcome",
+              "parent":"109641752"}];
+          callbacks.success(data);
+        }
+      }); 
+      
+      document.getElementById('testDiv').appendChild(sidebar.domNode);
+      sidebar.startup();
+      expect(sidebar.creationModal.domNode.getAttribute('class')).toBe('modal hide fade');
+      sidebar.addGadgetBtn.click();
+      expect(sidebar.creationModal.domNode.getAttribute('class')).toBe('modal fade in');
+      sidebar.destroy;
+    });
+    
     it("can add a new spec", function() {
       var sidebar = new SidebarNav();
       

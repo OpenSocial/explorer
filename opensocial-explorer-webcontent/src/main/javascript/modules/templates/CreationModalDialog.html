@@ -1,6 +1,6 @@
 <div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div id="creation-header" class="modal-header center">
-		<button data-dojo-attach-event="onclick: hide" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<button data-dojo-attach-point="creationExit" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3>Create New</h3>
 	</div>
 	<div id="creation-body" class="modal-body center">
@@ -13,6 +13,6 @@
 		<textarea data-dojo-attach-point="creationDescription" class="creation" rows="3" placeholder="Description"></textarea>
 	</div>
 	<div id="creation-footer" class="modal-footer center">
-		<button data-dojo-attach-point="creationSubmit" data-dojo-attach-event="onclick: onSubmit" id="creation-submit" class="btn btn-success">Create!</button>
+		<button data-dojo-attach-point="creationSubmit" id="creation-submit" class="btn btn-success">Create!</button>
 	</div>
 </div>

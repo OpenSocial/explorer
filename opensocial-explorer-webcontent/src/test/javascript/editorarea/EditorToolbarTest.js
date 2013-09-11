@@ -35,7 +35,7 @@ define(['modules/widgets/editorarea/EditorToolbar', 'dojo/query', 'dojo/dom-clas
       var editorToolbar = new EditorToolbar();
       spyOn(editorToolbar, "emit").andCallThrough();
       document.getElementById('testDiv').appendChild(editorToolbar.domNode);
-      document.getElementById('renderBtn').click();
+      editorToolbar.renderGadgetButton.click();
       expect(editorToolbar.emit).toHaveBeenCalledWith("renderGadgetClick");
       editorToolbar.destroy();
     });
@@ -44,7 +44,7 @@ define(['modules/widgets/editorarea/EditorToolbar', 'dojo/query', 'dojo/dom-clas
       var editorToolbar = new EditorToolbar();
       spyOn(editorToolbar, "emit").andCallThrough();
       document.getElementById('testDiv').appendChild(editorToolbar.domNode);
-      document.getElementById('renderEEBtn').click();
+      editorToolbar.renderEEButton.click();
       expect(editorToolbar.emit).toHaveBeenCalledWith("renderEEClick");
       editorToolbar.destroy();
     });
@@ -61,9 +61,9 @@ define(['modules/widgets/editorarea/EditorToolbar', 'dojo/query', 'dojo/dom-clas
       var editorToolbar = new EditorToolbar();
       document.getElementById('testDiv').appendChild(editorToolbar.domNode);
       editorToolbar.showRenderEEButton();
-      expect(domClass.contains('renderEEBtn', 'hide')).toEqual(false);
+      expect(domClass.contains(editorToolbar.renderEEButton, 'hide')).toEqual(false);
       editorToolbar.hideRenderEEButton();
-      expect(domClass.contains('renderEEBtn', 'hide')).toEqual(true);
+      expect(domClass.contains(editorToolbar.renderEEButton, 'hide')).toEqual(true);
       editorToolbar.destroy();
     })
   });
