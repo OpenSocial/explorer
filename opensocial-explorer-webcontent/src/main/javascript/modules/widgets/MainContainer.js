@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+* Container Widget to delegate cross module method calls.
+*
+* @module modules/widgets/MainContainer
+*/
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin',
          'dojo/query', 'dojo/on', 'dojo/text!./../templates/MainContainer.html'], 
          function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, query, on, template) {
