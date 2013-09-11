@@ -108,16 +108,16 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
       }
 
       if(data.cssResources) {
-        for(var i = 0; i < data.cssResources.length; i++) {
-          editor = new CssEditor({"resource" : data.cssResources[i]});
-          this.createTab(data.cssResources[i], editorTabs, false, editor);
+        for(var j = 0; j < data.cssResources.length; j++) {
+          editor = new CssEditor({"resource" : data.cssResources[j]});
+          this.createTab(data.cssResources[j], editorTabs, false, editor);
         }
       }
 
       if(data.jsResources) {
-        for(var i = 0; i < data.jsResources.length; i++) {
-          editor = new JSEditor({"resource" : data.jsResources[i]});
-          this.createTab(data.jsResources[i], editorTabs, false, editor);
+        for(var k = 0; k < data.jsResources.length; k++) {
+          editor = new JSEditor({"resource" : data.jsResources[k]});
+          this.createTab(data.jsResources[k], editorTabs, false, editor);
         }
       }
 

@@ -19,9 +19,8 @@
 define(['dojo/_base/lang', 'dojo/_base/declare', 'modules/widgets/DropDownMenu', 'dojo/Evented', 'dojo/topic',
         'dojo/query', 'dojo/dom-class', 'modules/widgets/MenuItemWidget', 'modules/opensocial-data',
         'dojo/text!./../../templates/GadgetDropDownMenu.html', 'dijit/_WidgetsInTemplateMixin',
-        'dojo/on', 'dojo/topic', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
-        function(lang, declare, DropDownMenu, Evented, topic, query, domClass, MenuItemWidget, osData, template, WidgetsInTemplateMixin,
-            on, topic) {
+        'dojo/on', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
+        function(lang, declare, DropDownMenu, Evented, topic, query, domClass, MenuItemWidget, osData, template, WidgetsInTemplateMixin, on) {
   return declare('GadgetDropDownMenuWidget', [ DropDownMenu, WidgetsInTemplateMixin, Evented ], {
     templateString : template,
 
@@ -56,9 +55,11 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'modules/widgets/DropDownMenu',
     setViews : function(views) {
       var items = [];
       for(var key in views) {
-        items.push(new MenuItemWidget({"name" : key, "onclick" : lang.hitch(this, function(key){
-          topic.publish("reRenderGadgetView", {"view" : key});
-        }, key)}));
+        if(views.hasOwnProperty(key)) {
+          items.push(new MenuItemWidget({"name" : key, "onclick" : lang.hitch(this, function(key){
+            topic.publish("reRenderGadgetView", {"view" : key});
+          }, key)}));
+        }
       }
       this.viewsMenu.setSubMenuContent(items, 'pull-left');
     },

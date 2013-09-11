@@ -20,60 +20,53 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dojo/text!./../templates/MenuItem.html', 'dojo/dom-construct',
         'dojo/dom-class', 'modules/widgets/DropDownMenu', 'dojo/on'],
         function(declare, WidgetBase, TemplatedMixin,
-                template, domConstruct, domClass, DropDownMenu, on) {
-            return declare('MenuItemWidget', [ WidgetBase, TemplatedMixin ], {
-                templateString : template,
-                
-                class : '',
-                _setClassAttr: { node: "containerNode", type: "class" },
-                
-                postCreate : function() {
-                  
-                },
-                
-                startup : function() {
-                  if(this.onclick) {
-                    on(this.domNode,'click', this.onclick);
-                  }
-                  
-                  if(this.menuItems) {
-                    this.setSubMenuContent(this.menuItems.items, this.menuItems.direction);
-                  }
-                },
-                
-                setSubMenuContent : function(menuItems, opt_direction) {
-                  this.createSubMenu(opt_direction);
-                  this.subMenu.clearMenuItems();
-                  for(var i = 0; i < menuItems.length; i++) {
-                    this.subMenu.addMenuItem(menuItems[i]);
-                  }
-                },
-                
-                createSubMenu : function(opt_direction) {
-                  if(!this.subMenu) {
-                    this.subMenu = new DropDownMenu();
-                    domConstruct.place(this.subMenu.domNode, this.domNode);
-                    this.subMenu.startup();
-                    domClass.add(this.domNode, 'dropdown-submenu');
-                    if(opt_direction) {
-                      domClass.add(this.domNode, opt_direction);
-                    }
-                  }
-                },
-                
-                getValue : function() {},
-                
-                addSubMenuItem : function(menuItem, opt_direction) {
-                  this.createSubMenu(opt_direction);
-                  this.subMenu.addMenuItem(menuItem);
-                },
-                
-                removeSubMenuItem : function(menuName) {
-                  this.subMenu.removeMenuItem(menuName);
-                },
-                
-                getSubMenuItem : function(menuName) {
-                  return this.subMenu ? this.subMenu.getMenuItem(menuName) : undefined;
-                }
-            });
-        });
+            template, domConstruct, domClass, DropDownMenu, on) {
+  return declare('MenuItemWidget', [ WidgetBase, TemplatedMixin ], {
+    templateString : template,
+
+    startup : function() {
+      if(this.onclick) {
+        on(this.domNode,'click', this.onclick);
+      }
+
+      if(this.menuItems) {
+        this.setSubMenuContent(this.menuItems.items, this.menuItems.direction);
+      }
+    },
+
+    setSubMenuContent : function(menuItems, opt_direction) {
+      this.createSubMenu(opt_direction);
+      this.subMenu.clearMenuItems();
+      for(var i = 0; i < menuItems.length; i++) {
+        this.subMenu.addMenuItem(menuItems[i]);
+      }
+    },
+
+    createSubMenu : function(opt_direction) {
+      if(!this.subMenu) {
+        this.subMenu = new DropDownMenu();
+        domConstruct.place(this.subMenu.domNode, this.domNode);
+        this.subMenu.startup();
+        domClass.add(this.domNode, 'dropdown-submenu');
+        if(opt_direction) {
+          domClass.add(this.domNode, opt_direction);
+        }
+      }
+    },
+
+    getValue : function() {},
+
+    addSubMenuItem : function(menuItem, opt_direction) {
+      this.createSubMenu(opt_direction);
+      this.subMenu.addMenuItem(menuItem);
+    },
+
+    removeSubMenuItem : function(menuName) {
+      this.subMenu.removeMenuItem(menuName);
+    },
+
+    getSubMenuItem : function(menuName) {
+      return this.subMenu ? this.subMenu.getMenuItem(menuName) : undefined;
+    }
+  });
+});
