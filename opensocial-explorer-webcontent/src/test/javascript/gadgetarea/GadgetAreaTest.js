@@ -125,7 +125,7 @@ define(['modules/widgets/gadgetarea/GadgetArea'], function(GadgetArea){
     });
   
     it("can be started", function() {
-      var gadgetArea = GadgetArea.getInstance();
+      var gadgetArea = new GadgetArea();
     
       document.getElementById('testDiv').appendChild(gadgetArea.domNode);
       gadgetArea.startup();
@@ -137,7 +137,7 @@ define(['modules/widgets/gadgetarea/GadgetArea'], function(GadgetArea){
     });
   
     it("can load a gadget", function() {
-      var gadgetArea = GadgetArea.getInstance();
+      var gadgetArea = new GadgetArea();
       document.getElementById('testDiv').appendChild(gadgetArea.domNode);
       gadgetArea.startup();
       gadgetArea.loadGadget('http://example.com/gadget.xml');
@@ -149,7 +149,7 @@ define(['modules/widgets/gadgetarea/GadgetArea'], function(GadgetArea){
     });
   
     it("can handle an error when loading a gadget", function() {
-      var gadgetArea = GadgetArea.getInstance();
+      var gadgetArea = new GadgetArea();
       document.getElementById('testDiv').appendChild(gadgetArea.domNode);
       gadgetArea.startup();
       container.preloadGadget.andCallFake(function(url, callback) {
@@ -171,7 +171,7 @@ define(['modules/widgets/gadgetarea/GadgetArea'], function(GadgetArea){
     });
   
     it("can load consecutive gadgets", function() {
-      var gadgetArea = GadgetArea.getInstance();
+      var gadgetArea = new GadgetArea();
       document.getElementById('testDiv').appendChild(gadgetArea.domNode);
       gadgetArea.startup();
       gadgetArea.loadGadget('http://example.com/gadget.xml');
@@ -193,7 +193,7 @@ define(['modules/widgets/gadgetarea/GadgetArea'], function(GadgetArea){
     });
   
     it("can render embedded experience gadgets", function() {
-      var gadgetArea = GadgetArea.getInstance();
+      var gadgetArea = new GadgetArea();
       document.getElementById('testDiv').appendChild(gadgetArea.domNode);
       gadgetArea.startup();
       gadgetArea.renderEmbeddedExperience('http://example.com/gadget.xml', "{" +
