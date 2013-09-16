@@ -16,6 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+ * Contains the EditorToolbar, EditorTabs, and Editors
+ *
+ * @module modules/widgets/editorarea/EditorArea
+ * @requires module:modules/widgets/editorarea/EditorToolbar
+ * @requires module:modules/widgets/editorarea/EditorTabs
+ * @requires module:modules/widgets/editorarea/GadgetEditor
+ * @requires module:modules/widgets/editorarea/HtmlEditor
+ * @requires module:modules/widgets/editorarea/CssEditor
+ * @requires module:modules/widgets/editorarea/JSEditor
+ * @requires module:modules/widgets/editorarea/JSONEditor
+ * @requires module:modules/widgets/editorarea/EditorTab
+ * @requires module:modules/gadget-spec-service
+ * @augments dijit/_WidgetBase
+ * @augments dijit/_TemplatedMixin
+ * @augments dijit/_WidgetsInTemplateMixin
+ * @augments dojo/Evented
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_TemplatedMixin.html|TemplatedMixin Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetsInTemplateMixin.html|WidgetsInTemplateMixin Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dojo/Evented.html|Evented Documentation}
+ */
 define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin', 'dojo/Evented', 'dojo/topic',
          'dojo/query', 'dojo/on', 'dojo/text!./../../templates/EditorArea.html', 'modules/widgets/editorarea/EditorToolbar',
          'modules/widgets/editorarea/EditorTabs', 'modules/widgets/editorarea/GadgetEditor', 'modules/widgets/editorarea/HtmlEditor', 
@@ -27,6 +50,12 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
   return declare('EditorAreaWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, Evented ], {
     templateString : template,
 
+    /**
+     * Called right after widget is added to the dom. See link for more information.
+     *
+     * @memberof module:modules/widgets/editorarea/EditorArea#
+     * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
+     */
     startup : function() {
       var self = this;
       this.getGadgetSpecService().getDefaultGadgetSpec({
@@ -56,6 +85,13 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
       });
     },
 
+    /**
+     * Posts a spec to the servlet. This method is used when rerendering a spec.
+     *
+     * @memberof module:modules/widgets/editorarea/EditorArea#
+     *
+     * @param {Function} thenFunction - Callback function to execute if the POST to the servlet is successful.
+     */
     postGadgetSpec : function(thenFunction) {
       var self = this;
       this.getGadgetSpecService().createNewGadgetSpec(this.getGadgetSpec(), {
@@ -66,6 +102,12 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
       });
     },
 
+    /**
+     * Displays the spec's code - resets the tabs and adds the necessary tabs and editors to the Ui.
+     *
+     * @memberof module:modules/widgets/editorarea/EditorArea#
+     * @param {String} id - The ID of the spec to display
+     */
     displaySpec : function(id) {
       var self = this;
       this.getGadgetSpecService().getGadgetSpec(id, {
@@ -79,6 +121,12 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
       });
     },
 
+    /**
+     * Adds a spec's tabs to the Ui and adjusts the render button according to the type of spec.
+     *
+     * @memberof module:modules/widgets/editorarea/EditorArea#
+     * @param {Object} data - Data of the spec.
+     */
     addToUi : function(data) {
       if(!this.editorTabs) {
         this.editorTabs = new EditorTabs(data);
@@ -97,6 +145,13 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
       }
     },
 
+    /**
+     * Creates the necessary EditorTabs and Editors for a spec.
+     *
+     * @memberof module:modules/widgets/editorarea/EditorArea#
+     * @param {Object} data - Data of the spec.
+     * @param {EditorTabs} editorTabs - Contains each EditorTab of the spec.
+     */
     createTabsAndEditors : function(data, editorTabs) {
       var editor = new GadgetEditor({"resource" : data.gadgetResource});
       this.createTab(data.gadgetResource, editorTabs, true, editor);
@@ -131,33 +186,77 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
       }
     },
 
+    /**
+     * Creates an EditorTab of a spec.
+     *
+     * @memberof module:modules/widgets/editorarea/EditorArea#
+     * @param {Object} resource - An object that contains data about a spec's particular resource (e.g. jsResource).
+     * @param {EditorTabs} editorTabs - Contains each EditorTab of the spec.
+     * @param {Boolean} isActive - Whether or not the tab is the focused tab.
+     * @param {GadgetEditor} editor - the Editor corresponding to the tab's resource (e.g. JSEditor).
+     */
     createTab : function(resource, editorTabs, isActive, editor) {
       domConstruct.place(editor.domNode, this.domNode);
       editor.startup();
       var editorTab = new EditorTab({"resource" : resource, "isActive" : isActive, "editor" : editor});
       editorTabs.addTab(editorTab);
     },
-
+    
+    /**
+     * Sets the title of a spec in the Ui.
+     *
+     * @memberof module:modules/widgets/editorarea/EditorArea#
+     * @param {String} title - Title of the spec.
+     */
     setTitle : function(title) {
         this.editorToolbar.setTitle(title);
     },
 
+    /**
+     * Gets the GadgetSpec object.
+     *
+     * @memberof module:modules/widgets/editorarea/EditorArea#
+     * @returns {Object} The GadgetSpec object.
+     */
     getGadgetSpec : function() {
       return this.editorTabs.getGadgetSpec();
     },
     
+    /**
+     * Gets the context root.
+     *
+     * @memberof module:modules/widgets/editorarea/EditorArea#
+     * @returns {String} The context root.
+     */
     getContextRoot : function() {
       return urlUtil.getContextRoot();
     },
 
+    /**
+     * Getter method for EditorTabs.
+     *
+     * @memberof module:modules/widgets/editorarea/EditorArea#
+     * @returns {EditorTabs} The EditorTabs object.
+     */
     getEditorTabs : function() {
       return this.editorTabs;
     },
 
+    /**
+     * Getter method for the GadgetSpecService module for testing purposes.
+     *
+     * @memberof module:modules/widgets/editorarea/EditorArea#
+     * @returns {gadgetSpecService} The gadgetSpecService object.
+     */
     getGadgetSpecService : function() {
       return gadgetSpecService;
     },
 
+    /**
+     * Destroys this instance of EditorArea. For testing purposes.
+     *
+     * @memberof module:modules/widgets/editorarea/EditorArea#
+     */
     destroy : function() {
       this.inherited(arguments);
       instance = undefined;

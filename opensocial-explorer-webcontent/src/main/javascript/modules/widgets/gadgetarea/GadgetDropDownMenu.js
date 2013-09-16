@@ -16,6 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+ * A drop-down menu that displays MenuItems about a gadget's metadata.
+ *
+ * @module modules/widgets/gadgetarea/GadgetDropDownMenu
+ * @requires module:modules/widgets/MenuItemWidget 
+ * @augments module:modules/widgets/DropDownMenu
+ * @augments dijit/_WidgetsInTemplateMixin
+ * @augments dojo/Evented
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetsInTemplateMixin.html|WidgetsInTemplateMixin Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dojo/Evented.html|Evented Documentation}
+*/
 define(['dojo/_base/lang', 'dojo/_base/declare', 'modules/widgets/DropDownMenu', 'dojo/Evented', 'dojo/topic',
         'dojo/query', 'dojo/dom-class', 'modules/widgets/MenuItemWidget', 'modules/opensocial-data',
         'dojo/text!./../../templates/GadgetDropDownMenu.html', 'dijit/_WidgetsInTemplateMixin',
@@ -24,6 +36,12 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'modules/widgets/DropDownMenu',
   return declare('GadgetDropDownMenuWidget', [ DropDownMenu, WidgetsInTemplateMixin, Evented ], {
     templateString : template,
 
+    /**
+     * Called right after widget is added to the dom. See link for more information.
+     *
+     * @memberof module:modules/widgets/gadgetarea/GadgetDropDownMenu#
+     * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
+     */
     startup : function() {
       var self = this;
       on(this.personMenuOption.domNode,'click', function(e) {
@@ -52,6 +70,12 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'modules/widgets/DropDownMenu',
       });
     },
 
+    /**
+     * Adds a gadget's views to a MenuItemWidget in the GadgetDropDownMenu.
+     *
+     * @memberof module:modules/widgets/gadgetarea/GadgetDropDownMenu#
+     * @param {Object} views - The views object in the gadget's metadata.
+     */
     setViews : function(views) {
       var items = [];
       for(var key in views) {
@@ -64,6 +88,12 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'modules/widgets/DropDownMenu',
       this.viewsMenu.setSubMenuContent(items, 'pull-left');
     },
 
+    /**
+     * Adds a gadget's actions to a MenuItemWidget in the GadgetDropDownMenu.
+     *
+     * @memberof module:modules/widgets/gadgetarea/GadgetDropDownMenu#
+     * @param {Object} action - The action object in the gadget's metadata to add.
+     */
     addAction : function(action) {
       var actionItem = new MenuItemWidget({"name" : action.label || action.id, "onclick" : action.runAction});
       if (action.path) {
@@ -80,6 +110,12 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'modules/widgets/DropDownMenu',
       }
     },
 
+    /**
+     * Removes a gadget's actions from a MenuItemWidget in the GadgetDropDownMenu.
+     *
+     * @memberof module:modules/widgets/gadgetarea/GadgetDropDownMenu#
+     * @param {Object} action - The action object in the gadget's metadata to remove.
+     */
     removeAction : function(action) {
       // TODO: Removing an action by name is not the most reliable thing to do. Should
       // we create an "actionId" to pass to the MenuItemWidget constructor that we can
@@ -98,6 +134,12 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'modules/widgets/DropDownMenu',
       }
     },
 
+    /**
+     * Publishes a gadget's selection given the type.
+     *
+     * @memberof module:modules/widgets/gadgetarea/GadgetDropDownMenu#
+     * @param {String} type - The type of the selection.
+     */
     publishSelection : function(type) {
       var selection = osData.get(type);
       if(selection) {

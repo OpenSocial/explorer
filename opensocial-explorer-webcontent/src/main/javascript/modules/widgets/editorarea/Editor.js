@@ -16,47 +16,84 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+ * Displays the code of a particular EditorTab.
+ *
+ * @module modules/widgets/editorarea/Editor
+ * @augments dijit/_WidgetBase
+ * @augments dijit/_TemplatedMixin
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_TemplatedMixin.html|TemplatedMixin Documentation}
+ */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dojo/query', 'dojo/text!./../../templates/Editor.html',
         'dojo/json', 'dojo/dom-class', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, WidgetBase, TemplatedMixin, query, template, json, domClass) {
-            return declare('EditorWidget', [ WidgetBase, TemplatedMixin ], {
-                templateString : template,
-            
-                startup : function() {
-                  var textArea = query('textarea', this.domNode)[0];
-                  textArea.value = this.resource.content;
-                  this.editor = CodeMirror.fromTextArea(textArea, {
-                    mode: this.mode,
-                    lineNumbers: true,
-                    lineWrapping: true
-                  });
-                  var hlLine = this.editor.addLineClass(0, "background", "activeline"),
-                      self = this;
-                  this.editor.on("cursorActivity", function() {
-                    var cur = self.editor.getLineHandle(self.editor.getCursor().line);
-                    if (cur !== hlLine) {
-                      self.editor.removeLineClass(hlLine, "background", "activeline");
-                      hlLine = self.editor.addLineClass(cur, "background", "activeline");
-                    }
-                  });
-                },
-                
-                show : function() {
-                  domClass.remove(this.domNode, 'hide');
-                  this.refresh();
-                },
-                
-                hide : function() {
-                  domClass.add(this.domNode, 'hide');
-                },
-                
-                getContent : function() {
-                  return this.editor.getValue();
-                },
-                
-                refresh : function() {
-                  this.editor.refresh();
-                }
-            });
-        });
+  return declare('EditorWidget', [ WidgetBase, TemplatedMixin ], {
+    templateString : template,
+
+    /**
+     * Called right after widget is added to the dom. See link for more information.
+     *
+     * @memberof module:modules/widgets/editorarea/Editor#
+     * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
+     */
+    startup : function() {
+      var textArea = query('textarea', this.domNode)[0];
+      textArea.value = this.resource.content;
+      this.editor = CodeMirror.fromTextArea(textArea, {
+        mode: this.mode,
+        lineNumbers: true,
+        lineWrapping: true
+      });
+      var hlLine = this.editor.addLineClass(0, "background", "activeline"),
+      self = this;
+      this.editor.on("cursorActivity", function() {
+        var cur = self.editor.getLineHandle(self.editor.getCursor().line);
+        if (cur !== hlLine) {
+          self.editor.removeLineClass(hlLine, "background", "activeline");
+          hlLine = self.editor.addLineClass(cur, "background", "activeline");
+        }
+      });
+    },
+
+    /**
+     * Shows the Editor.
+     *
+     * @memberof module:modules/widgets/editorarea/Editor#
+     */
+    show : function() {
+      domClass.remove(this.domNode, 'hide');
+      this.refresh();
+    },
+
+    /**
+     * Hides the Editor.
+     *
+     * @memberof module:modules/widgets/editorarea/Editor#
+     */
+    hide : function() {
+      domClass.add(this.domNode, 'hide');
+    },
+
+    /**
+     * Gets the content of the CodeMirror
+     *
+     * @memberof module:modules/widgets/editorarea/Editor#
+     * @returns {String} Content of CodeMirror
+     */
+    getContent : function() {
+      return this.editor.getValue();
+    },
+
+    /**
+     * Refreshes the CodeMirror.
+     *
+     * @memberof module:modules/widgets/editorarea/Editor#
+     */
+    refresh : function() {
+      this.editor.refresh();
+    }
+  });
+});

@@ -16,21 +16,46 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+ * The button located in the GadgetToolbar that toggles the GadgetDropDownMenu widget.
+ *
+ * @module modules/widgets/gadgetarea/GadgetMenuButton
+ * @requires module:modules/widgets/GadgetDropDownMenu
+ * @augments dijit/_WidgetBase
+ * @augments dijit/_TemplatedMixin
+ * @augments dijit/_WidgetsInTemplateMixin
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_TemplatedMixin.html|TemplatedMixin Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetsInTemplateMixin.html|WidgetsInTemplateMixin Documentation}
+ */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dojo/text!./../../templates/GadgetMenuButton.html',
         'modules/widgets/gadgetarea/GadgetDropDownMenu', 'dojo/dom-construct',
         'dijit/_WidgetsInTemplateMixin'],
         function(declare, WidgetBase, TemplatedMixin, template, GadgetDropDownMenu, domConstruct,
-                WidgetsInTemplateMixin) {
-            return declare('GadgetMenuButtonWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin ], {
-                templateString : template,
-                
-                constructMenu : function(metadata) {
-                  this.gadgetDropDown.setViews(metadata.views);
-                },
-                
-                getGadgetDropDownMenu : function() {
-                  return this.gadgetDropDown;
-                }
-            });
-        });
+            WidgetsInTemplateMixin) {
+  return declare('GadgetMenuButtonWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin ], {
+    templateString : template,
+
+    /**
+     * Populates the GadgetDropDownmenu with the gadget's metadata.
+     *
+     * @memberof module:modules/widgets/gadgetarea/GadgetMenuButton#
+     * @param {Object} metadata - Object with the gadget's metadata.
+     */
+    constructMenu : function(metadata) {
+      this.gadgetDropDown.setViews(metadata.views);
+    },
+
+    /**
+     * Getter method for the GadgetDropDownMenu.
+     *
+     * @memberof module:modules/widgets/gadgetarea/GadgetMenuButton#
+     * @returns {GadgetDropDownMenu} The DropDownMenu connected to this button.
+     */
+    getGadgetDropDownMenu : function() {
+      return this.gadgetDropDown;
+    }
+  });
+});

@@ -16,6 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+ * Contains the Dojo Tree Control for specs and the CreationModalDialog Module.
+ *
+ * @module modules/widgets/sidebar/SidebarNav
+ * @requires module:modules/widgets/sidebar/CreationModalDialog
+ * @requires module:modules/gadget-spec-service
+ * @augments dijit/_WidgetBase
+ * @augments dijit/_TemplatedMixin
+ * @augments dijit/_WidgetsInTemplateMixin
+ * @augments dojo/Evented
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_TemplatedMixin.html|TemplatedMixin Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetsInTemplateMixin.html|WidgetsInTemplateMixin Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dojo/Evented.html|Evented Documentation}
+ */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 
         'dijit/_WidgetsInTemplateMixin', 'dojo/text!./../../templates/SidebarNav.html', 
         'dojo/dom-construct', 'dojo/Evented', 'modules/widgets/sidebar/CreationModalDialog',
@@ -28,6 +44,13 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     specStore : null,
     specModel : null,
     specTree: null,
+    
+    /**
+     * Called right after widget is added to the dom. See link for more information.
+     *
+     * @memberof module:modules/widgets/sidebar/SidebarNav#
+     * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
+     */
     startup : function() {
       var self = this;
       this.getGadgetSpecService().getSpecTree({
@@ -79,6 +102,14 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
       });
     },
     
+    /**
+    * Adds a new spec to the Tree Control. If a user-created spec doesn't exist yet, a folder called "My Specs" is also added.
+    *
+    * @memberof module:modules/widgets/sidebar/SidebarNav#
+    *
+    * @param {String} title - Title of the spec to be added.
+    * @param {String} specId - Id of the spec to be added.
+    */
     addSpec : function(title, specId) {
       if(this.specStore.query({name: "My Specs"}).length === 0) {
         this.specStore.put({id: "myspecs", isDefault: false, name:"My Specs", parent :"root", hasChildren: true});
@@ -91,6 +122,16 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
       this.emit('show', newNode);
     },
     
+    /**
+     * Gets the ID path of the spec in the tree control. Used to set the specTree focus to the particular spec.
+     *
+     * @memberof module:modules/widgets/sidebar/SidebarNav#
+     *
+     * @param {String} path - Accumulator parameter, starts as an empty array and is built up and eventually returned.
+     * @param {String} startId - Id of the current object in the path.
+     *
+     * @returns {String} The path of the spec.
+     */
     getPath : function(path, startId) {
       var object = this.specStore.query({id: startId})[0];
       if(object.id == "root") {
@@ -102,27 +143,61 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
       }
     },
     
+    /**
+     * Gets the ID of the default spec in the specTree (The spec that is initally displayed).
+     *
+     * @memberof module:modules/widgets/sidebar/SidebarNav#
+     *
+     * @returns {String} The default spec's ID.
+     */
     getDefaultId : function() {
       var object = this.specStore.query({isDefault: true})[0];
       return object.id;
     }, 
     
+    /**
+     * Gets the name of the default spec in the specTree (The spec that is initally displayed).
+     *
+     * @memberof module:modules/widgets/sidebar/SidebarNav#
+     *
+     * @returns {String} The default spec's name.
+     */
     getDefaultName : function() {
       var object = this.specStore.query({isDefault: true})[0];
       return object.name;
     },
     
+    /**
+     * Sets the ID of the focused spec in the specTree to the ID provided by the xhr POST. 
+     * When a spec is added or rerendered, the servlet assigns a new ID to the updated spec. 
+     * We use this method so that the spec's ID in the Dojo Tree is representative of its updated counterpart server-side.
+     *
+     * @memberof module:modules/widgets/sidebar/SidebarNav#
+     *
+     * @param {String} The default spec's ID.
+     */
     setNewId: function(id) {
       var focusedNode = this.specTree.get('selectedItems')[0];
       focusedNode.id = id;
     },
     
+    /**
+     * Opens the CreationModalDialog modal for adding a new spec.
+     *
+     * @memberof module:modules/widgets/sidebar/SidebarNav#
+     */
     toggleModal: function() {
       domClass.remove(this.creationModal.domNode, 'hide');
       domClass.add(this.creationModal.domNode, 'in');
       query('body').append('<div class="modal-backdrop fade in"></div>');
     },
     
+    /**
+     * Getter method for the GadgetSpecService module for testing purposes.
+     *
+     * @memberof module:modules/widgets/sidebar/SidebarNav#
+     * @returns {gadgetSpecService} The gadgetSpecService object.
+     */
     getGadgetSpecService : function() {
       return gadgetSpecService;
     }

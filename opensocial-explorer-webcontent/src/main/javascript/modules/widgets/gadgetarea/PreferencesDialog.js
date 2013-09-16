@@ -16,6 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+ * A modal window that serves as a UI for the Preferences Gadget example.
+ *
+ * @module modules/widgets/gadgetarea/PreferencesDialog
+ * @augments module:modules/widgets/ModalDialog
+ * @requires module:modules/widgets/controlgroups/BooleanControlGroup
+ * @requires module:modules/widgets/controlgroups/StringControlGroup
+ * @requires module:modules/widgets/controlgroups/EnumControlGroup
+ * @requires module:modules/widgets/controlgroups/ListControlGroup
+ */
 define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'dojo/dom-construct',
         'modules/widgets/controlgroups/StringControlGroup', 'modules/widgets/controlgroups/BooleanControlGroup', 
         'modules/widgets/controlgroups/EnumControlGroup', 'modules/widgets/controlgroups/ListControlGroup', 'dojo/on', 
@@ -36,12 +47,12 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'doj
       });
     },
 
-    destroy : function() {
-      this.showHandle.remove();
-      this.hideHandle.remove();
-      this.inherited(arguments);
-    },
-
+    /**
+     * Called right before widget is added to the dom. See link for more information.
+     *
+     * @memberof module:modules/widgets/gadgetarea/PreferencesDialog#
+     * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
+     */
     postCreate : function() {
       var form = domConstruct.create('div', {"class" : "form-horizontal"}),
       self = this,
@@ -60,11 +71,23 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'doj
       footer.append(closeBtn);
     },
 
+    /**
+     * Called right after widget is added to the dom. See link for more information.
+     *
+     * @memberof module:modules/widgets/gadgetarea/PreferencesDialog#
+     * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
+     */
     startup : function() {
       this.setHeaderTitle('Preferences');
       this.inherited(arguments);
     },
 
+    /**
+     * Adds the prefs gadget's metadata to the modal.
+     *
+     * @memberof module:modules/widgets/gadgetarea/PreferencesDialog#
+     * @params {Object} prefs - The prefs object in a gadget's metadata.
+     */
     addPrefsToUI : function(prefs) {
       query('.form-horizontal > *', this.domNode).remove();
       //TODO we probably need to destroy the widgets created as well
@@ -76,6 +99,12 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'doj
       }
     },
 
+    /**
+     * Adds each pref in prefs to the modal.
+     *
+     * @memberof module:modules/widgets/gadgetarea/PreferencesDialog#
+     * @params {Object} prefs - The prefs object in a gadget's metadata.
+     */
     addPrefToUI : function(pref) {
       var controlGroup;
       if(pref.dataType === 'BOOL') {
@@ -95,6 +124,12 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'doj
       }
     },
 
+    /**
+     * Adds each pref in prefs to the modal.
+     *
+     * @memberof module:modules/widgets/gadgetarea/PreferencesDialog#
+     * @params {Object} prefs - The prefs object in a gadget's metadata.
+     */
     notifyPrefsChangedListeners : function() {
       if(!this.isValid()) {
         return;
@@ -110,6 +145,12 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'doj
       }
     },
 
+    /**
+     * Gets the prefs from the control groups.
+     *
+     * @memberof module:modules/widgets/gadgetarea/PreferencesDialog#
+     * @returns {Object} The prefs object assembled from the control groups.
+     */
     getPrefs : function() {
       var prefs = {};
       for(var key in this.controlGroups) {
@@ -120,15 +161,33 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'doj
       return prefs;
     },
 
+    /**
+     * Checks whether the prefs' fields are valid (has values).
+     *
+     * @memberof module:modules/widgets/gadgetarea/PreferencesDialog#
+     * @returns {Boolean} Whether or not the fields are valid.
+     */
     isValid : function() {
       //TODO go through and validate each field to make sure that the required prefs have values
       return true;
     },
 
+    /**
+     * Adds a listener function to the instance variable prefsChangedListeners.
+     *
+     * @memberof module:modules/widgets/gadgetarea/PreferencesDialog#
+     * @param {Function} listener - A callback function that updates the prefs and rerenders the gadget.
+     */
     addPrefsChangedListener : function(listener) {
       this.prefsChangedListeners.push(listener);
     },
 
+    /**
+     * Sets each control group that exists in a spec's prefs.
+     *
+     * @memberof module:modules/widgets/gadgetarea/PreferencesDialog#
+     * @param {Object} prefs - The prefs object in a gadget's metadata.
+     */
     setPrefs : function(prefs) {
       for(var key in prefs) {
         if(prefs.hasOwnProperty(key)) {
@@ -138,6 +197,17 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'doj
           }
         }
       }
+    },
+
+    /**
+     * Destroys the PreferencesDialog.
+     *
+     * @memberof module:modules/widgets/gadgetarea/PreferencesDialog#
+     */
+    destroy : function() {
+      this.showHandle.remove();
+      this.hideHandle.remove();
+      this.inherited(arguments);
     }
   });
 });

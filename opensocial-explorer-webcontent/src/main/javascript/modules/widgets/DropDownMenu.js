@@ -16,54 +16,87 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+ * A drop-down menu that displays MenuItems.
+ *
+ * @module modules/widgets/DropDownMenu
+ * @augments dijit/_WidgetBase
+ * @augments dijit/_TemplatedMixin
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_TemplatedMixin.html|TemplatedMixin Documentation}
+ */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dojo/_base/array', 'dojo/text!./../templates/DropDownMenu.html', 'dojo/dom-construct'],
-        function(declare, WidgetBase, TemplatedMixin,
-                arrayUtil, template, domConstruct) {
-            return declare('DropDownMenuWidget', [ WidgetBase, TemplatedMixin ], {
-                templateString : template,
-                
-                constructor : function() {
-                  this.menuItems = [];
-                },
-                
-                addMenuItem : function(menuItem) {
-                  this.menuItems.push(menuItem);
-                  domConstruct.place(menuItem.domNode, this.domNode);
-                  menuItem.startup();
-                },
-                
-                clearMenuItems : function() {
-                  for(var i = 0; i < this.menuItems.length; i++) {
-                    this.menuItems[i].destroy();
-                  }
-                  this.menuItems = [];
-                },
-                
-                removeMenuItem : function(menuName) {
-                  for(var i = 0; i < this.menuItems.length; i++) {
-                    if (this.menuItems[i].name === menuName) {
-                      this.menuItems[i].destroy();
-                      this.menuItems.splice(i, 1);
-                      // CONSIDER: Do we need to delete spliced array items?
-                      break;
-                    }
-                  }
-                  
-                  if (this.menuItems.length === 0) {
-                    // this.destroy();
-                    // TODO: If this.menuItems.length == 0 should I call this.destroy()? Can I show a
-                    // menu item with a label of <Empty>?
-                  }
-                },
-                
-                getMenuItem : function(menuName) {
-                  for(var i = 0; i < this.menuItems.length; i++) {
-                    if (this.menuItems[i].name === menuName) {
-                      return this.menuItems[i];
-                    }
-                  }
-                  return null;
-                }
-            });
-        });
+        function(declare, WidgetBase, TemplatedMixin, arrayUtil, template, domConstruct) {
+  return declare('DropDownMenuWidget', [ WidgetBase, TemplatedMixin ], {
+    templateString : template,
+
+    constructor : function() {
+      this.menuItems = [];
+    },
+
+    /**
+     * Adds a MenuItem to the menu.
+     *
+     * @memberof module:modules/widgets/DropDownMenu#
+     * @param {MenuItemWidget} menuItem - The MenuItem to add.
+     */
+    addMenuItem : function(menuItem) {
+      this.menuItems.push(menuItem);
+      domConstruct.place(menuItem.domNode, this.domNode);
+      menuItem.startup();
+    },
+
+    /**
+     * Clears all existing MenuItems in the menuItems array.
+     *
+     * @memberof module:modules/widgets/DropDownMenu#
+     */
+    clearMenuItems : function() {
+      for(var i = 0; i < this.menuItems.length; i++) {
+        this.menuItems[i].destroy();
+      }
+      this.menuItems = [];
+    },
+
+    /**
+     * Removes a MenuItem from the menuItems array.
+     *
+     * @memberof module:modules/widgets/DropDownMenu#
+     * @param {String} menuName - The name of MenuItem to remove.
+     */
+    removeMenuItem : function(menuName) {
+      for(var i = 0; i < this.menuItems.length; i++) {
+        if (this.menuItems[i].name === menuName) {
+          this.menuItems[i].destroy();
+          this.menuItems.splice(i, 1);
+          // CONSIDER: Do we need to delete spliced array items?
+              break;
+        }
+      }
+
+      if (this.menuItems.length === 0) {
+        // this.destroy();
+        // TODO: If this.menuItems.length == 0 should I call this.destroy()? Can I show a
+            // menu item with a label of <Empty>?
+      }
+    },
+
+    /**
+     * Gets a MenuItem from the menuItems array.
+     *
+     * @memberof module:modules/widgets/DropDownMenu#
+     * @param {String} menuName - The name of MenuItem to retrieve.
+     * @returns {MenuItemWidget} The MenuItem that matches the name.
+     */
+    getMenuItem : function(menuName) {
+      for(var i = 0; i < this.menuItems.length; i++) {
+        if (this.menuItems[i].name === menuName) {
+          return this.menuItems[i];
+        }
+      }
+      return null;
+    }
+  });
+});

@@ -16,40 +16,68 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 
-        'dojo/dom-class', 'modules/widgets/controlgroups/StringControlGroup', 'modules/widgets/controlgroups/BooleanControlGroup', 'modules/widgets/controlgroups/EnumControlGroup', 
-        'modules/widgets/controlgroups/ListControlGroup', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
-        function(declare, ModalDialog, query, domClass, StringControlGroup, BooleanControlGroup, EnumControlGroup, ListControlGroup) {
-            return declare('GadgetModalDialogWidget', [ ModalDialog ], {
-                
-                postCreate : function() {
-                  
-                  if(this.viewTarget === 'TAB') {
-                    domClass.add(this.domNode, 'tab');  
-                    domClass.add(this.domNode, 'gadgetModal');
-                  } else if( this.viewTarget === 'SIDEBAR') {
-                    domClass.add(this.domNode, 'sidebar');
-                    domClass.add(this.domNode, 'gadgetModal');
-                  }
-                },
-                
-                startup : function() {
-                  this.setHeaderTitle(this.title);
-                  this.inherited(arguments);
-                },
-                
-                getGadgetNode : function() {
-                  return query('.modal-body', this.domNode)[0];
-                },
-                
-                hide : function(opt_site) {
-                  var site = opt_site;
-                  if(!site) {
-                    site = this.container.getGadgetSiteByIframeId_(query('.modal-body > iframe')[0].getAttribute('id'));
-                  }
-                  this.container.closeGadget(site);
-                  this.inherited(arguments);
-                  this.destroy();
-                }
-            });
-        });
+
+/**
+ * A modal window that displays the results of the open-views gadget example.
+ *
+ * @module modules/widgets/gadgetarea/GadgetModalDialog
+ * @augments module:modules/widgets/ModalDialog
+ */
+define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'dojo/dom-class', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
+        function(declare, ModalDialog, query, domClass) {
+  return declare('GadgetModalDialogWidget', [ ModalDialog ], {
+
+    /**
+     * Called right before widget is added to the dom. See link for more information.
+     *
+     * @memberof module:modules/widgets/gadgetarea/GadgetModalDialog#
+     * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
+     */
+    postCreate : function() {
+      if(this.viewTarget === 'TAB') {
+        domClass.add(this.domNode, 'tab');  
+        domClass.add(this.domNode, 'gadgetModal');
+      } else if( this.viewTarget === 'SIDEBAR') {
+        domClass.add(this.domNode, 'sidebar');
+        domClass.add(this.domNode, 'gadgetModal');
+      }
+    },
+
+    /**
+     * Called right after widget is added to the dom. See link for more information.
+     *
+     * @memberof module:modules/widgets/gadgetarea/GadgetModalDialog#
+     * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
+     */
+    startup : function() {
+      this.setHeaderTitle(this.title);
+      this.inherited(arguments);
+    },
+
+    /**
+     * Gets the domNode of the gadget that is rendered in the iframe of the GadgetModalDialog.
+     *
+     * @memberof module:modules/widgets/gadgetarea/GadgetModalDialog#
+     * @return {Object} The domNode of the gadget.
+     */
+    getGadgetNode : function() {
+      return query('.modal-body', this.domNode)[0];
+    },
+
+    /**
+     * Removes the modal when the user exits out of it.
+     *
+     * @memberof module:modules/widgets/gadgetarea/GadgetModalDialog#
+     * @param {Object} opt_site
+     */
+    hide : function(opt_site) {
+      var site = opt_site;
+      if(!site) {
+        site = this.container.getGadgetSiteByIframeId_(query('.modal-body > iframe')[0].getAttribute('id'));
+      }
+      this.container.closeGadget(site);
+      this.inherited(arguments);
+      this.destroy();
+    }
+  });
+});
