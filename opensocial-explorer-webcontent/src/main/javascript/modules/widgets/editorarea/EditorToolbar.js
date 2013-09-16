@@ -54,6 +54,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
       on(this.renderEEButton, 'click', function() {
         self.emit("renderEEClick");
       });
+    },
     
     /**
      * Sets the innerHTML of the EditorToolbar.
