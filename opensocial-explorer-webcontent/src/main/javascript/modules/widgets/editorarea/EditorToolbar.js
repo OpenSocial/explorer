@@ -40,22 +40,20 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
     templateString : template,
     
     /**
-     * Handler for the RenderGadgetButton, emits a message for EditorArea.
+     * Called right before widget is added to the dom. See link for more information.
      *
      * @memberof module:modules/widgets/editorarea/EditorToolbar#
+     * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
-    onRenderGadgetClick: function() {
-      this.emit("renderGadgetClick");
-    },
-    
-    /**
-     * Handler for the RenderEEButton, emits a message for EditorArea.
-     *
-     * @memberof module:modules/widgets/editorarea/EditorToolbar#
-     */
-    onRenderEEClick: function() {
-      this.emit("renderEEClick");
-    },
+    postCreate: function() {
+      var self = this;
+      on(this.renderGadgetButton, 'click', function() {
+        self.emit("renderGadgetClick");
+      });
+      
+      on(this.renderEEButton, 'click', function() {
+        self.emit("renderEEClick");
+      });
     
     /**
      * Sets the innerHTML of the EditorToolbar.
@@ -73,7 +71,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
      * @memberof module:modules/widgets/editorarea/EditorToolbar#
      */
     showRenderEEButton: function() {
-      domClass.remove("renderEEBtn", "hide");
+      domClass.remove(this.renderEEButton, "hide");
     },
 
     /**
@@ -82,7 +80,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
      * @memberof module:modules/widgets/editorarea/EditorToolbar#
      */
     hideRenderEEButton: function() {
-      domClass.add("renderEEBtn", "hide");
+      domClass.add(this.renderEEButton, "hide");
     },
 
     /**
@@ -91,7 +89,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
      * @memberof module:modules/widgets/editorarea/EditorToolbar#
      */
     showRenderGadgetButton: function() {
-      domClass.remove("renderBtn", "hide");
+      domClass.remove(this.renderGadgetButton, "hide");
     },
 
     /**
@@ -100,7 +98,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
      * @memberof module:modules/widgets/editorarea/EditorToolbar#
      */
     hideRenderGadgetButton: function() {
-      domClass.add("renderBtn", "hide");
+      domClass.add(this.renderGadgetButton, "hide");
     },
     
     /**
