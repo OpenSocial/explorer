@@ -18,16 +18,28 @@
  */
 
 /**
-* Container Widget to delegate cross module method calls.
-*
-* @module modules/widgets/MainContainer
-*/
+ * Container widget to delegate cross module method calls.
+ *
+ * @module modules/widgets/MainContainer
+ * @augments dijit/_WidgetBase
+ * @augments dijit/_TemplatedMixin
+ * @augments dijit/_WidgetsInTemplateMixin
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_TemplatedMixin.html|TemplatedMixin Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetsInTemplateMixin.html|WidgetsInTemplateMixin Documentation}
+ */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin',
          'dojo/query', 'dojo/on', 'dojo/text!./../templates/MainContainer.html'], 
          function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, query, on, template) {
   return declare('MainContainerWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin ], {
     templateString : template,
 
+    /**
+     * Called right before widget is added to the dom. See link for more information.
+     *
+     * @memberof module:modules/widgets/MainContainer#
+     * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
+     */
     postCreate: function() {
       var self = this;
       on(this.sidebarNav, 'show', function(node) {

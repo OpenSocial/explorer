@@ -18,10 +18,20 @@
  */
 
 /**
-* This module, SidebarNav, contains the Dojo Tree Control for specs and the CreationModalDialog Module.
-*
-* @module modules/widgets/sidebar/SidebarNav
-*/
+ * Contains the Dojo Tree Control for specs and the CreationModalDialog Module.
+ *
+ * @module modules/widgets/sidebar/SidebarNav
+ * @requires module:modules/widgets/sidebar/CreationModalDialog
+ * @requires module:modules/gadget-spec-service
+ * @augments dijit/_WidgetBase
+ * @augments dijit/_TemplatedMixin
+ * @augments dijit/_WidgetsInTemplateMixin
+ * @augments dojo/Evented
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_TemplatedMixin.html|TemplatedMixin Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetsInTemplateMixin.html|WidgetsInTemplateMixin Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dojo/Evented.html|Evented Documentation}
+ */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 
         'dijit/_WidgetsInTemplateMixin', 'dojo/text!./../../templates/SidebarNav.html', 
         'dojo/dom-construct', 'dojo/Evented', 'modules/widgets/sidebar/CreationModalDialog',
@@ -34,6 +44,13 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     specStore : null,
     specModel : null,
     specTree: null,
+    
+    /**
+     * Called right after widget is added to the dom. See link for more information.
+     *
+     * @memberof module:modules/widgets/sidebar/SidebarNav#
+     * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
+     */
     startup : function() {
       var self = this;
       this.getGadgetSpecService().getSpecTree({
@@ -139,7 +156,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
      *
      * @memberof module:modules/widgets/sidebar/SidebarNav#
      *
-     * @param {String} id - Id of the current object in the path.
+     * @returns {String} The default spec's name.
      */
     getDefaultName : function() {
       var object = this.specStore.query({isDefault: true})[0];
@@ -153,7 +170,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
      *
      * @memberof module:modules/widgets/sidebar/SidebarNav#
      *
-     * @returns {String} The default spec's ID.
+     * @param {String} The default spec's ID.
      */
     setNewId: function(id) {
       var focusedNode = this.specTree.get('selectedItems')[0];
@@ -175,6 +192,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
      * Getter method for the GadgetSpecService module for testing purposes.
      *
      * @memberof module:modules/widgets/sidebar/SidebarNav#
+     * @returns {gadgetSpecService} The gadgetSpecService object.
      */
     getGadgetSpecService : function() {
       return gadgetSpecService;

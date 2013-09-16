@@ -18,10 +18,16 @@
  */
 
 /**
-* This module, CreationModalDialog, is for adding a new spec. 
-*
-* @module modules/widgets/sidebar/CreationModalDialog
-*/
+ * A modal window that allows users to create a new spec along with information about the spec.
+ *
+ * @module modules/widgets/sidebar/CreationModalDialog
+ * @requires module:modules/gadget-spec-service
+ * @augments module:modules/widgets/ModalDialog
+ * @augments dijit/_WidgetsInTemplateMixin
+ * @augments dojo/Evented
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetsInTemplateMixin.html|WidgetsInTemplateMixin Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dojo/Evented.html|Evented Documentation}
+ */
 define(['dojo/_base/declare', 'modules/widgets/ModalDialog', 
         'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin', 'dojo/Evented',
         'dojo/query', 'dojo/text!./../../templates/CreationModalDialog.html', 'dojo/text!./../../stubs/StubXML.xml', 
@@ -32,6 +38,12 @@ define(['dojo/_base/declare', 'modules/widgets/ModalDialog',
             query, template, stubxml, stubeexml, stubhtml, dom, gadgetSpecService, domClass, domStyle) {
   return declare('CreationModalDialogWidget', [ModalDialog, WidgetsInTemplateMixin, Evented], {
     templateString : template,
+    
+    /**
+     * Sends the data of user-submitted spec to the servlet and hides and clears the modal.
+     *
+     * @memberof module:modules/widgets/sidebar/CreationModalDialog#
+     */
     onSubmit : function() {
       var self = this;
       var title = this.creationTitle.value;
@@ -145,6 +157,7 @@ define(['dojo/_base/declare', 'modules/widgets/ModalDialog',
      * Getter method for the GadgetSpecService module for testing purposes.
      *
      * @memberof module:modules/widgets/sidebar/CreationModalDialog#
+     * @returns {gadgetSpecService} The gadgetSpecService object.
      */
     getGadgetSpecService : function() {
       return gadgetSpecService;

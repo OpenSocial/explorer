@@ -16,35 +16,67 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+ * The modal template widget.
+ *
+ * @module modules/widgets/ModalDialog
+ * @augments dijit/_WidgetBase
+ * @augments dijit/_TemplatedMixin
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_TemplatedMixin.html|TemplatedMixin Documentation}
+ */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dojo/query', 'dojo/text!./../templates/ModalDialog.html',
         'dojo/dom-class', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, WidgetBase, TemplatedMixin,
-                query, template, domClass) {
-            return declare('ModalDialogWidget', [ WidgetBase, TemplatedMixin ], {
-                templateString : template,
-                
-                startup : function() {
-                  var self = this;
-                  query('.modal-header .close', this.domNode).on('click', function(e) {
-                    self.hide();
-                  });
-                },
-                
-                show : function() {
-                  domClass.remove(this.domNode, 'hide');
-                  domClass.add(this.domNode, 'in');
-                  query('body').append('<div class="modal-backdrop fade in"></div>');
-                },
-                
-                hide : function() {
-                  domClass.add(this.domNode, 'hide');
-                  domClass.remove(this.domNode, 'in');
-                  query('div.modal-backdrop').remove();
-                },
-                
-                setHeaderTitle : function(title) {
-                  query('div.modal-header h3', this.domNode).innerHTML(title);
-                }
-            });
-        });
+            query, template, domClass) {
+  return declare('ModalDialogWidget', [ WidgetBase, TemplatedMixin ], {
+    templateString : template,
+    
+    /**
+     * Called right after widget is added to the dom. See link for more information.
+     *
+     * @memberof module:modules/widgets/ModalDialog#
+     * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
+     */
+    startup : function() {
+      var self = this;
+      query('.modal-header .close', this.domNode).on('click', function(e) {
+        self.hide();
+      });
+    },
+
+    /**
+     * Shows the ModalDialog in the dom.
+     *
+     * @memberof module:modules/widgets/ModalDialog#
+     */
+    show : function() {
+      domClass.remove(this.domNode, 'hide');
+      domClass.add(this.domNode, 'in');
+      query('body').append('<div class="modal-backdrop fade in"></div>');
+    },
+
+    /**
+     * Hides the ModalDialog in the dom.
+     *
+     * @memberof module:modules/widgets/ModalDialog#
+     */
+    hide : function() {
+      domClass.add(this.domNode, 'hide');
+      domClass.remove(this.domNode, 'in');
+      query('div.modal-backdrop').remove();
+    },
+
+    /**
+     * Sets the header title in the ModalDialog.
+     *
+     * @memberof module:modules/widgets/ModalDialog#
+     * @param {String} title - The title to be set.
+     */
+    setHeaderTitle : function(title) {
+      query('div.modal-header h3', this.domNode).innerHTML(title);
+    }
+  });
+});

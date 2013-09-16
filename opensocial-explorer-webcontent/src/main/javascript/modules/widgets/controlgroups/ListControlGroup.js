@@ -16,22 +16,47 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+ * A ControlGroup for the list option of the PreferencesDialog.
+ *
+ * @module modules/widgets/controlgroups/ListControlGroup
+ * @augments module:modules/widgets/controlgroups/ControlGroup
+ */
 define(['dojo/_base/declare', 'modules/widgets/controlgroups/ControlGroup', 'dojo/query', 'dojo/dom-construct',
         'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, ControlGroup, query, domConstruct) {
-            return declare('ListsControlGroupWidget', [ ControlGroup ], {
-                
-                postCreate : function() {
-                  this.input = domConstruct.create("input", {"type" : "text", "value" : this.defaultValue});
-                  query('.controls', this.domNode).innerHTML(this.input);
-                },
-                
-                getValue : function() {
-                  return this.input.value;
-                },
-                
-                setValue : function(value) {
-                  this.input.value = value;
-                }
-            });
-        });
+  return declare('ListsControlGroupWidget', [ ControlGroup ], {
+
+    /**
+     * Called right before widget is added to the dom. See link for more information.
+     *
+     * @memberof module:modules/widgets/controlgroups/ListControlGroup#
+     * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
+     */
+    postCreate : function() {
+      this.input = domConstruct.create("input", {"type" : "text", "value" : this.defaultValue});
+      query('.controls', this.domNode).innerHTML(this.input);
+    },
+
+    /**
+     * Gets the value of the ListControlGroup inputbox.
+     *
+     * @memberof module:modules/widgets/controlgroups/ListControlGroup#
+     * @return {String} The value of the inputbox.
+     */
+    getValue : function() {
+      return this.input.value;
+    },
+
+    /**
+     * Sets the value of the ListControlGroup inputbox.
+     *
+     * @memberof module:modules/widgets/controlgroups/ListControlGroup#
+     * @param {String} The value to set.
+     */
+    setValue : function(value) {
+      this.input.value = value;
+    }
+  });
+});

@@ -16,6 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+ * Contains the EditorToolbar, EditorTabs, and Editors.
+ *
+ * @module modules/widgets/gadgetarea/GadgetArea
+ * @requires module:modules/widgets/editorarea/GadgetToolbar
+ * @requires module:modules/widgets/editorarea/GadgetModalDialog
+ * @augments dijit/_WidgetBase
+ * @augments dijit/_TemplatedMixin
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_TemplatedMixin.html|TemplatedMixin Documentation}
+*/
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dojo/topic',
         'dojo/_base/array', 'dojo/text!./../../templates/GadgetArea.html', 'modules/widgets/gadgetarea/GadgetToolbar',
         'dojo/dom-construct','modules/widgets/Loading', 'modules/opensocial-data', 'modules/widgets/gadgetarea/GadgetModalDialog',
@@ -86,10 +98,22 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       });
     },
 
+    /**
+     * Getter method for the container instance variable.
+     *
+     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
+     * @returns {Container} The container for the gadget.
+     */
     getContainer : function() {
       return this.container;
     },
 
+    /**
+     * Loads the gadget given its url to the servlet.
+     *
+     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
+     * @param {String} url - The url where the gadget is located.
+     */
     loadGadget : function(url) {
       this.closeOpenSite();
       this.loadingWidget.show();                  
@@ -105,6 +129,13 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       });
     },
 
+    /**
+     * Renders the gadget given its url to the servlet.
+     *
+     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
+     * @param {String} url - The url where the gadget is located.
+     * @param {Object=} opt_renderParams - Optional parameter used by the container.
+     */
     renderGadget : function(url, opt_renderParams) {
       var renderParams = opt_renderParams || {},
       viewParams = {"gadgetUrl" : url};
@@ -116,6 +147,12 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
           renderParams);
     },
 
+    /**
+     * Sets the prefs for the PreferencesDialog.
+     *
+     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
+     * @returns {Function} - The function that sets the prefs.
+     */
     setPrefs : function() {
       var self = this;
       return function(site, url, prefs) {
@@ -123,6 +160,13 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       };
     },
 
+    /**
+     * Renders the embedded-experience.
+     *
+     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
+     * @param {String} url - The url where the EE is located.
+     * @param {Object} dataModel - Additional json data the EE needs to be able to render.
+     */
     renderEmbeddedExperience : function(url, dataModel) {
       this.closeOpenSite();
       this.loadingWidget.show();  
