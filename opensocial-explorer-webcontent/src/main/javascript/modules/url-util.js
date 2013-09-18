@@ -16,11 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+* Utility module for parsing URLs.
+*
+* @module modules/url-util
+*/
 define([], function() {
   return {
     /**
      * Gets the context root of where the OpenSocial Explorer is running.
      * This may not be the same context root of the container page.
+     * 
+     * @memberof module:modules/url-util
+     * @returns {String} The context root.
      */
     getContextRoot : function() {
       var modulePath = require.toUrl('modules');

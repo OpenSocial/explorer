@@ -16,18 +16,38 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+ * Loading bar used in GadgetArea when a gadget is loading.
+ *
+ * @module modules/widgets/Loading
+ * @augments dijit/_WidgetBase
+ * @augments dijit/_TemplatedMixin
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_TemplatedMixin.html|TemplatedMixin Documentation}
+ */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dojo/text!./../templates/Loading.html', 'dojo/dom-class'],
         function(declare, WidgetBase, TemplatedMixin, template, domClass) {
-            return declare('LoadingWidget', [ WidgetBase, TemplatedMixin ], {
-                templateString : template,
-                
-                show : function() {
-                  domClass.remove(this.domNode, 'hide');
-                },
-                
-                hide : function() {
-                  domClass.add(this.domNode, 'hide');
-                }
-            });
-        });
+  return declare('LoadingWidget', [ WidgetBase, TemplatedMixin ], {
+    templateString : template,
+
+    /**
+     * Shows the Loading bar in the dom.
+     *
+     * @memberof module:modules/widgets/Loading#
+     */
+    show : function() {
+      domClass.remove(this.domNode, 'hide');
+    },
+
+    /**
+     * Hides the Loading bar in the dom.
+     *
+     * @memberof module:modules/widgets/Loading#
+     */
+    hide : function() {
+      domClass.add(this.domNode, 'hide');
+    }
+  });
+});

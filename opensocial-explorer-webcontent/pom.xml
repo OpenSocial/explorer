@@ -33,6 +33,7 @@
   <!-- P R O P E R T I E S -->
   <!-- ====================================================================== -->
   <properties>
+    <jsdoc3-maven-plugin.version>1.0.5</jsdoc3-maven-plugin.version>
     <maven-jstools-plugin.version>0.7</maven-jstools-plugin.version>
     <maven-source-plugin.version>2.1.2</maven-source-plugin.version>
     <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
@@ -253,6 +254,24 @@
   <reporting>
     <plugins>
       <plugin>
+        <groupId>com.github.phasebash</groupId>
+        <artifactId>jsdoc3-maven-plugin</artifactId>
+        <version>${jsdoc3-maven-plugin.version}</version>
+        <configuration>
+          <recursive>true</recursive>
+          <directoryRoots>
+            <directoryRoot>${basedir}/src/main/javascript</directoryRoot>
+          </directoryRoots>
+        </configuration>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>jsdoc3</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+      <plugin>
         <groupId>gr.abiss.mvn.plugins</groupId>
         <artifactId>maven-jstools-plugin</artifactId>
         <version>${maven-jstools-plugin.version}</version>
@@ -266,7 +285,6 @@
           <reportSet>
             <reports>
               <report>jslint</report>
-              <report>jsdoc</report>
             </reports>
           </reportSet>
         </reportSets>
