@@ -193,11 +193,13 @@ public class OSEOAuth2Persister implements OAuth2Persister {
           for (int i = 0; i < dArray.length(); i++) {
             domains.add(dArray.optString(i));
           }
-          client.setAllowedDomains(domains.toArray(new String[0]));
+          client.setAllowedDomains(domains.toArray(new String[domains.size()]));
         }
 
         internalMap.put(clientName, client);
       }
+    } catch (RuntimeException e) {
+      throw e;  
     } catch (final Exception e) {
       LOG.logp(Level.WARNING, CLAZZ, method, "Exception loading clients.", e);
       throw new OAuth2PersistenceException(e);

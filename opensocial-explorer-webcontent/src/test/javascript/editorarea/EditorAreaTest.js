@@ -23,93 +23,97 @@ define(['modules/widgets/editorarea/EditorArea'], function(EditorArea){
       div.style.display = 'none';
       div.id = 'testDiv';
       document.body.appendChild(div);
-    
+
       var editor = jasmine.createSpyObj('editor', ['addLineClass', 'on', 'getValue', 'refresh']);
       window.CodeMirror = jasmine.createSpyObj('CodeMirror', ['fromTextArea']);
       window.CodeMirror.fromTextArea.andReturn(editor);
     });
-  
+
     afterEach(function() {
       document.body.removeChild(document.getElementById('testDiv'));
       window.CodeMirror = undefined;
     });
-  
+
     it("can be started", function() {
-      var editorArea = EditorArea.getInstance();
+      var editorArea = new EditorArea();
       spyOn(editorArea, 'getGadgetSpecService').andReturn({
         getDefaultGadgetSpec : function(callbacks) {
           var data = {
-                  gadgetResource : {
-                    name : "gadget.xml",
-                    content : "some content"
-                  }
+              gadgetResource : {
+                name : "gadget.xml",
+                content : "some content"
+              },
+              id: "testing"
           };
           callbacks.success(data);
         }
       });
-      spyOn(editorArea, 'renderGadget').andReturn(undefined);
+      spyOn(editorArea, 'emit').andCallThrough();
       document.getElementById('testDiv').appendChild(editorArea.domNode);
       editorArea.startup();
-      expect(editorArea.renderGadget).toHaveBeenCalled();
+      expect(editorArea.emit).toHaveBeenCalledWith("renderGadget", "testing");
       expect(editorArea.getEditorTabs().tabs.length).toEqual(1);
       editorArea.destroy();
     });
-  
+
     it("can be started with an error", function() {
-      var editorArea = EditorArea.getInstance();
+      var editorArea = new EditorArea();
 
       spyOn(editorArea, 'getGadgetSpecService').andReturn({
         getDefaultGadgetSpec : function(callbacks) {
           callbacks.error();
         }
       });
-      spyOn(editorArea, 'renderGadget').andReturn(undefined);
+      spyOn(editorArea, 'emit').andCallThrough();
       document.getElementById('testDiv').appendChild(editorArea.domNode);
       editorArea.startup();
-      expect(editorArea.renderGadget).not.toHaveBeenCalled();
+      expect(editorArea.emit).not.toHaveBeenCalled();
       expect(editorArea.getEditorTabs()).toBeUndefined();
       editorArea.destroy();
     });
-  
+
     it("can display any spec with an id", function() {
-      var editorArea = EditorArea.getInstance();
+      var editorArea = new EditorArea();
       spyOn(editorArea, 'getGadgetSpecService').andReturn({
         getDefaultGadgetSpec : function(callbacks) {
           var data = {
-                  gadgetResource : {
-                    name : "gadget.xml",
-                    content : "some content"
-                  }
+              gadgetResource : {
+                name : "gadget.xml",
+                content : "some content"
+              },
+              id: "1234"
           };
           callbacks.success(data);
         },
         getGadgetSpec : function(id, callbacks) {
           var data = {
-                  gadgetResource : {
-                    name : "gadget.xml",
-                    content : "some content"
-                  }
+              gadgetResource : {
+                name : "gadget.xml",
+                content : "some content"
+              },
+              id: "1234"
           };
           callbacks.success(data);
         }
       });
-      spyOn(editorArea, 'renderGadget').andReturn(undefined);
+      spyOn(editorArea, 'emit').andCallThrough();
       document.getElementById('testDiv').appendChild(editorArea.domNode);
       editorArea.startup();
       editorArea.displaySpec('1234');
-      expect(editorArea.renderGadget.calls.length).toEqual(2);
+      expect(editorArea.emit).toHaveBeenCalledWith("renderGadget", "1234");
       editorArea.destroy();
     });
-  
+
     it("can handle an error when displaying a spec with an id", function() {
-      var editorArea = EditorArea.getInstance();
+      var editorArea = new EditorArea();
       spyOn(editorArea, 'getGadgetSpecService').andReturn({
         getDefaultGadgetSpec : function(callbacks) {
           var data = {
-                  gadgetResource : {
-                    name : "gadget.xml",
-                    content : "some content"
-                  }
+              gadgetResource : {
+                name : "gadget.xml",
+                content : "some content"
+              },
+              id: "1234"
           };
           callbacks.success(data);
         },
@@ -117,10 +121,10 @@ define(['modules/widgets/editorarea/EditorArea'], function(EditorArea){
           callbacks.error();
         }
       });
-      spyOn(editorArea, 'renderGadget').andReturn(undefined);
+      spyOn(editorArea, 'emit').andCallThrough();
       document.getElementById('testDiv').appendChild(editorArea.domNode);
       editorArea.startup();
-      expect(editorArea.renderGadget.calls.length).toEqual(1);
+      expect(editorArea.emit.calls.length).toEqual(1);
       expect(editorArea.getEditorTabs().tabs.length).toEqual(1);
       editorArea.destroy();
     });

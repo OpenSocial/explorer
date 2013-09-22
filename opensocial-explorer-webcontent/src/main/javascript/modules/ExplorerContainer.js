@@ -27,9 +27,6 @@ define(['dojo/_base/declare',
                 containerTokenTTL : 3600,
                 
                 constructor : function(params) {
-                  this.siteCounter = 0;
-                  this.siteParent = params.siteParent;
-                  
                   var config = {},
                       self = this,
                       lifecycle = {};
@@ -41,21 +38,21 @@ define(['dojo/_base/declare',
                   config[osapi.container.ContainerConfig.GET_CONTAINER_TOKEN] = lang.hitch(this, 'getContainerToken');
                   this.container = new osapi.container.Container(config);
                   lifecycle[osapi.container.CallbackType.ON_RENDER] = function(gadgetUrl, siteId) {
-                    self.emit('rendergadget', gadgetUrl, siteId)
+                    self.emit('gadgetrendered', gadgetUrl, siteId)
                   };
                   this.container.addGadgetLifecycleCallback('org.opensocial.explorer', lifecycle);
                   
                   // Hook-up actions
                   this.container.actions.registerShowActionsHandler(function(actionObjArray) { 
-                    self.showActions(actionObjArray, self.gadgetToolbar, self.container, function(actionId){
+                    self.showActions(actionObjArray, self.container, function(actionId){
                       self.container.actions.runAction(actionId);
                     });
                   });
                   this.container.actions.registerHideActionsHandler(function(actionObjArray) { 
-                    self.hideActions(actionObjArray, self.gadgetToolbar);
+                    self.hideActions(actionObjArray);
                   });
                   this.container.actions.registerNavigateGadgetHandler(function(gadgetUrl, opt_params) {
-                    self.navigateForActions(self, gadgetUrl, opt_params);
+                    self.navigateForActions(gadgetUrl, opt_params);
                   });
                   
                   //Hook-up open-views
@@ -69,99 +66,75 @@ define(['dojo/_base/declare',
                   return this.container;
                 },
                 
-                loadGadget : function(url) {
-                  this.closeOpenSite();              
+                renderGadget : function(url, site, opt_renderParams) {             
                   var deferred = new Deferred();
                   var self = this;
                   this.container.preloadGadget(url, function(metadata) {
                     deferred.resolve(metadata);
-                    self.renderGadget(url);
-                  });
-                  return deferred.promise;
-                },
-                
-                renderGadget : function(url, opt_renderParams) {
-                  var renderParams = opt_renderParams || {},
+                    if(metadata[url] && !metadata[url].error) {
+                      var renderParams = opt_renderParams || {},
                       viewParams = {"gadgetUrl" : url};   
-                  this.site = this.createSite();
-                  renderParams[osapi.container.RenderParam.HEIGHT] = '100%';
-                  renderParams[osapi.container.RenderParam.WIDTH] = '100%';
-                  this.container.navigateGadget(this.site, url, viewParams, 
+                      renderParams[osapi.container.RenderParam.HEIGHT] = '100%';
+                      renderParams[osapi.container.RenderParam.WIDTH] = '100%';
+                      self.container.navigateGadget(site, url, viewParams, 
                           renderParams);
-                },
-                
-                renderEmbeddedExperience : function(url, dataModel) {
-                  this.closeOpenSite();
-                  this.loadingWidget.show();  
-                  var self = this;
-                  this.container.preloadGadget(url, function(metadata) {
-                    if(metadata && metadata[url]) {
-                      self.gadgetToolbar.setGadgetMetadata(metadata[url]);
-                      var siteNode = self.createNodeForSite.call(self),
-                      oDataModel = JSON.parse(dataModel),
-                      renderParams = {};
-                      oDataModel.gadget = url;
-                      renderParams[osapi.container.ee.RenderParam.GADGET_RENDER_PARAMS] = {};
-                      renderParams[osapi.container.ee.RenderParam.GADGET_RENDER_PARAMS][osapi.container.RenderParam.HEIGHT] = '100%';
-                      renderParams[osapi.container.ee.RenderParam.GADGET_RENDER_PARAMS][osapi.container.RenderParam.WIDTH] = '100%';
-                      renderParams[osapi.container.ee.RenderParam.GADGET_VIEW_PARAMS] = {"gadgetUrl" : url}; 
-
-                      self.container.ee.navigate(siteNode, oDataModel, renderParams, function(site){
-                        // Set the site so we can clean it up when we switch gadgets
-                        self.site = site;
-                      });
-                    } else {
-                      console.error('There was an error preloading the embedded experience.');
                     }
                   });
+                  return deferred.promise;
+                  
                 },
                 
-                createSite : function() {
-                  var siteNode = this.createNodeForSite();
-                  return this.container.newGadgetSite(siteNode);
-                },
-                
-                createNodeForSite: function() {
-                  // Let's be nice and reuse the same div for the site.
-                  var siteNode = dom.byId("gadgetSite" + this.siteCounter.toString());
-                  if (!siteNode) {
-                    this.siteCounter += 1;
-                    siteNode = domConstruct.create("div", {"id" : "gadgetSite" + this.siteCounter.toString()});
-                    domConstruct.place(siteNode, this.siteParent);
+                renderEmbeddedExperience : function(dataModel, siteNode) {
+                  var deferred = new Deferred();
+                  var self = this;
+                  renderParams = {};
+                  renderParams[osapi.container.ee.RenderParam.GADGET_RENDER_PARAMS] = {};
+                  renderParams[osapi.container.ee.RenderParam.GADGET_RENDER_PARAMS][osapi.container.RenderParam.HEIGHT] = '100%';
+                  renderParams[osapi.container.ee.RenderParam.GADGET_RENDER_PARAMS][osapi.container.RenderParam.WIDTH] = '100%';
+                  renderParams[osapi.container.ee.RenderParam.URL_RENDER_PARAMS] = {};
+                  renderParams[osapi.container.ee.RenderParam.URL_RENDER_PARAMS][osapi.container.RenderParam.HEIGHT] = '100%';
+                  renderParams[osapi.container.ee.RenderParam.URL_RENDER_PARAMS][osapi.container.RenderParam.WIDTH] = '100%';
+                  if(dataModel.gadget) {
+                    this.container.preloadGadget(dataModel.gadget, function(metadata) {
+                      if(metadata && metadata[dataModel.gadget]) {
+                        renderParams[osapi.container.ee.RenderParam.GADGET_VIEW_PARAMS] = {"gadgetUrl" : dataModel.gadget}; 
+
+                        self.container.ee.navigate(siteNode, dataModel, renderParams, function(site) {
+                          deferred.resolve(metadata, site);
+                        });
+                      } else {
+                        console.error('There was an error preloading the embedded experience.');
+                      }
+                    });
+                  } else {
+                    self.container.ee.navigate(siteNode, dataModel, renderParams, function(site) {
+                      deferred.resolve(undefined, site);
+                    });
                   }
-                  return siteNode;
+                  return deferred;
                 },
                 
-                closeOpenSite: function() {
-                  if(this.site) {
-                    // IMPORTANT: The gadget must be unloaded before it is closed.
-                    // Otherwise, getUrl() is undefined and no lifecycle events are fired
-                    // for unload!!!
-                    this.container.unloadGadget(this.site.getActiveSiteHolder().getUrl());
-                    this.container.closeGadget(this.site);
-                    domConstruct.destroy("gadgetSite" + this.siteCounter.toString());
-                  }
-                },
-                
-                reRenderGadget : function(opt_renderParams) {
-                  this.renderGadget(this.site.getActiveSiteHolder().getUrl(), opt_renderParams);
-                },
-                
-                showActions : function(actionObjArray, gadgetToolbar, container, runAction) {
+                showActions : function(actionObjArray, container, runAction) {
                   for (var i = 0; i < actionObjArray.length; i++) {
                     var action = actionObjArray[i];
                     
                     // Decorate the action with a function to be called when the action is executed
                     if (action.path && action.path.length > 0) {
                       action.runAction = function() {
-                        runAction(action.id);
-                      };
+                        var toRun = action;
+                        return function() {
+                          runAction(toRun.id);
+                        };
+                      }();
                     } else if (action.dataType && action.dataType.length > 0) {
                       action.runAction = function() {
-                        var selection = osData.get(action.dataType);
-                        container.selection.setSelection(selection);
-                        runAction(action.id);
-                      };
+                        var selection = osData.get(action.dataType),
+                        toRun = action;
+                        return function() {
+                          container.selection.setSelection(selection);
+                          runAction(toRun.id);
+                        };
+                      }();
                     } else {
                       gadgets.error("Invalid action contribution: " + gadgets.json.stringify(action));
                       break;
@@ -170,16 +143,15 @@ define(['dojo/_base/declare',
                   }
                 },
                 
-                hideActions : function(actionObjArray, gadgetToolbar) {
+                hideActions : function(actionObjArray) {
                   for (var i = 0; i < actionObjArray.length; i++) {
                     var action = actionObjArray[i];
                     this.emit('removeaction', action);
                   }
                 },
                 
-                navigateForActions : function(gadgetArea, gadgetUrl, opt_params) {
-                  // We can effectively ignore gadgetUrl, because we'll get it from the site's holder in reRenderGadget
-                  this.reRenderGadget(opt_params);
+                navigateForActions : function(gadgetUrl, opt_params) {
+                  this.emit('navigateforactions', gadgetUrl, opt_params);
                 },
                 
                 handleNavigateUrl : function() {

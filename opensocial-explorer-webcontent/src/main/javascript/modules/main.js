@@ -20,28 +20,21 @@
  * Main JS file the OpenSocial Explorer.
  */
 require(['modules/widgets/editorarea/EditorArea', 'modules/widgets/gadgetarea/GadgetArea', 'modules/widgets/sidebar/SidebarNav', 
-         'modules/widgets/openid/OpenIDLoginDialog', 'dojo/query', 'dojo/dom-class',  'dojo/_base/event', 
-         'dojo/NodeList-manipulate', 'dojo/NodeList-dom', 'dojo/NodeList-traverse', 'dojo/domReady!'], 
-         function(EditorArea, GadgetArea, SidebarNav, OpenIDLoginDialog, query, domClass, event) {
-    var editorArea = EditorArea.getInstance(),
-        gadgetArea = GadgetArea.getInstance(),
-        openIDLogin = OpenIDLoginDialog.getInstance();
-    
-    openIDLogin.startup();
-    query('body').append(openIDLogin.domNode);
-    query('#openid-login').on('click', function(e) {
-      openIDLogin.show();
-    });
+         'modules/widgets/openid/OpenIDLoginDialog', 'dojo/query', 'dojo/dom-class', 'dojo/_base/event', 'dojo/ready',
+         'dojo/NodeList-manipulate', 'dojo/NodeList-dom', 'dojo/NodeList-traverse'], 
+         function(EditorArea, GadgetArea, SidebarNav, OpenIDLoginDialog, query, domClass, event, ready) {
 
-    query('#main').prepend(gadgetArea.domNode);
-    gadgetArea.startup();
-    query('#main').prepend(editorArea.domNode);
-    editorArea.startup();  
-    query('#main').append('<div class="clear"></div>');
-    
-    /*
-     * The following code SHOULD handle showing and hiding all drop down menus on the page. 
-     */
+  openIDLogin = OpenIDLoginDialog.getInstance();
+  openIDLogin.startup();
+  query('body').append(openIDLogin.domNode);
+  query('#openid-login').on('click', function(e) {
+    openIDLogin.show();
+  });
+
+  /*
+   * The following code SHOULD handle showing and hiding all drop down menus on the page. 
+   */
+  ready(function() {
     query('html').on('click', function(e) {
       query('.dropdown-menu').parent().removeClass('open');
     });
@@ -52,4 +45,5 @@ require(['modules/widgets/editorarea/EditorArea', 'modules/widgets/gadgetarea/Ga
         event.stop(e);
       }
     });
+  });
 });

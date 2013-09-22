@@ -17,15 +17,26 @@
  * under the License.
  */
 define(['dojo/_base/declare', 'modules/widgets/ModalDialog', 
-        'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'modules/widgets/editorarea/EditorArea',
+        'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin', 'dojo/Evented',
         'dojo/query', 'dojo/text!./../../templates/CreationModalDialog.html', 'dojo/text!./../../stubs/StubXML.xml', 
         'dojo/text!./../../stubs/StubEEXML.xml', 'dojo/text!./../../stubs/StubHTML.html',
-        'dojo/dom', 'modules/gadget-spec-service',
+        'dojo/dom', 'modules/gadget-spec-service', 'dojo/on',
         'dojo/dom-class', 'dojo/dom-style','dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
-        function(declare, ModalDialog, WidgetBase, TemplatedMixin, EditorArea,
-            query, template, stubxml, stubeexml, stubhtml, dom, gadgetSpecService, domClass, domStyle) {
-  return declare('CreationModalDialogWidget', [ModalDialog], {
+        function(declare, ModalDialog, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, Evented,
+            query, template, stubxml, stubeexml, stubhtml, dom, gadgetSpecService, on, domClass, domStyle) {
+  return declare('CreationModalDialogWidget', [ModalDialog, WidgetsInTemplateMixin, Evented], {
     templateString : template,
+    
+    postCreate: function() {
+      var self = this;
+      on(this.creationSubmit, 'click', function() {
+        self.onSubmit();
+      });
+      
+      on(this.creationExit, 'click', function() {
+        self.hide();
+      });
+    },
     
     onSubmit : function() {
       var self = this;
@@ -38,17 +49,15 @@ define(['dojo/_base/declare', 'modules/widgets/ModalDialog',
           author: this.creationAuthor.value,
           description: this.creationDescription.value
       };
+      var callback = function(data) {
+        self.emit('newSpec', title, data);
+      };
       
       if(option == "Gadget") {
-        this.postNewGadgetSpec(userInput, function(data) {
-          self.addToSidebar(data, title);
-        });
+        this.postNewGadgetSpec(userInput, callback);
       } else {
-        this.postNewEESpec(userInput, function(data) {
-          self.addToSidebar(data, title);
-        });
-      } 
-      
+        this.postNewEESpec(userInput, callback);
+      }
       self.hide();
       self.clear(); 
     },
@@ -92,10 +101,6 @@ define(['dojo/_base/declare', 'modules/widgets/ModalDialog',
           console.error("There was an error");
         }
       });
-    },
-    
-    addToSidebar: function(data, title) {
-      sidebarNav.addSpec(title, data.id);
     },
     
     replaceResourceStubs : function(str, mapObj) {
