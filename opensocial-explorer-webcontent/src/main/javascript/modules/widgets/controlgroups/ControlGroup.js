@@ -16,22 +16,51 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+ * A ControlGroup template for features of the PreferencesDialog.
+ *
+ * @module modules/widgets/controlgroups/ControlGroup
+ * @augments dijit/_WidgetBase
+ * @augments dijit/_TemplatedMixin
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_TemplatedMixin.html|TemplatedMixin Documentation}
+ */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dojo/query', 'dojo/text!./../../templates/ControlGroup.html', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, WidgetBase, TemplatedMixin, query, template) {
-            return declare('ControlGroupWidget', [ WidgetBase, TemplatedMixin ], {
-                templateString : template,
-                
-                setLabel : function(name) {
-                  query('.control-label', this.domNode).innerHTML(name);
-                },
-                
-                getValue : function() {
-                  
-                },
-                
-                setValue : function(value) {
-                  
-                }
-            });
-        });
+  return declare('ControlGroupWidget', [ WidgetBase, TemplatedMixin ], {
+    templateString : template,
+
+    /**
+     * Sets the label of the ControlGroup.
+     * 
+     * @memberof module:modules/widgets/controlgroups/ControlGroup#
+     * @param {String} name - The name to set.
+     */
+    setLabel : function(name) {
+      query('.control-label', this.domNode).innerHTML(name);
+    },
+
+    /**
+     * Gets the value of the ControlGroup. This method must be overridden.
+     * 
+     * @abstract
+     * @memberof module:modules/widgets/controlgroups/ControlGroup#
+     */
+    getValue : function() {
+
+    },
+
+    /**
+     * Sets the value of the ControlGroup. This method must be overridden.
+     * 
+     * @abstract
+     * @param {String} value - The value to set.
+     * @memberof module:modules/widgets/controlgroups/ControlGroup#
+     */
+    setValue : function(value) {
+
+    }
+  });
+});

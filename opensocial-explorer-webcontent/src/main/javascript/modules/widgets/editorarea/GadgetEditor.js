@@ -16,9 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+ * Editor for the gadget tab of a spec. Inherits from Editor.
+ *
+ * @module modules/widgets/editorarea/GadgetEditor
+ * @requires module:modules/widgets/editorarea/Editor
+ */
 define(['dojo/_base/declare', 'modules/widgets/editorarea/Editor'],
-        function(declare, Editor, template) {
-            return declare('GadgetEditorWidget', [ Editor ], {
-                mode : 'application/xml'
-            });
-        });
+    function(declare, Editor, template) {
+  return declare('GadgetEditorWidget', [ Editor ], {
+    mode : 'application/xml'
+  });
+});

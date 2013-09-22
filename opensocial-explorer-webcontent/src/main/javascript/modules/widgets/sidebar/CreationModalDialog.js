@@ -16,6 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+ * A modal window that allows users to create a new spec along with information about the spec.
+ *
+ * @module modules/widgets/sidebar/CreationModalDialog
+ * @requires module:modules/gadget-spec-service
+ * @augments module:modules/widgets/ModalDialog
+ * @augments dijit/_WidgetsInTemplateMixin
+ * @augments dojo/Evented
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetsInTemplateMixin.html|WidgetsInTemplateMixin Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dojo/Evented.html|Evented Documentation}
+ */
 define(['dojo/_base/declare', 'modules/widgets/ModalDialog', 
         'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin', 'dojo/Evented',
         'dojo/query', 'dojo/text!./../../templates/CreationModalDialog.html', 'dojo/text!./../../stubs/StubXML.xml', 
@@ -27,6 +39,12 @@ define(['dojo/_base/declare', 'modules/widgets/ModalDialog',
   return declare('CreationModalDialogWidget', [ModalDialog, WidgetsInTemplateMixin, Evented], {
     templateString : template,
     
+    /**
+     * Called right before widget is added to the dom. See link for more information.
+     *
+     * @memberof module:modules/widgets/sidebar/CreationModalDialog#
+     * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
+     */
     postCreate: function() {
       var self = this;
       on(this.creationSubmit, 'click', function() {
@@ -38,6 +56,11 @@ define(['dojo/_base/declare', 'modules/widgets/ModalDialog',
       });
     },
     
+    /**
+     * Sends the data of user-submitted spec to the servlet and hides and clears the modal.
+     *
+     * @memberof module:modules/widgets/sidebar/CreationModalDialog#
+     */
     onSubmit : function() {
       var self = this;
       var title = this.creationTitle.value;
@@ -62,6 +85,14 @@ define(['dojo/_base/declare', 'modules/widgets/ModalDialog',
       self.clear(); 
     },
     
+    /**
+     * Posts a new GadgetSpec to the servlet.
+     *
+     * @memberof module:modules/widgets/sidebar/CreationModalDialog#
+     *
+     * @param {Object} userInput - User input information in the form of { title: ..., filename: ..., author: ..., description: ... }
+     * @param {Function} thenFunction - Callback function to execute if the POST to the servlet is successful.
+     */
     postNewGadgetSpec : function(userInput, thenFunction) {
       var self = this;
       var postData = {
@@ -82,6 +113,14 @@ define(['dojo/_base/declare', 'modules/widgets/ModalDialog',
       });
     },
     
+    /**
+     * Posts a new EESpec to the servlet.
+     *
+     * @memberof module:modules/widgets/sidebar/CreationModalDialog#
+     *
+     * @param {Object} userInput - User input information in the form of { title: ..., filename: ..., author: ..., description: ... }
+     * @param {Function} thenFunction - Callback function to execute if the POST to the servlet is successful.
+     */
     postNewEESpec : function(userInput, thenFunction) {
       var self = this;
       var postData = {
@@ -103,12 +142,27 @@ define(['dojo/_base/declare', 'modules/widgets/ModalDialog',
       });
     },
     
+    /**
+     * Replaces all instances of ${...} in a html code stub string with user input.
+     * This method makes sure that the stubs generated for a new spec have the user's 
+     * information in it (title, description, author).
+     *
+     * @memberof module:modules/widgets/sidebar/CreationModalDialog#
+     *
+     * @param {String} str - The html string that has instances of ${...} to replace.
+     * @param {Object} mapObj - The object containing user data.
+     */
     replaceResourceStubs : function(str, mapObj) {
       return str.replace(/[$]{([^{}]+)}/g, function(match, key){
           return mapObj[key];
       });
     },
 
+    /**
+     * Clears the input boxes after a new spec is added.
+     *
+     * @memberof module:modules/widgets/sidebar/CreationModalDialog#
+     */
     clear: function() {
       var self = this;
       query(".creation", self.domNode).forEach(function(node) {
@@ -116,6 +170,12 @@ define(['dojo/_base/declare', 'modules/widgets/ModalDialog',
       });
     },
     
+    /**
+     * Getter method for the GadgetSpecService module for testing purposes.
+     *
+     * @memberof module:modules/widgets/sidebar/CreationModalDialog#
+     * @returns {gadgetSpecService} The gadgetSpecService object.
+     */
     getGadgetSpecService : function() {
       return gadgetSpecService;
     }

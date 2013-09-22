@@ -16,9 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+ * Editor for the html tab of a spec. Inherits from Editor.
+ *
+ * @module modules/widgets/editorarea/HtmlEditor
+ * @requires module:modules/widgets/editorarea/Editor
+ */
 define(['dojo/_base/declare', 'modules/widgets/editorarea/Editor'],
-        function(declare, Editor, template) {
-            return declare('HtmlEditorWidget', [ Editor ], {
-                mode : 'application/xml'
-            });
-        });
+    function(declare, Editor, template) {
+  return declare('HtmlEditorWidget', [ Editor ], {
+    mode : 'application/xml'
+  });
+});
