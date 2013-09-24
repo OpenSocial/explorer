@@ -18,11 +18,9 @@
  */
 
 /**
- * Contains the EditorToolbar, EditorTabs, and Editors.
+ * Contains the space where the gadget renders.
  *
  * @module modules/widgets/gadgetarea/GadgetArea
- * @requires module:modules/widgets/editorarea/GadgetToolbar
- * @requires module:modules/widgets/editorarea/GadgetModalDialog
  * @augments dijit/_WidgetBase
  * @augments dijit/_TemplatedMixin
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
@@ -31,51 +29,24 @@
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dojo/topic',
         'dojo/_base/array', 'dojo/text!./../../templates/GadgetArea.html', 'modules/widgets/gadgetarea/GadgetToolbar',
         'dojo/dom-construct','modules/widgets/Loading', 'modules/opensocial-data', 'modules/widgets/gadgetarea/GadgetModalDialog',
-        'dojo/_base/window', 'dojo/dom', 'dojo/json'],
+        'dojo/_base/window', 'dojo/dom', 'dojo/json', 'modules/ExplorerContainer', 'dojo/on'],
         function(declare, WidgetBase, TemplatedMixin, topic, arrayUtil, template, GadgetToolbar, 
-            domConstruct, Loading, osData, GadgetModalDialog, win, dom, JSON) {
-  return declare('GadgetAreaWidget', [ WidgetBase, TemplatedMixin ], {
-    templateString : template,
-    containerToken : null,
-    containerTokenTTL : 3600,
-
-    constructor : function() {
-      this.siteCounter = 0;
-
-      var config = {},
-      self = this,
-      lifecycle = {};
-      this.containerToken = gadgets.config.get('shindig.auth').authToken;
-      config[osapi.container.ContainerConfig.RENDER_DEBUG] = '1';
-      config[osapi.container.ContainerConfig.SET_PREFERENCES] = this.setPrefs();
-      config[osapi.container.ContainerConfig.GET_CONTAINER_TOKEN] = dojo.hitch(this, 'getContainerToken');
-      this.container = new osapi.container.Container(config);
-      lifecycle[osapi.container.CallbackType.ON_RENDER] = function(gadgetUrl, sideId) {
-        self.loadingWidget.hide();
-      };
-      this.container.addGadgetLifecycleCallback('org.opensocial.explorer', lifecycle);
-
-      // Hook-up actions
-      this.container.actions.registerShowActionsHandler(function(actionObjArray) { 
-        self.showActions(actionObjArray, self.gadgetToolbar, self.container, function(actionId){
-          self.container.actions.runAction(actionId);
-        });
-      });
-      this.container.actions.registerHideActionsHandler(function(actionObjArray) { 
-        self.hideActions(actionObjArray, self.gadgetToolbar);
-      });
-      this.container.actions.registerNavigateGadgetHandler(function(gadgetUrl, opt_params) {
-        self.navigateForActions(self, gadgetUrl, opt_params);
-      });
-
-      //Hook-up open-views
-      this.container.views.createElementForUrl = this.handleNavigateUrl();
-      this.container.views.createElementForGadget = this.handleNavigateGadget();
-      this.container.views.createElementForEmbeddedExperience = this.handleNavigateEE();
-      this.container.views.destroyElement = this.handleDestroyElement();
-    },
-
+            domConstruct, Loading, osData, GadgetModalDialog, win, dom, JSON, ExplorerContainer, on) {
+      return declare('GadgetAreaWidget', [ WidgetBase, TemplatedMixin ], {
+                templateString : template,
+                containerToken : null,
+                containerTokenTTL : 3600,
+    
+    /**
+     * Called right after this widget has been added to the DOM.
+     * 
+     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
+     * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
+     */
     startup : function() {
+      this.expContainer = new ExplorerContainer();
+      this.siteCounter = 0;
+      this.siteParent = this.domNode;
       this.gadgetToolbar = new GadgetToolbar();
       domConstruct.place(this.gadgetToolbar.domNode, this.domNode);
       this.gadgetToolbar.startup();
@@ -88,249 +59,210 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       this.loadingWidget = new Loading();
       domConstruct.place(this.loadingWidget.domNode, this.domNode);
       this.loadingWidget.startup();
-
-      topic.subscribe("reRenderGadgetView", function(view) {
-        self.reRenderGadget(view);
+      on(this.getExplorerContainer(), 'gadgetrendered', function(gadgetUrl, siteId) {
+        self.loadingWidget.hide();
       });
       
-      topic.subscribe("setSelection", function(selection) {
-        self.getContainer().selection.setSelection(selection);
+      on(this.getExplorerContainer(), 'setpreferences', function(site, url, prefs) {
+        self.gadgetToolbar.getPrefDialog().setPrefs(prefs);
       });
-    },
-
-    /**
-     * Getter method for the container instance variable.
-     *
-     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
-     * @returns {Container} The container for the gadget.
-     */
-    getContainer : function() {
-      return this.container;
-    },
-
-    /**
-     * Loads the gadget given its url to the servlet.
-     *
-     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
-     * @param {String} url - The url where the gadget is located.
-     */
-    loadGadget : function(url) {
-      this.closeOpenSite();
-      this.loadingWidget.show();                  
-      var self = this;
-      this.container.preloadGadget(url, function(metadata) {
-        if(metadata[url] && !metadata[url].error) {
-          // TODO: Check to see if the gadget requires OAuth and ensure we are logged in if it does
-          self.gadgetToolbar.setGadgetMetadata(metadata[url]);
-        self.renderGadget(url);
-        } else { 
-          console.error('There was an error fetching the metadata');
+      
+      on(this.getExplorerContainer(), 'addaction', function(action) {
+        self.gadgetToolbar.addAction(action);
+      });
+      
+      on(this.getExplorerContainer(), 'removeaction', function(action) {
+        self.gadgetToolbar.removeAction(action);
+      });
+      
+      on(this.getExplorerContainer(), 'navigateurl', function(rel, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
+        opt_callback(self.createDialog('URL', opt_viewTarget));
+      });
+      
+      on(this.getExplorerContainer(), 'navigategadget', function(metadata, rel, opt_view, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
+        var title = 'Gadget';
+        if(metadata.modulePrefs && metadata.modulePrefs.title) {
+          title = metadata.modulePrefs.title;
         }
+        opt_callback(self.createDialog(title, opt_viewTarget));
       });
+      
+      on(this.getExplorerContainer(), 'navigateee', function(el, opt_gadgetInfo, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
+        var title = 'Embedded Experiences';
+        if(opt_gadgetInfo && opt_gadgetInfo.modulePrefs && opt_gadgetInfo.modulePrefs.title) {
+          title = opt_gadgetInfo.modulePrefs.title;
+        }
+        opt_callback(self.createDialog(title, opt_viewTarget));
+      });
+      
+      on(this.getExplorerContainer(), 'destroyelement', function(site) {
+        self.gadgetDialog.hide(site);
+      });
+      
+      on(this.getExplorerContainer(), 'navigateforactions', function(gadgetUrl, opt_params) {
+        // We can effectively ignore gadgetUrl, because we'll get it from the site's holder in reRenderGadget
+        self.reRenderGadget(opt_params);
+      });
+      
+      //Published when a gadget switches views via the menu
+      topic.subscribe('reRenderGadgetView', function(params) {
+        self.reRenderGadget(params);
+      });
+    },
+    
+    /**
+     * Gets the {@link module:modules/widgets/ExplorerContainer}.
+     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
+     */
+    getExplorerContainer : function() {
+      return this.expContainer;
     },
 
     /**
-     * Renders the gadget given its url to the servlet.
+     * Renders the gadget given its URL.
      *
      * @memberof module:modules/widgets/gadgetarea/GadgetArea#
-     * @param {String} url - The url where the gadget is located.
-     * @param {Object=} opt_renderParams - Optional parameter used by the container.
+     * @param {String} url - The URL where the gadget is located.
+     * @param {Object=} opt_renderParams - Optional parameter used by the container, see the
+     * {@link http://opensocial.github.io/spec/2.5/Core-Container.xml#RenderConfiguration|OpenSocial spec} 
+     * for more details about how this object should be constructed.
      */
     renderGadget : function(url, opt_renderParams) {
-      var renderParams = opt_renderParams || {},
-      viewParams = {"gadgetUrl" : url};
-      this.loadingWidget.show();                  
-      this.site = this.createSite();
-      renderParams[osapi.container.RenderParam.HEIGHT] = '100%';
-      renderParams[osapi.container.RenderParam.WIDTH] = '100%';
-      this.container.navigateGadget(this.site, url, viewParams, 
-          renderParams);
-    },
-
-    /**
-     * Sets the prefs for the PreferencesDialog.
-     *
-     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
-     * @returns {Function} - The function that sets the prefs.
-     */
-    setPrefs : function() {
-      var self = this;
-      return function(site, url, prefs) {
-        self.gadgetToolbar.getPrefDialog().setPrefs(prefs);
-      };
-    },
-
-    /**
-     * Renders the embedded-experience.
-     *
-     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
-     * @param {String} url - The url where the EE is located.
-     * @param {Object} dataModel - Additional json data the EE needs to be able to render.
-     */
-    renderEmbeddedExperience : function(url, dataModel) {
       this.closeOpenSite();
-      this.loadingWidget.show();  
+      this.loadingWidget.show();
+      this.site = this.createSite();
       var self = this;
-      this.container.preloadGadget(url, function(metadata) {
+      this.getExplorerContainer().renderGadget(url, this.site, opt_renderParams).then(function(metadata) {
         if(metadata && metadata[url]) {
           self.gadgetToolbar.setGadgetMetadata(metadata[url]);
-          var siteNode = self.createNodeForSite.call(self),
-          oDataModel = JSON.parse(dataModel),
-          renderParams = {};
-          oDataModel.gadget = url;
-          renderParams[osapi.container.ee.RenderParam.GADGET_RENDER_PARAMS] = {};
-          renderParams[osapi.container.ee.RenderParam.GADGET_RENDER_PARAMS][osapi.container.RenderParam.HEIGHT] = '100%';
-          renderParams[osapi.container.ee.RenderParam.GADGET_RENDER_PARAMS][osapi.container.RenderParam.WIDTH] = '100%';
-          renderParams[osapi.container.ee.RenderParam.GADGET_VIEW_PARAMS] = {"gadgetUrl" : url}; 
-
-          self.container.ee.navigate(siteNode, oDataModel, renderParams, function(site){
-            // Set the site so we can clean it up when we switch gadgets
-            self.site = site;
-          });
-        } else {
-          console.error('There was an error preloading the embedded experience.');
         }
       });
     },
 
+    /**
+     * Renders an embedded experience.
+     *
+     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
+     * @param {String} url - The URL where the embedded experience is located.
+     * @param {String} dataModel - A stringified JSON object containing just the context property
+     * from the {@link http://opensocial.github.io/spec/2.5/Core-Gadget.xml#Embedded-Experiences|embedded experiences data model}.
+     * The gadget property of the embedded experiences data model will be the URL parameter.
+     */
+    renderEmbeddedExperience : function(url, dataModel) {
+      var oDataModel = JSON.parse(dataModel);
+      oDataModel.gadget = url;
+      this.closeOpenSite();
+      this.loadingWidget.show();
+      var self = this;
+      this.getExplorerContainer().renderEmbeddedExperience(oDataModel, this.createNodeForSite()).then(function(metadata, site) {
+        self.site = site;
+        if(metadata && metadata[oDataModel.gadget]) {
+          self.gadgetToolbar.setGadgetMetadata(metadata[oDataModel.gadget]);
+        }
+      });
+    },
+    
+    /**
+     * Rerenders the currently rendered gadget.
+     * 
+     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
+     * @param {Object=} opt_renderParams - Optional render params. See
+     * {@link http://opensocial.github.io/spec/2.5/Core-Container.xml#RenderConfiguration|OpenSocial spec} 
+     * for more details about how this object should be constructed.
+     */
+    reRenderGadget : function(opt_renderParams) {
+      this.renderGadget(this.site.getActiveSiteHolder().getUrl(), opt_renderParams);
+    },
+    
+    /**
+     * Creates a modal dialog.  Typically used when handling open-views requests from the gadget.
+     * 
+     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
+     * @param {String} title - The title to give the dialog.
+     * @param {String} viewTarget - Should be one of the 
+     * {@link http://opensocial.github.io/spec/2.5/Core-Gadget.xml#gadgets.views.ViewType.ViewTarget|view targets} 
+     * defined in the OpenSocial spec.
+     */
+    createDialog : function(title, viewTarget) {
+      if(this.gadgetDialog) {
+        this.gadgetDialog.destroy();
+      }
+      this.gadgetDialog = new GadgetModalDialog({"title" : title, "viewTarget" : viewTarget, 
+        "container" : this.getExplorerContainer().getContainer()});
+      domConstruct.place(this.gadgetDialog.domNode, win.body());
+      this.gadgetDialog.startup();
+      this.gadgetDialog.show();
+      return this.gadgetDialog.getGadgetNode();
+    },
+    
+    /**
+     * Destroys this widget.
+     * 
+     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
+     * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
+     */
+    destroy : function() {
+      this.inherited(arguments);
+      if(this.gadgetDialog) {
+        this.gadgetDialog.destroy();
+      }
+    },
+    
+    /**
+     * Updates the container security token and forces a refresh of all of the gadget
+     * security tokens to ensure owner/viewer information is up-to-date.
+     * 
+     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
+     * @param {String} token - The security token.
+     * @param {Number} ttl - The time to live for the security token.
+     */
+    updateContainerSecurityToken : function(token, ttl) {
+      this.getExplorerContainer().updateContainerSecurityToken(token, ttl);
+    },
+    
+    /**
+     * Creates an gadget site.
+     * 
+     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
+     * @return Returns a new gadget site.
+     * @see {@link http://opensocial.github.io/spec/2.5/Core-Container.xml#osapi.container.GadgetSite|osapi.container.GadgetSite|OpenSocial Spec}
+     */
     createSite : function() {
       var siteNode = this.createNodeForSite();
-      return this.container.newGadgetSite(siteNode);
+      return this.getExplorerContainer().getContainer().newGadgetSite(siteNode);
     },
-
+    
+    /**
+     * Creates a DOM node to use for the gadget site.
+     * 
+     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
+     * @returns {Element} A DOM node.
+     */
     createNodeForSite: function() {
       // Let's be nice and reuse the same div for the site.
       var siteNode = dom.byId("gadgetSite" + this.siteCounter.toString());
       if (!siteNode) {
         this.siteCounter += 1;
         siteNode = domConstruct.create("div", {"id" : "gadgetSite" + this.siteCounter.toString()});
-        domConstruct.place(siteNode, this.domNode);
+        domConstruct.place(siteNode, this.siteParent);
       }
       return siteNode;
     },
-
+    
+    /**
+     * Closes the currently open gadget site.
+     * 
+     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
+     */
     closeOpenSite: function() {
       if(this.site) {
         // IMPORTANT: The gadget must be unloaded before it is closed.
         // Otherwise, getUrl() is undefined and no lifecycle events are fired
         // for unload!!!
-        this.container.unloadGadget(this.site.getActiveSiteHolder().getUrl());
-        this.container.closeGadget(this.site);
+        this.getExplorerContainer().getContainer().unloadGadget(this.site.getActiveSiteHolder().getUrl());
+        this.getExplorerContainer().getContainer().closeGadget(this.site);
         domConstruct.destroy("gadgetSite" + this.siteCounter.toString());
       }
-    },
-
-    reRenderGadget : function(opt_renderParams) {
-      this.renderGadget(this.site.getActiveSiteHolder().getUrl(), opt_renderParams);
-    },
-
-    showActions : function(actionObjArray, gadgetToolbar, container, runAction) {
-      for (var i = 0; i < actionObjArray.length; i++) {
-        var action = actionObjArray[i];
-
-        // Decorate the action with a function to be called when the action is executed
-        if (action.path && action.path.length > 0) {
-          action.runAction = function() {
-            runAction(action.id);
-          };
-        } else if (action.dataType && action.dataType.length > 0) {
-          action.runAction = function() {
-            var selection = osData.get(action.dataType);
-            container.selection.setSelection(selection);
-            runAction(action.id);
-          };
-        } else {
-          gadgets.error("Invalid action contribution: " + gadgets.json.stringify(action));
-          break;
-        }
-        gadgetToolbar.addAction(action);
-      }
-    },
-
-    hideActions : function(actionObjArray, gadgetToolbar) {
-      for (var i = 0; i < actionObjArray.length; i++) {
-        var action = actionObjArray[i];
-        gadgetToolbar.removeAction(action);
-      }
-    },
-
-    navigateForActions : function(gadgetArea, gadgetUrl, opt_params) {
-      // We can effectively ignore gadgetUrl, because we'll get it from the site's holder in reRenderGadget
-      gadgetArea.reRenderGadget(opt_params);
-    },
-
-    handleNavigateUrl : function() {
-      var self = this;
-      return function(rel, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
-        return self.createDialog('URL', opt_viewTarget);
-      };
-    },
-
-    handleNavigateGadget : function() {
-      var self = this;
-      return function (metadata, rel, opt_view, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
-        var title = 'Gadget';
-        if(metadata.modulePrefs && metadata.modulePrefs.title) {
-          title = metadata.modulePrefs.title;
-        }
-        return self.createDialog(title, opt_viewTarget);
-      };
-    },
-
-    handleNavigateEE : function() {
-      var self = this;
-      return function(rel, opt_gadgetInfo, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
-        var title = 'Embedded Experiences';
-        if(opt_gadgetInfo && opt_gadgetInfo.modulePrefs && opt_gadgetInfo.modulePrefs.title) {
-          title = opt_gadgetInfo.modulePrefs.title;
-        }
-        return self.createDialog(title, opt_viewTarget);
-      };
-    },
-
-    handleDestroyElement : function() {
-      var self = this;
-      return function(site) {
-        self.gadgetDialog.hide(site);
-      };
-    },
-
-    createDialog : function(title, viewTarget) {
-      this.gadgetDialog = new GadgetModalDialog({"title" : title, "viewTarget" : viewTarget, 
-        "container" : this.container});
-      domConstruct.place(this.gadgetDialog.domNode, win.body());
-      this.gadgetDialog.startup();
-      this.gadgetDialog.show();
-      return this.gadgetDialog.getGadgetNode();
-    },
-
-    destroy : function() {
-      this.inherited(arguments);
-      instance = undefined;
-    },
-
-    /**
-     * Updates the container security token and forces a refresh of all of the gadget
-     * security tokens to ensure owner/viewer information is up-to-date.
-     */
-    updateContainerSecurityToken : function(token, ttl) {
-      this.containerToken = token;
-      this.containerTokenTTL = ttl;
-      shindig.auth.updateSecurityToken(token);
-      // FIXME: Fixed by https://issues.apache.org/jira/browse/SHINDIG-1924
-      // Begin GROSS
-      sites = sites_ = this.container.sites_;
-      commonContainer = this.container;
-      // End GROSS
-      dojo.hitch(this.container, 'forceRefreshAllTokens')();
-    },
-
-    /**
-     * Will get called when Shindig needs to get a new container security token
-     */
-    getContainerToken : function(result) {
-      // TODO: Do work to get a new container token
-      result(this.containerToken, this.containerTokenTTL);
     }
   });
 });
