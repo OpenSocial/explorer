@@ -18,11 +18,9 @@
  */
 
 /**
- * Contains the EditorToolbar, EditorTabs, and Editors.
+ * Contains the space where the gadget renders.
  *
  * @module modules/widgets/gadgetarea/GadgetArea
- * @requires module:modules/widgets/editorarea/GadgetToolbar
- * @requires module:modules/widgets/editorarea/GadgetModalDialog
  * @augments dijit/_WidgetBase
  * @augments dijit/_TemplatedMixin
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
@@ -38,7 +36,13 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
                 templateString : template,
                 containerToken : null,
                 containerTokenTTL : 3600,
-                
+    
+    /**
+     * Called right after this widget has been added to the DOM.
+     * 
+     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
+     * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
+     */
     startup : function() {
       this.expContainer = new ExplorerContainer();
       this.siteCounter = 0;
@@ -103,19 +107,25 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       //Published when a gadget switches views via the menu
       topic.subscribe('reRenderGadgetView', function(params) {
         self.reRenderGadget(params);
-      })
+      });
     },
     
+    /**
+     * Gets the {@link module:modules/widgets/ExplorerContainer}.
+     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
+     */
     getExplorerContainer : function() {
       return this.expContainer;
     },
 
     /**
-     * Renders the gadget given its url to the servlet.
+     * Renders the gadget given its URL.
      *
      * @memberof module:modules/widgets/gadgetarea/GadgetArea#
-     * @param {String} url - The url where the gadget is located.
-     * @param {Object=} opt_renderParams - Optional parameter used by the container.
+     * @param {String} url - The URL where the gadget is located.
+     * @param {Object=} opt_renderParams - Optional parameter used by the container, see the
+     * {@link http://opensocial.github.io/spec/2.5/Core-Container.xml#RenderConfiguration|OpenSocial spec} 
+     * for more details about how this object should be constructed.
      */
     renderGadget : function(url, opt_renderParams) {
       this.closeOpenSite();
@@ -130,11 +140,13 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
     },
 
     /**
-     * Renders the embedded-experience.
+     * Renders an embedded experience.
      *
      * @memberof module:modules/widgets/gadgetarea/GadgetArea#
-     * @param {String} url - The url where the EE is located.
-     * @param {Object} dataModel - Additional json data the EE needs to be able to render.
+     * @param {String} url - The URL where the embedded experience is located.
+     * @param {String} dataModel - A stringified JSON object containing just the context property
+     * from the {@link http://opensocial.github.io/spec/2.5/Core-Gadget.xml#Embedded-Experiences|embedded experiences data model}.
+     * The gadget property of the embedded experiences data model will be the URL parameter.
      */
     renderEmbeddedExperience : function(url, dataModel) {
       var oDataModel = JSON.parse(dataModel);
@@ -150,10 +162,27 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       });
     },
     
+    /**
+     * Rerenders the currently rendered gadget.
+     * 
+     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
+     * @param {Object=} opt_renderParams - Optional render params. See
+     * {@link http://opensocial.github.io/spec/2.5/Core-Container.xml#RenderConfiguration|OpenSocial spec} 
+     * for more details about how this object should be constructed.
+     */
     reRenderGadget : function(opt_renderParams) {
       this.renderGadget(this.site.getActiveSiteHolder().getUrl(), opt_renderParams);
     },
     
+    /**
+     * Creates a modal dialog.  Typically used when handling open-views requests from the gadget.
+     * 
+     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
+     * @param {String} title - The title to give the dialog.
+     * @param {String} viewTarget - Should be one of the 
+     * {@link http://opensocial.github.io/spec/2.5/Core-Gadget.xml#gadgets.views.ViewType.ViewTarget|view targets} 
+     * defined in the OpenSocial spec.
+     */
     createDialog : function(title, viewTarget) {
       if(this.gadgetDialog) {
         this.gadgetDialog.destroy();
@@ -166,6 +195,12 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       return this.gadgetDialog.getGadgetNode();
     },
     
+    /**
+     * Destroys this widget.
+     * 
+     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
+     * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
+     */
     destroy : function() {
       this.inherited(arguments);
       if(this.gadgetDialog) {
@@ -176,16 +211,33 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
     /**
      * Updates the container security token and forces a refresh of all of the gadget
      * security tokens to ensure owner/viewer information is up-to-date.
+     * 
+     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
+     * @param {String} token - The security token.
+     * @param {Number} ttl - The time to live for the security token.
      */
     updateContainerSecurityToken : function(token, ttl) {
       this.getExplorerContainer().updateContainerSecurityToken(token, ttl);
     },
     
+    /**
+     * Creates an gadget site.
+     * 
+     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
+     * @return Returns a new gadget site.
+     * @see {@link http://opensocial.github.io/spec/2.5/Core-Container.xml#osapi.container.GadgetSite|osapi.container.GadgetSite|OpenSocial Spec}
+     */
     createSite : function() {
       var siteNode = this.createNodeForSite();
       return this.getExplorerContainer().getContainer().newGadgetSite(siteNode);
     },
     
+    /**
+     * Creates a DOM node to use for the gadget site.
+     * 
+     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
+     * @returns {Element} A DOM node.
+     */
     createNodeForSite: function() {
       // Let's be nice and reuse the same div for the site.
       var siteNode = dom.byId("gadgetSite" + this.siteCounter.toString());
@@ -197,6 +249,11 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       return siteNode;
     },
     
+    /**
+     * Closes the currently open gadget site.
+     * 
+     * @memberof module:modules/widgets/gadgetarea/GadgetArea#
+     */
     closeOpenSite: function() {
       if(this.site) {
         // IMPORTANT: The gadget must be unloaded before it is closed.
@@ -206,6 +263,6 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
         this.getExplorerContainer().getContainer().closeGadget(this.site);
         domConstruct.destroy("gadgetSite" + this.siteCounter.toString());
       }
-    },
+    }
   });
 });

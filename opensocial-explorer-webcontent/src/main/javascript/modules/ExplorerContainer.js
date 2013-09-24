@@ -16,6 +16,33 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+/**
+ * An AMD module that can be used to manage an OpenSocial container.  This module depends on the container Javascript
+ * to already be loaded.  This module requires the following container features to be loaded as well.
+ * <ul>
+ *  <li>embedded-experiences</li>
+ *  <li>open-views</li>
+ *  <li>actions</li>
+ *  <li>selection</li>
+ * </ul>
+ *
+ * @module modules/widgets/ExplorerContainer
+ * @augments dijit/_WidgetBase
+ * @augments dijit/_TemplatedMixin
+ * @augments dojo/Evented
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_TemplatedMixin.html|TemplatedMixin Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dojo/Evented.html|Evented Documentation}
+ * 
+ * @fires module:modules/widgets/ExplorerContainer#setpreferences
+ * @fires module:modules/widgets/ExplorerContainer#gadgetrendered
+ * @fires module:modules/widgets/ExplorerContainer#addaction
+ * @fires module:modules/widgets/ExplorerContainer#removeaction
+ * @fires module:modules/widgets/ExplorerContainer#navigateforactions
+ * @fires module:modules/widgets/ExplorerContainer#navigateurl
+ * @fires module:modules/widgets/ExplorerContainer#navigateee
+ * @fires module:modules/widgets/ExplorerContainer#destroyelement
+ */
 define(['dojo/_base/declare',
         'dojo/_base/array',
         'dojo/dom-construct', 'modules/opensocial-data',
@@ -26,19 +53,42 @@ define(['dojo/_base/declare',
                 containerToken : null,
                 containerTokenTTL : 3600,
                 
-                constructor : function(params) {
+                /**
+                 * Creates a new ExplorerContainer.
+                 * @constructor
+                 * 
+                 * @memberof module:modules/widgets/ExplorerContainer#
+                 */
+                constructor : function() {
                   var config = {},
                       self = this,
                       lifecycle = {};
-                  this.containerToken = gadgets.config.get('shindig.auth')['authToken'];
+                  this.containerToken = gadgets.config.get('shindig.auth').authToken;
                   config[osapi.container.ContainerConfig.RENDER_DEBUG] = '1';
                   config[osapi.container.ContainerConfig.SET_PREFERENCES] = function(site, url, prefs) {
+                    /**
+                     * setpreferences event.
+                     *
+                     * @event module:modules/widgets/ExplorerContainer#setpreferences
+                     * @param {osapi.container.GadgetSite} site - The 
+                     * {@link http://opensocial.github.io/spec/2.5/Core-Container.xml#osapi.container.GadgetSite|osapi.container.GadgetSite|gadget site}
+                     * the set preferences event came from.
+                     * @param {String} url - The gadget URL for the gadget firing the event.
+                     * @param {Object} prefs - An object of key value pairs containing the preferences set.
+                     */
                     self.emit('setpreferences', site, url, prefs);
                   };
                   config[osapi.container.ContainerConfig.GET_CONTAINER_TOKEN] = lang.hitch(this, 'getContainerToken');
                   this.container = new osapi.container.Container(config);
                   lifecycle[osapi.container.CallbackType.ON_RENDER] = function(gadgetUrl, siteId) {
-                    self.emit('gadgetrendered', gadgetUrl, siteId)
+                    /**
+                     * gadgetrendered event.
+                     * 
+                     * @event module:modules/widgets/ExplorerContainer#gadgetrendered
+                     * @param {String} gadgetUrl - The gadget URL of the gadget that has rendered.
+                     * @param {String} siteId - The id of the site containing the gadget that rendered.
+                     */
+                    self.emit('gadgetrendered', gadgetUrl, siteId);
                   };
                   this.container.addGadgetLifecycleCallback('org.opensocial.explorer', lifecycle);
                   
@@ -62,10 +112,39 @@ define(['dojo/_base/declare',
                   this.container.views.destroyElement = this.handleDestroyElement();
                 },
                 
+                /**
+                 * Gets the common container.
+                 * 
+                 * @memberof module:modules/widgets/ExplorerContainer#
+                 * @return {osapi.container.Container} The common container.
+                 * @see {@link http://opensocial.github.io/spec/2.5/Core-Container.xml#osapi.container.Container|OpenSocial Spec}
+                 */
                 getContainer : function() {
                   return this.container;
                 },
                 
+                /**
+                 * Renders a gadget.
+                 * 
+                 * @memberof module:modules/widgets/ExplorerContainer#
+                 * @param {String} url - The URL of the gadget to render.
+                 * @param {osapi.container.GadgetSite} site - The {@link http://opensocial.github.io/spec/2.5/Core-Container.xml#osapi.container.GadgetSite|site}
+                 * to render the gadget in.
+                 * @param {Object=} opt_renderParams - Optional parameter used by the container, see the
+                 * {@link http://opensocial.github.io/spec/2.5/Core-Container.xml#RenderConfiguration|OpenSocial spec} 
+                 * for more details about how this object should be constructed.
+                 * @returns {module:dojo/promise/Promise} Returns a 
+                 * {@link http://dojotoolkit.org/reference-guide/1.8/dojo/promise/Promise.html#dojo-promise-promise|Dojo Promise}.
+                 * Call the then method of this Promise with a function that takes in one parameter, the gadget metadata.
+                 * 
+                 * @example
+                 * var container = new ExplorerContainer();
+                 * container.renderGadget(....).then(function(metadata) {
+                 *   if(metadata && metadata[gadgetUrl]) {
+                 *     //Do something with the metadata
+                 *   }
+                 * });
+                 */
                 renderGadget : function(url, site, opt_renderParams) {             
                   var deferred = new Deferred();
                   var self = this;
@@ -80,10 +159,29 @@ define(['dojo/_base/declare',
                           renderParams);
                     }
                   });
-                  return deferred.promise;
-                  
+                  return deferred.promise;  
                 },
                 
+                /**
+                 * Renders an embedded experience gadget.
+                 * 
+                 * @memberof module:modules/widgets/ExplorerContainer#
+                 * @param {Object} dataModel - A JSON object representing the 
+                 * {@link http://opensocial.github.io/spec/2.5/Core-Gadget.xml#Embedded-Experiences|embedded experiences data model}.
+                 * @param {Element} siteNode - The element to be used for the site.
+                 * @returns {module:dojo/promise/Promise} Returns a 
+                 * {@link http://dojotoolkit.org/reference-guide/1.8/dojo/promise/Promise.html#dojo-promise-promise|Dojo Promise}.
+                 * Call the then method of this Promise with a function that takes in one parameter, the gadget metadata and the
+                 * {@link http://opensocial.github.io/spec/2.5/Core-Container.xml#osapi.container.GadgetSite|osapi.container.GadgetSite|gadget site}.
+                 * 
+                 * @example
+                 * var container = new ExplorerContainer();
+                 * container.renderEmbeddedExperience(....).then(function(metadata, site) {
+                 *   if(metadata && metadata[gadgetUrl]) {
+                 *     //Do something with the metadata
+                 *   }
+                 * });
+                 */
                 renderEmbeddedExperience : function(dataModel, siteNode) {
                   var deferred = new Deferred();
                   var self = this;
@@ -114,6 +212,14 @@ define(['dojo/_base/declare',
                   return deferred;
                 },
                 
+                /**
+                 * Called when a gadget is rendered which has actions.
+                 * 
+                 * @memberof module:modules/widgets/ExplorerContainer#
+                 * @param {Object[]} actionObjArray - The array of actions from the gadget.
+                 * @param {osapi.container.Container} container - The OpenSocial container object.
+                 * @param {Function} runAction - Function which will run an action in the OpeSocial container.
+                 */
                 showActions : function(actionObjArray, container, runAction) {
                   for (var i = 0; i < actionObjArray.length; i++) {
                     var action = actionObjArray[i];
@@ -139,45 +245,164 @@ define(['dojo/_base/declare',
                       gadgets.error("Invalid action contribution: " + gadgets.json.stringify(action));
                       break;
                     }
+                    /**
+                     * addaction event.
+                     * 
+                     * @event module:modules/widgets/ExplorerContainer#addaction
+                     * @param {Object} action - The action that was added.
+                     * @see {@link http://opensocial.github.io/spec/trunk/Core-Gadget.xml#gadgets.actions.actionobjects|Action Object}
+                     */
                     this.emit('addaction', action);
                   }
                 },
                 
+                /**
+                 * Called when actions from a gadget should be hidden.
+                 * 
+                 * @memberof module:modules/widgets/ExplorerContainer#
+                 * @param {Object[]} actionObjArray - The actions that should be hidden.
+                 */
                 hideActions : function(actionObjArray) {
                   for (var i = 0; i < actionObjArray.length; i++) {
                     var action = actionObjArray[i];
+                    /**
+                     * removeaction event.
+                     * 
+                     * @event module:modules/widgets/ExplorerContainer#removeaction
+                     * @param {Object} action - The action that was removed.
+                     * @see {@link http://opensocial.github.io/spec/trunk/Core-Gadget.xml#gadgets.actions.actionobjects|Action Object}
+                     */
                     this.emit('removeaction', action);
                   }
                 },
                 
+                /**
+                 * Emits an event letting listeners know to navigate to a gadget for an action.
+                 * 
+                 * @memberof module:modules/widgets/ExplorerContainer#
+                 * @param {String} gadgetUrl - The URL to the gadget to render.
+                 * @param {Object=} opt_params - Optional parameter used by the container, see the
+                 * {@link http://opensocial.github.io/spec/2.5/Core-Container.xml#RenderConfiguration|OpenSocial spec} 
+                 * for more details about how this object should be constructed. 
+                 */
                 navigateForActions : function(gadgetUrl, opt_params) {
+                  /**
+                   * navigateforactions event.
+                   * 
+                   * @event module:modules/widgets/ExplorerContainer#navigateforactions
+                   * @param {String} gadgetUrl - The URL of the gadget that is being navigated to.
+                   * @param {Object=} opt_params - Optional parameter used by the container, see the
+                   * {@link http://opensocial.github.io/spec/2.5/Core-Container.xml#RenderConfiguration|OpenSocial spec} 
+                   * for more details about how this object should be constructed.
+                   */
                   this.emit('navigateforactions', gadgetUrl, opt_params);
                 },
                 
+                /**
+                 * Returns a closure to handle navigate URL calls from gadgets.
+                 * 
+                 * @memberof module:modules/widgets/ExplorerContainer#
+                 * @return {Function} A closure that handles navigate URL calls for gadgets.
+                 * 
+                 */
                 handleNavigateUrl : function() {
                   var self = this;
                   return function(rel, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
+                    /**
+                     * navigateurl event.
+                     * 
+                     * @event module:modules/widgets/ExplorerContainer#navigateurl
+                     * @param {Element} rel - The element containing the gadget requesting to open the URL.
+                     * @param {String=} opt_viewTarget - The 
+                     * {@link http://opensocial.github.io/spec/2.5/Core-Gadget.xml#gadgets.views.ViewType.ViewTarget|view target}
+                     * to open.
+                     * @param {Object=} opt_coordinates - The coordinates of where to open the URL.
+                     * @param {osapi.container.GadgetSite} - The
+                     * {@link http://opensocial.github.io/spec/2.5/Core-Container.xml#osapi.container.GadgetSite|osapi.container.GadgetSite|gadget site}
+                     * of the gadget requesting to open the URL.
+                     * @param {Function} opt_callback - A function to call once the DOM element to be used for the URL site
+                     * has been created.  You should call this function and pass the DOM element.
+                     */
                     return self.emit('navigateurl', rel, opt_viewTarget, opt_coordinates, parentSite, opt_callback);
                   };
                 },
                 
+                /**
+                 * Returns a closure to handle navigate gadget calls from gadgets.
+                 * 
+                 * @memberof module:modules/widgets/ExplorerContainer#
+                 * @returns {Function} A closure that handles navigate gadget calls for gadgets.
+                 */
                 handleNavigateGadget : function() {
                   var self = this;
                   return function (metadata, rel, opt_view, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
+                    /**
+                     * navigategadget event.
+                     * 
+                     * @event module:modules/widgets/ExplorerContainer#navigategadget
+                     * @param {Object} metadata - The gadget metadata for the gadget being opened.
+                     * @param {Element} rel - The element containing the gadget requesting to open the URL.
+                     * @param {String=} opt_view - The view of the gadget to open.
+                     * @param {String=} opt_viewTarget - The 
+                     * {@link http://opensocial.github.io/spec/2.5/Core-Gadget.xml#gadgets.views.ViewType.ViewTarget|view target}
+                     * to open.
+                     * @param {Object=} opt_coordinates - The coordinates of where to open the URL.
+                     * @param {osapi.container.GadgetSite} - The
+                     * {@link http://opensocial.github.io/spec/2.5/Core-Container.xml#osapi.container.GadgetSite|osapi.container.GadgetSite|gadget site}
+                     * of the gadget requesting to open the URL.
+                     * @param {Function} opt_callback - A function to call once the DOM element to be used for the URL site
+                     * has been created.  You should call this function and pass the DOM element.
+                     */
                     self.emit('navigategadget', metadata, rel, opt_view, opt_viewTarget, opt_coordinates, parentSite, opt_callback);
                   };
                 },
                 
+                /**
+                 * Returns a closure to handle navigate embedded experience calls from gadgets.
+                 * 
+                 * @memberof module:modules/widgets/ExplorerContainer#
+                 * @returns {Function} A closure that handles navigate embedded experience calls for gadgets.
+                 */
                 handleNavigateEE : function() {
                   var self = this;
                   return function(rel, opt_gadgetInfo, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
+                    /**
+                     * navigateee event.
+                     * 
+                     * @event module:modules/widgets/ExplorerContainer#navigateee
+                     * @param {Element} rel - The element containing the gadget requesting to open the URL.
+                     * @param {Object=} opt_gadgetInfo - The metadata of the embedded experience gadget being opened.
+                     * @param {String=} opt_viewTarget - The 
+                     * {@link http://opensocial.github.io/spec/2.5/Core-Gadget.xml#gadgets.views.ViewType.ViewTarget|view target}
+                     * to open.
+                     * @param {Object=} opt_coordinates - The coordinates of where to open the URL.
+                     * @param {osapi.container.GadgetSite} - The
+                     * {@link http://opensocial.github.io/spec/2.5/Core-Container.xml#osapi.container.GadgetSite|osapi.container.GadgetSite|gadget site}
+                     * of the gadget requesting to open the URL.
+                     * @param {Function} opt_callback - A function to call once the DOM element to be used for the URL site
+                     * has been created.  You should call this function and pass the DOM element.
+                     */
                     self.emit('navigateee', rel, opt_gadgetInfo, opt_viewTarget, opt_coordinates, parentSite, opt_callback);
                   };
                 },
                 
+                /**
+                 * Returns a closure to handle destroy element calls from gadgets closing other gadgets they have opened.
+                 * 
+                 *  @memberof module:modules/widgets/ExplorerContainer#
+                 *  @returns {Function} A closure to handle destroy element calls from gadgets closing other gadgets they have opened.
+                 */
                 handleDestroyElement : function() {
                   var self = this;
                   return function(site) {
+                    /**
+                     * destroyelement event.
+                     * 
+                     * @event module:modules/widgets/ExplorerContainer#destroyelement
+                     * @param {osapi.container.GadgetSite} site - The
+                     * {@link http://opensocial.github.io/spec/2.5/Core-Container.xml#osapi.container.GadgetSite|osapi.container.GadgetSite|gadget site}
+                     * to destroy.
+                     */
                     self.emit('destroyelement', site);
                   };
                 },
@@ -185,6 +410,10 @@ define(['dojo/_base/declare',
                 /**
                  * Updates the container security token and forces a refresh of all of the gadget
                  * security tokens to ensure owner/viewer information is up-to-date.
+                 * 
+                 * @memberof module:modules/widgets/ExplorerContainer#
+                 * @param {String} token - The security token.
+                 * @param {Number} ttl - The time to live for the security token.
                  */
                 updateContainerSecurityToken : function(token, ttl) {
                   this.containerToken = token;
@@ -199,11 +428,21 @@ define(['dojo/_base/declare',
                 },
                 
                 /**
-                 * Will get called when Shindig needs to get a new container security token
+                 * Will get called when Shindig needs to get a new container security token.
+                 * @param {module:modules/widgets/ExplorerContainer~containerTokenCallback} result - The callback that gets called with the container token.
+                 * 
+                 * @memberof module:modules/widgets/ExplorerContainer#
                  */
                 getContainerToken : function(result) {
                   // TODO: Do work to get a new container token
                   result(this.containerToken, this.containerTokenTTL);
                 }
+                
+                /**
+                 * Callback to get the container security token.
+                 * @callback module:modules/widgets/ExplorerContainer~containerTokenCallback
+                 * @param {String} containerToken - Container security token.
+                 * @param {Number} ttl - Container security token time to live.
+                 */
             });
         });
