@@ -16,204 +16,267 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['modules/widgets/gadgetarea/GadgetArea'], function(GadgetArea){
+define(['modules/widgets/gadgetarea/GadgetArea', 'dojo/_base/declare', 'dojo/Evented', 'dojo/dom-class', 'dojo/query',
+        'dojo/topic'], 
+        function(GadgetArea, declare, Evented, domClass, query, topic){
   describe('An GadgetArea widget', function() {
-    var container;
-    var actions;
-    var views;
-    var ee;
-    function defineContainerNamespace() {
-      window.osapi = window.osapi || {};
-      window.osapi.container = window.osapi.container || {};
-      window.osapi.container.ContainerConfig = window.osapi.container.ContainerConfig || {};
-      window.osapi.container.ContainerConfig.RENDER_DEBUG = 'renderDebug';
-      window.osapi.container.ContainerConfig.SET_PREFERENCES = 'setPrefs';
-      window.osapi.container.RenderParam = window.osapi.container.RENDER_PARAM || {};
-      window.osapi.container.RenderParam.HEIGHT = 'height';
-      window.osapi.container.RenderParam.WIDTH = 'width';
-      window.osapi.container.CallbackType = window.osapi.container.CallbackType || {};
-      window.osapi.container.CallbackType.ON_RENDER = 'onRender';
-      window.osapi.container.ee = window.osapi.container.ee || {};
-      window.osapi.container.ee.RenderParam = window.osapi.container.ee.RenderParam || {};
-      window.osapi.container.ee.RenderParam.GADGET_RENDER_PARAMS = 'gadgetRenderParams';
-      window.osapi.container.ee.RenderParam.GADGET_VIEW_PARAMS = 'gadgetViewParams';
-      container = createContainerSpy();
-      window.osapi.container.Container = jasmine.createSpy('Container').andCallFake(function() {
-        return container;
-      });
-    };
     
-    function defineGadgetNameSpace() {
-      window.gadgets = window.gadgets || {};
-      window.gadgets.config = window.gadgets.config || {};
-      window.gadgets.config.get = window.gadgets.config.get || function(opt_component) {
-        if (opt_component === 'shindig.auth') {
-          return {'authToken': '-1:-1:*:*:*:0:default'};
-        }
-        throw "Unexpected config requested";
-      };
-    };
-  
-    function createContainerSpy() {
-      var container = jasmine.createSpyObj('container', 
-              ['addGadgetLifecycleCallback', 'newGadgetSite', 'preloadGadget',
-               'navigateGadget', 'unloadGadget', 'closeGadget']);
-      container.preloadGadget.andCallFake(function(url, callback) {
-        var metadata = {};
-        metadata[url] = {};
-        callback(metadata);
-      });
-    
-      var site = createSiteSpy();
-      container.newGadgetSite.andCallFake(function() {
-        return site;
-      });
-    
-      container.actions = createActionsSpy();
-      container.views = createViewsSpy();
-      container.ee = createEESpy();
-      return container;
-    };
-  
-    function createSiteSpy() {
-      var site = jasmine.createSpyObj('site', 
-              ['getActiveSiteHolder']);
-      var holder = createGadgetHolderSpy();
-      site.getActiveSiteHolder.andCallFake(function() {
-        return holder;
-      });
-      return site;
-    };
-  
-    function createGadgetHolderSpy() {
-      var holder = jasmine.createSpyObj('holder',
-              ['getUrl']);
-      holder.getUrl.andCallFake(function() {
-        return 'http://example.com/gadget.xml';
-      });
-      return holder;
-    };
-  
-    function createActionsSpy() {
-      return jasmine.createSpyObj('actions', 
-              ['registerShowActionsHandler', 'registerHideActionsHandler', 
-               'registerNavigateGadgetHandler']);
-    };
-  
-    function createViewsSpy() {
-      return jasmine.createSpyObj('views', 
-              ['createElementForUrl', 'createElementForGadget', 
-               'createElementForEmbeddedExperience', 'destroyElement']);
-    };
-  
-    function createEESpy() {
-      var ee = jasmine.createSpyObj('ee', ['navigate']);
-      return ee;
-    };
+    var MockContainer = declare([Evented], {
+      fireGadgetRendered : function(gadgetUrl, siteId) {
+        this.emit('gadgetrendered', gadgetUrl, siteId);
+      },
+      
+      fireSetPreferences : function(site, url, preferences) {
+        this.emit('setpreferences', site, url, preferences);
+      },
+      
+      fireAddAction : function(action) {
+        this.emit('addaction', action);
+      },
+      
+      fireRemoveAction : function(action) {
+        this.emit('removeaction', action);
+      },
+      
+      fireNavigateUrl : function(rel, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
+        this.emit('navigateurl', rel, opt_viewTarget, opt_coordinates, parentSite, opt_callback);
+      },
+      
+      fireNavigateGadget : function(metadata, rel, opt_view, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
+        this.emit('navigategadget', metadata, rel, opt_view, opt_viewTarget, opt_coordinates, parentSite, opt_callback);
+      },
+      
+      fireNavigateEE : function(el, opt_gadgetInfo, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
+        this.emit('navigateee', el, opt_gadgetInfo, opt_viewTarget, opt_coordinates, parentSite, opt_callback);
+      },
+      
+      fireDestroyElement : function(site) {
+        this.emit('destroyelement', site);
+      },
+      
+      fireNavigateForActions : function(gadgetUrl, opt_params) {
+        this.emit('navigateforactions', gadgetUrl, opt_params);
+      },
+      
+      renderGadget : function(url, site, opt_renderParams){},
+      
+      renderEmbeddedExperience : function(url, dataModel){},
+      
+      getContainer : function() {
+        return jasmine.createSpy('container');
+      },
+      
+      updateContainerSecurityToken : function(token, ttl){}
+    });
   
     beforeEach(function() {
       var div = document.createElement("div");
       div.style.display = 'none';
       div.id = 'testDiv';
       document.body.appendChild(div);
-      defineContainerNamespace();
-      defineGadgetNameSpace();
+      gadgetArea = new GadgetArea();
+      document.getElementById('testDiv').appendChild(gadgetArea.domNode);
+      mockContainer = new MockContainer();
+      spyOn(gadgetArea, 'getExplorerContainer').andReturn(mockContainer);
+      gadgetArea.startup();
     });
   
     afterEach(function() {
       document.body.removeChild(document.getElementById('testDiv'));
+      gadgetArea.destroy();
     });
-  
-    it("can be started", function() {
-      var gadgetArea = new GadgetArea();
     
-      document.getElementById('testDiv').appendChild(gadgetArea.domNode);
-      gadgetArea.startup();
-      expect(container.addGadgetLifecycleCallback.calls.length).toEqual(1);
-      expect(container.actions.registerShowActionsHandler.calls.length).toEqual(1);
-      expect(container.actions.registerHideActionsHandler.calls.length).toEqual(1);
-      expect(container.actions.registerNavigateGadgetHandler.calls.length).toEqual(1);
-      gadgetArea.destroy();
+    it("handles the gadgetrendered event", function() {
+      mockContainer.fireGadgetRendered('http://example.com/gadget.xml', '123');
+      var loading = query('.progress-striped', gadgetArea.domNode)[0];
+      expect(domClass.contains(loading, 'hide')).toEqual(true);
     });
-  
-    it("can load a gadget", function() {
-      var gadgetArea = new GadgetArea();
-      document.getElementById('testDiv').appendChild(gadgetArea.domNode);
-      gadgetArea.startup();
-      gadgetArea.loadGadget('http://example.com/gadget.xml');
-      //The first argument is a spy object for the site
-      expect(container.navigateGadget).toHaveBeenCalledWith(jasmine.any(Object), 'http://example.com/gadget.xml', 
-              {"gadgetUrl" : "http://example.com/gadget.xml"}, 
-              {"height" : "100%", "width" : "100%"});
-      gadgetArea.destroy();
+    
+    it("handles the setpreferences event", function() {
+      spyOn(gadgetArea.gadgetToolbar.getPrefDialog(), 'setPrefs').andCallThrough();
+      mockContainer.fireSetPreferences(jasmine.createSpy('site'), 'http://example.com/gadget.xml', {"set_pref" : "1234"});
+      expect(gadgetArea.gadgetToolbar.getPrefDialog().setPrefs).toHaveBeenCalledWith({"set_pref" : "1234"});
     });
-  
-    it("can handle an error when loading a gadget", function() {
-      var gadgetArea = new GadgetArea();
-      document.getElementById('testDiv').appendChild(gadgetArea.domNode);
-      gadgetArea.startup();
-      container.preloadGadget.andCallFake(function(url, callback) {
-        var metadata = {};
+    
+    it("handles the addaction event", function() {
+      spyOn(gadgetArea.gadgetToolbar, 'addAction').andCallThrough();
+      var action = {
+        "dataType" : "opensocial.Person",
+        "id" : "org-opensocial-explorer-person",
+        "label" : "Person Action",
+        "tooltip" : "Execute the person action"
+      };
+      mockContainer.fireAddAction(action);
+      expect(gadgetArea.gadgetToolbar.addAction).toHaveBeenCalledWith(action);
+    });
+    
+    it("handles the removeaction event", function() {
+      spyOn(gadgetArea.gadgetToolbar, 'removeAction').andReturn(undefined);
+      var action = {
+        "dataType" : "opensocial.Person",
+        "id" : "org-opensocial-explorer-person",
+        "label" : "Person Action",
+        "tooltip" : "Execute the person action"
+      };
+      mockContainer.fireRemoveAction(action);
+      expect(gadgetArea.gadgetToolbar.removeAction).toHaveBeenCalledWith(action);
+    });
+    
+    it("handles the navigateurl event", function() {
+      spyOn(gadgetArea, 'createDialog').andCallThrough();
+      var spyCallback = jasmine.createSpy('callbackSpy');
+      mockContainer.fireNavigateUrl(undefined, 'sidebar', undefined, undefined, spyCallback);
+      expect(gadgetArea.createDialog).toHaveBeenCalledWith('URL', 'sidebar');
+      expect(spyCallback).toHaveBeenCalledWith(jasmine.any(Element));
+    });
+    
+    it("handles the navigategadget event", function() {
+      spyOn(gadgetArea, 'createDialog').andCallThrough();
+      var spyCallback = jasmine.createSpy('callbackSpy');
+      mockContainer.fireNavigateGadget({}, undefined, undefined, 'sidebar', undefined, undefined, spyCallback);
+      expect(gadgetArea.createDialog).toHaveBeenCalledWith('Gadget', 'sidebar');
+      expect(spyCallback).toHaveBeenCalledWith(jasmine.any(Element));
+      mockContainer.fireNavigateGadget({"modulePrefs" : {
+        "title" : "test title"
+      }}, undefined, undefined, 'sidebar', undefined, undefined, spyCallback);
+      expect(gadgetArea.createDialog).toHaveBeenCalledWith('test title', 'sidebar');
+      expect(spyCallback).toHaveBeenCalledWith(jasmine.any(Element));
+    });
+    
+    it("handles the navigateee event", function() {
+      spyOn(gadgetArea, 'createDialog').andCallThrough();
+      var spyCallback = jasmine.createSpy('callbackSpy');
+      mockContainer.fireNavigateEE(undefined, {}, 'sidebar', undefined, undefined, spyCallback);
+      expect(gadgetArea.createDialog).toHaveBeenCalledWith('Embedded Experiences', 'sidebar');
+      expect(spyCallback).toHaveBeenCalledWith(jasmine.any(Element));
+      mockContainer.fireNavigateEE(undefined, {"modulePrefs" : {
+        "title" : "test title"
+      }}, 'sidebar', undefined, undefined, spyCallback);
+      expect(gadgetArea.createDialog).toHaveBeenCalledWith('test title', 'sidebar');
+      expect(spyCallback).toHaveBeenCalledWith(jasmine.any(Element));
+    });
+    
+    it("handles the destroyelement event", function() {
+      spyOn(gadgetArea, 'createDialog').andCallThrough();
+      var spyCallback = jasmine.createSpy('callbackSpy');
+      mockContainer.fireNavigateEE(undefined, {}, 'sidebar', undefined, undefined, spyCallback);
+      spyOn(gadgetArea.gadgetDialog, 'hide').andReturn(undefined);
+      var mockSite = jasmine.createSpy('mockSite');
+      mockContainer.fireDestroyElement(mockSite);
+      expect(gadgetArea.gadgetDialog.hide).toHaveBeenCalledWith(mockSite)
+    });
+    
+    it("handles the navigateforactions event", function() {
+      spyOn(gadgetArea, 'reRenderGadget').andReturn(undefined);
+      var params = jasmine.createSpy('params');
+      mockContainer.fireNavigateForActions('http://example.com/gadget.xml', params);
+      expect(gadgetArea.reRenderGadget).toHaveBeenCalledWith(params);
+    });
+    
+    it("can render a gadget", function() {
+      spyOn(gadgetArea, 'closeOpenSite').andCallThrough();
+      var siteSpy = jasmine.createSpy('site');
+      spyOn(gadgetArea, 'createSite').andReturn(siteSpy);
+      var params = {"param1" : "value1"};
+      var deferred = jasmine.createSpyObj('defferred', ['then']);
+      deferred.then.andCallFake(function(callback) {
+        var metadata = {
+          "http://example.com/gadget.xml" : {
+            "key" : "value"
+          }
+        };
         callback(metadata);
       });
-      gadgetArea.loadGadget('http://example.com/gadget.xml');
-      expect(container.navigateGadget).not.toHaveBeenCalled();
-      
-      gadgetArea.renderEmbeddedExperience('http://example.com/gadget.xml', "{" +
-              "\"gadget\" : \"http://example.com/gadget.xml\"," +
-              "\"context\" : {" +
-                "\"id\" : 123" +
-              "}" +
-            "}");
-      
-      expect(container.ee.navigate).not.toHaveBeenCalled();
-      gadgetArea.destroy();
+      spyOn(mockContainer, 'renderGadget').andReturn(deferred);
+      spyOn(gadgetArea.gadgetToolbar, 'setGadgetMetadata');
+      gadgetArea.renderGadget('http://example.com/gadget.xml', params);
+      var loading = query('.progress-striped', gadgetArea.domNode)[0];
+      expect(domClass.contains(loading, 'hide')).toEqual(false);
+      expect(mockContainer.renderGadget).toHaveBeenCalledWith('http://example.com/gadget.xml', siteSpy, params);
+      expect(deferred.then).toHaveBeenCalled();
+      expect(gadgetArea.gadgetToolbar.setGadgetMetadata).toHaveBeenCalledWith({"key" : "value"});
     });
-  
-    it("can load consecutive gadgets", function() {
-      var gadgetArea = new GadgetArea();
-      document.getElementById('testDiv').appendChild(gadgetArea.domNode);
-      gadgetArea.startup();
-      gadgetArea.loadGadget('http://example.com/gadget.xml');
-      //The first argument is a spy object for the site
-      expect(container.navigateGadget).toHaveBeenCalledWith(jasmine.any(Object), 'http://example.com/gadget.xml', 
-              {"gadgetUrl" : "http://example.com/gadget.xml"}, 
-              {"height" : "100%", "width" : "100%"});
-      expect(container.unloadGadget).not.toHaveBeenCalled();
-      expect(container.closeGadget).not.toHaveBeenCalled();
-      gadgetArea.loadGadget('http://example.com/gadget.xml');
+    
+    it("can render an embedded experience", function() {
+      spyOn(gadgetArea, 'closeOpenSite').andCallThrough();
+      var siteSpy = jasmine.createSpy('site');
+      spyOn(gadgetArea, 'createSite').andReturn(siteSpy);
+      var params = {"param1" : "value1"};
+      var deferred = jasmine.createSpyObj('defferred', ['then']);
+      deferred.then.andCallFake(function(callback) {
+        var metadata = {
+          "http://example.com/gadget.xml" : {
+            "key" : "value"
+          }
+        };
+        callback(metadata);
+      });
+      spyOn(mockContainer, 'renderEmbeddedExperience').andReturn(deferred);
+      spyOn(gadgetArea.gadgetToolbar, 'setGadgetMetadata');
+      gadgetArea.renderEmbeddedExperience('http://example.com/gadget.xml', "{\"context\" : \"123\"}");
+      var loading = query('.progress-striped', gadgetArea.domNode)[0];
+      expect(domClass.contains(loading, 'hide')).toEqual(false);
+      expect(mockContainer.renderEmbeddedExperience).toHaveBeenCalledWith({
+        "context" : "123",
+        "gadget" : "http://example.com/gadget.xml"
+      }, jasmine.any(Element));
+      expect(deferred.then).toHaveBeenCalled();
+      expect(gadgetArea.gadgetToolbar.setGadgetMetadata).toHaveBeenCalledWith({"key" : "value"});
+    });
+    
+    it("can rerender a gadget", function() {
+      var mockSiteHolder = jasmine.createSpyObj('siteHolder', ['getUrl']);
+      mockSiteHolder.getUrl.andCallFake(function() {
+        return 'http://example.com/gadget.xml';
+      })
+      var mockSite = jasmine.createSpyObj('site', ['getActiveSiteHolder']);
+      mockSite.getActiveSiteHolder.andCallFake(function() {
+        return mockSiteHolder;
+      });
+      gadgetArea.site = mockSite;
+      spyOn(gadgetArea, 'renderGadget').andReturn(undefined);
+      gadgetArea.reRenderGadget({"key" : "value"});
+      expect(gadgetArea.renderGadget).toHaveBeenCalledWith('http://example.com/gadget.xml', {"key" : "value"});
+    });
+    
+    it("can create a gadget site", function() {
+      var mockSite = jasmine.createSpy('mockSite');
+      var container = jasmine.createSpyObj('container', ['newGadgetSite']);
+      container.newGadgetSite.andCallFake(function() {
+        return mockSite;
+      });
+      spyOn(mockContainer, 'getContainer').andCallFake(function() {
+        return container;
+      });
+      var site = gadgetArea.createSite();
+      expect(site).toEqual(mockSite);
+      expect(container.newGadgetSite).toHaveBeenCalledWith(jasmine.any(Element));
+    });
+    
+    it("can close an open gadget site", function() {
+      var mockSiteHolder = jasmine.createSpyObj('siteHolder', ['getUrl']);
+      mockSiteHolder.getUrl.andCallFake(function() {
+        return 'http://example.com/gadget.xml';
+      })
+      var mockSite = jasmine.createSpyObj('site', ['getActiveSiteHolder']);
+      mockSite.getActiveSiteHolder.andCallFake(function() {
+        return mockSiteHolder;
+      });
+      gadgetArea.site = mockSite;
+      var container = jasmine.createSpyObj('container', ['unloadGadget', 'closeGadget']);
+      spyOn(mockContainer, 'getContainer').andCallFake(function() {
+        return container;
+      });
+      gadgetArea.closeOpenSite();
       expect(container.unloadGadget).toHaveBeenCalledWith('http://example.com/gadget.xml');
-      expect(container.unloadGadget.calls.length).toEqual(1);
-      expect(container.closeGadget.calls.length).toEqual(1);
-      //The first argument is a spy object for the site
-      expect(container.navigateGadget).toHaveBeenCalledWith(jasmine.any(Object), 'http://example.com/gadget.xml', 
-              {"gadgetUrl" : "http://example.com/gadget.xml"}, 
-              {"height" : "100%", "width" : "100%"});
-      gadgetArea.destroy();
+      expect(container.closeGadget).toHaveBeenCalledWith(mockSite);
     });
-  
-    it("can render embedded experience gadgets", function() {
-      var gadgetArea = new GadgetArea();
-      document.getElementById('testDiv').appendChild(gadgetArea.domNode);
-      gadgetArea.startup();
-      gadgetArea.renderEmbeddedExperience('http://example.com/gadget.xml', "{" +
-        "\"gadget\" : \"http://example.com/gadget.xml\"," +
-        "\"context\" : {" +
-          "\"id\" : 123" +
-        "}" +
-      "}");
-      var renderParams = {};
-      renderParams[osapi.container.ee.RenderParam.GADGET_RENDER_PARAMS] = {};
-      renderParams[osapi.container.ee.RenderParam.GADGET_RENDER_PARAMS][osapi.container.RenderParam.HEIGHT] = '100%';
-      renderParams[osapi.container.ee.RenderParam.GADGET_RENDER_PARAMS][osapi.container.RenderParam.WIDTH] = '100%';
-      renderParams[osapi.container.ee.RenderParam.GADGET_VIEW_PARAMS] = {"gadgetUrl" : 'http://example.com/gadget.xml'}; 
-      expect(container.ee.navigate).toHaveBeenCalledWith(jasmine.any(Object), {
-        "gadget" : "http://example.com/gadget.xml",
-        "context" : {
-          "id" : 123
-        }
-      }, renderParams, jasmine.any(Function));
-      gadgetArea.destroy();
+    
+    it("can update the security token", function() {
+      var container = jasmine.createSpyObj('container', ['updateContainerSecurityToken']);
+      spyOn(mockContainer, 'updateContainerSecurityToken').andCallThrough();
+      gadgetArea.updateContainerSecurityToken('123', 320);
+      expect(mockContainer.updateContainerSecurityToken).toHaveBeenCalledWith('123', 320);
     });
   });
 });
