@@ -45,7 +45,7 @@
  */
 define(['dojo/_base/declare',
         'dojo/_base/array',
-        'dojo/dom-construct', 'modules/opensocial-data',
+        'dojo/dom-construct', './opensocial-data',
         'dojo/_base/window', 'dojo/dom', 'dojo/json', 'dojo/Deferred', "dojo/_base/lang", 'dojo/Evented'],
         function(declare, arrayUtil, domConstruct, osData, win, dom,
                 JSON, Deferred, lang, Evented) {
@@ -198,7 +198,11 @@ define(['dojo/_base/declare',
                         renderParams[osapi.container.ee.RenderParam.GADGET_VIEW_PARAMS] = {"gadgetUrl" : dataModel.gadget}; 
 
                         self.container.ee.navigate(siteNode, dataModel, renderParams, function(site) {
-                          deferred.resolve(metadata, site);
+                          var results = {
+                                  "site" : site,
+                                  "metadata" : metadata
+                          };
+                          deferred.resolve(results);
                         });
                       } else {
                         console.error('There was an error preloading the embedded experience.');
