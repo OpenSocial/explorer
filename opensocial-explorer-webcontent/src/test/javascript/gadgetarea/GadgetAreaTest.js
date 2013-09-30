@@ -204,12 +204,14 @@ define(['modules/widgets/gadgetarea/GadgetArea', 'dojo/_base/declare', 'dojo/Eve
       var params = {"param1" : "value1"};
       var deferred = jasmine.createSpyObj('defferred', ['then']);
       deferred.then.andCallFake(function(callback) {
-        var metadata = {
-          "http://example.com/gadget.xml" : {
-            "key" : "value"
+        var results = {
+          "metadata" : {
+            "http://example.com/gadget.xml" : {
+              "key" : "value"
+            }
           }
         };
-        callback(metadata);
+        callback(results);
       });
       spyOn(mockContainer, 'renderEmbeddedExperience').andReturn(deferred);
       spyOn(gadgetArea.gadgetToolbar, 'setGadgetMetadata');

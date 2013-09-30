@@ -154,10 +154,10 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       this.closeOpenSite();
       this.loadingWidget.show();
       var self = this;
-      this.getExplorerContainer().renderEmbeddedExperience(oDataModel, this.createNodeForSite()).then(function(metadata, site) {
-        self.site = site;
-        if(metadata && metadata[oDataModel.gadget]) {
-          self.gadgetToolbar.setGadgetMetadata(metadata[oDataModel.gadget]);
+      this.getExplorerContainer().renderEmbeddedExperience(oDataModel, this.createNodeForSite()).then(function(results) {
+        self.site = results.site;
+        if(results.metadata && results.metadata[oDataModel.gadget]) {
+          self.gadgetToolbar.setGadgetMetadata(results.metadata[oDataModel.gadget]);
         }
       });
     },
