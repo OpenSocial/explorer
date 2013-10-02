@@ -16,8 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+*
+* Handles all xhr calls between client and servlet side for OpenID.
+*
+* @module modules/openid-service
+*/
 define(['dojo/request/xhr', 'dojo/json'], function(xhr, json) {
   return {
+    /**
+     * Gets the OpenID providers.
+     *
+     * @memberof module:modules/openid-service
+     * @param {Object} callbacks - Object with a success and an error function.
+     * @param {Function} callbacks.success - Fired if xhr was successful.
+     * @param {Function} callbacks.error - Fired if xhr was not successful.
+     */
     getProviders : function(callbacks) {
       xhr('openid/providers', {
         handleAs : "json"

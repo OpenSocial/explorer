@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+* Contains the sample OpenSocial data used in the Explorer.
+*
+* @module modules/opensocial-data
+*/
 define(['dojo/_base/declare'], function(declare) {
   var person = {
     "type" : "opensocial.Person",
@@ -37,6 +43,13 @@ define(['dojo/_base/declare'], function(declare) {
     }
   };
   return {
+    /**
+     * Gets the default gadget spec's data.
+     *
+     * @memberof module:modules/opensocial-data
+     * @param {String} type - Object with a success and an error function.
+     * @returns {Object} The OpenSocial sample json matching the type.
+     */
     get : function(type) {
       var data;
       if(type === 'opensocial.Person') {

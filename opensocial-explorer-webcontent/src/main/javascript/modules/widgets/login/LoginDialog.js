@@ -16,6 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+* A modal window that allows users to login.
+*
+* @module modules/widgets/login/LoginDialog
+* @augments module:modules/widgets/ModalDialog
+* @requires module:modules/openid-service
+* @requires module:modules/widgets/login/OAuthLogin
+*/
 define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dijit/_WidgetsInTemplateMixin', 
         'dojo/query', 'dojo/dom-construct', 'modules/widgets/login/OAuthLogin', 'dojo/topic', 
         'modules/openid-service',  'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
@@ -23,6 +32,12 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dijit/_WidgetsInT
             OAuthLogin, topic, openIdService) {
   return declare('LoginDialog', [ ModalDialog, WidgetsInTemplateMixin ], {
     
+    /**
+     * Called right after widget is added to the dom. See link for more information.
+     *
+     * @memberof module:modules/widgets/login/LoginDialog#
+     * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
+     */
     startup : function() {
       var self = this;
       this.setHeaderTitle('Sign-in or Create New Account');
@@ -33,6 +48,11 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dijit/_WidgetsInT
       });
     },
 
+    /**
+     * Shows the OpenIDLoginDialog modal.
+     *
+     * @memberof module:modules/widgets/login/LoginDialog#
+     */
     show : function() {
       var modalBodies = query('.modal-body', this.domNode);
       

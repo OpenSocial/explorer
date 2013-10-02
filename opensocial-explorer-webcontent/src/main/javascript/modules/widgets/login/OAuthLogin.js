@@ -16,6 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+ * Handles the OAuth login process via a popup. Multiple instances of this module are created
+ * in the LoginDialog for each individual login option.
+ *
+ * @module modules/widgets/login/OAuthLogin
+ * @augments dijit/_WidgetBase
+ * @augments dijit/_TemplatedMixin
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
+ * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_TemplatedMixin.html|TemplatedMixin Documentation}
+ */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dojo/_base/lang',
         'dojo/query', 'dojo/text!./../../templates/LoginItem.html', 'dojo/dom-construct', 'dojo/topic',
         'dojo/dom', 'dojo/dom-class', 'dojo/on', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
@@ -24,13 +35,24 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
   return declare('OAuthLogin', [ WidgetBase, TemplatedMixin ], {
     templateString : template,
     
+    /**
+     * Called right after widget is added to the dom. See link for more information.
+     *
+     * @memberof module:modules/widgets/login/OAuthLogin#
+     * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
+     */
     startup : function() {
       var self = this;
       on(this.loginLink, 'click', function() {
         self.togglePopup();
       });
     },
-      
+    
+    /**
+     * Creates and opens the popup for user authentication.
+     *
+     * @memberof module:modules/widgets/login/OAuthLogin#
+     */
     togglePopup : function() {
       var self = this,
           windowOptions = null,
@@ -41,6 +63,11 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       self.popup.createOpenerOnClick()();
     },
     
+    /**
+     * Handler for when the popup window opens.
+     *
+     * @memberof module:modules/widgets/login/OAuthLogin#
+     */
     onPopupOpen: function() {
       var self = this;
       document.addEventListener("myEvent", function(obj) {
@@ -51,6 +78,11 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       });
     },
 
+    /**
+     * Handler for when the popup window closes.
+     *
+     * @memberof module:modules/widgets/login/OAuthLogin#
+     */
     onPopupClose: function() {
       if(this.securityToken) {
         topic.publish("updateToken", this.securityToken, this.securityTokenTTL);

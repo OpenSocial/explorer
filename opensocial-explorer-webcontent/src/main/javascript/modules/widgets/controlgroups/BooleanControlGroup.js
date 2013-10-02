@@ -16,35 +16,60 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+ * A ControlGroup for the boolean option of the PreferencesDialog.
+ *
+ * @module modules/widgets/controlgroups/BooleanControlGroup
+ * @augments module:modules/widgets/controlgroups/ControlGroup
+ */
 define(['dojo/_base/declare', 'modules/widgets/controlgroups/ControlGroup', 'dojo/query', 'dojo/dom-construct',
         'dojo/dom-attr', 'dojo/on', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, ControlGroup, query, domConstruct, domAttr, on) {
-            return declare('BooleanControlGroupWidget', [ ControlGroup ], {
-                
-                constructor : function() {
-                },
-                
-                postCreate : function() {
-                  this.input = domConstruct.create('input', {"type" : "checkbox"});
-                  if(this.defaultValue.toUpperCase() === 'TRUE') {
-                    domAttr.set(this.input, 'checked', 'checked');
-                  }
-                  on(this.input, 'click', function(e) {
-                    if(domAttr.get(e.currentTarget, 'checked')) {
-                      domAttr.set(e.currentTarget, 'checked', '');
-                    } else {
-                      domAttr.set(e.currentTarget, 'checked', 'checked');
-                    }
-                  });
-                  query('.controls', this.domNode).append(this.input);
-                },
-                
-                getValue : function() {
-                  return this.input.checked;
-                },
-                
-                setValue : function(checked) {
-                  this.input.checked = checked;
-                }
-            });
-        });
+  return declare('BooleanControlGroupWidget', [ ControlGroup ], {
+
+    constructor : function() {
+    },
+
+    /**
+     * Called right before widget is added to the dom. See link for more information.
+     *
+     * @memberof module:modules/widgets/controlgroups/BooleanControlGroup#
+     * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
+     */
+    postCreate : function() {
+      this.input = domConstruct.create('input', {"type" : "checkbox"});
+      if(this.defaultValue.toUpperCase() === 'TRUE') {
+        domAttr.set(this.input, 'checked', 'checked');
+      }
+      on(this.input, 'click', function(e) {
+        if(domAttr.get(e.currentTarget, 'checked')) {
+          domAttr.set(e.currentTarget, 'checked', '');
+        } else {
+          domAttr.set(e.currentTarget, 'checked', 'checked');
+        }
+      });
+      query('.controls', this.domNode).append(this.input);
+    },
+
+    /**
+     * Gets the state of the BooleanControlGroup checkbox.
+     *
+     * @memberof module:modules/widgets/controlgroups/BooleanControlGroup#
+     * @return {Boolean} Whether or not the checkbox is checked.
+     */
+    getValue : function() {
+      return this.input.checked;
+    },
+
+    /**
+     * Sets the state of the BooleanControlGroup checkbox.
+     *
+     * @memberof module:modules/widgets/controlgroups/BooleanControlGroup#
+     * @param {Boolean} checked - Whether or not the checkbox should be checked.
+     */
+    setValue : function(checked) {
+      this.input.checked = checked;
+    }
+  });
+});

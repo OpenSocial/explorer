@@ -16,9 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+ * Editor for the json tab of a spec. Inherits from Editor.
+ *
+ * @module modules/widgets/editorarea/JSONEditor
+ * @requires module:modules/widgets/editorarea/Editor
+ */
 define(['dojo/_base/declare', 'modules/widgets/editorarea/Editor'],
-        function(declare, Editor, template) {
-            return declare('JSONEditorWidget', [ Editor ], {
-                mode : 'application/json'
-            });
-        });
+    function(declare, Editor, template) {
+  return declare('JSONEditorWidget', [ Editor ], {
+    mode : 'application/json'
+  });
+});
