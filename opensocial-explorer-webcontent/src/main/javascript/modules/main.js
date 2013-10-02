@@ -20,17 +20,9 @@
  * Main JS file the OpenSocial Explorer.
  */
 require(['modules/widgets/editorarea/EditorArea', 'modules/widgets/gadgetarea/GadgetArea', 'modules/widgets/sidebar/SidebarNav', 
-         'modules/widgets/openid/OpenIDLoginDialog', 'dojo/query', 'dojo/dom-class', 'dojo/_base/event', 'dojo/ready',
+         'modules/widgets/login/LoginDialog', 'dojo/query', 'dojo/dom-class', 'dojo/_base/event', 'dojo/ready',
          'dojo/NodeList-manipulate', 'dojo/NodeList-dom', 'dojo/NodeList-traverse'], 
-         function(EditorArea, GadgetArea, SidebarNav, OpenIDLoginDialog, query, domClass, event, ready) {
-
-  openIDLogin = OpenIDLoginDialog.getInstance();
-  openIDLogin.startup();
-  query('body').append(openIDLogin.domNode);
-  query('#openid-login').on('click', function(e) {
-    openIDLogin.show();
-  });
-
+         function(EditorArea, GadgetArea, SidebarNav, LoginDialog, query, domClass, event, ready) {
   /*
    * The following code SHOULD handle showing and hiding all drop down menus on the page. 
    */

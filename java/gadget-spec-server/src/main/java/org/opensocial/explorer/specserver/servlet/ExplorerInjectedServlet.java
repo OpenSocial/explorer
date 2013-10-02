@@ -20,10 +20,18 @@ package org.opensocial.explorer.specserver.servlet;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.http.HttpResponse;
 import org.apache.shindig.common.servlet.InjectedServlet;
+import org.apache.wink.json4j.JSONException;
+import org.apache.wink.json4j.JSONObject;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
@@ -61,4 +69,36 @@ public abstract class ExplorerInjectedServlet extends InjectedServlet {
     return Iterables.toArray(splitPath, String.class);
   }
 
+  protected JSONObject parseResponseToJson(HttpResponse response) throws JSONException, UnsupportedEncodingException, IllegalStateException, IOException {
+    BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
+    StringBuilder builder = new StringBuilder();
+    for (String line = null; (line = reader.readLine()) != null;) {
+        builder.append(line).append("\n");
+    }
+    
+    return new JSONObject(builder.toString());
+  }
+  
+
+  protected String parseResponseToString(HttpResponse response) throws IOException {
+    BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
+    StringBuilder builder = new StringBuilder();
+    for (String line = null; (line = reader.readLine()) != null;) {
+        builder.append(line);
+    }
+    
+    return builder.toString();
+  }
+  
+  protected Map<String, String> splitQuery(HttpResponse response) throws IOException, UnsupportedEncodingException {
+    String query = this.parseResponseToString(response);
+
+    Map<String, String> query_pairs = new LinkedHashMap<String, String>();
+    String[] pairs = query.split("&");
+    for (String pair : pairs) {
+      int index = pair.indexOf("=");
+      query_pairs.put(URLDecoder.decode(pair.substring(0, index), "UTF-8"), URLDecoder.decode(pair.substring(index + 1), "UTF-8"));
+    }
+    return query_pairs;
+  }
 }

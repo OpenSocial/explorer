@@ -16,14 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['dojo/_base/declare', 'modules/widgets/ModalDialog', 
-        'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin', 'dojo/Evented',
+define(['dojo/_base/declare', 'modules/widgets/ModalDialog', 'dijit/_WidgetsInTemplateMixin', 'dojo/Evented',
         'dojo/query', 'dojo/text!./../../templates/CreationModalDialog.html', 'dojo/text!./../../stubs/StubXML.xml', 
         'dojo/text!./../../stubs/StubEEXML.xml', 'dojo/text!./../../stubs/StubHTML.html',
         'dojo/dom', 'modules/gadget-spec-service', 'dojo/on',
         'dojo/dom-class', 'dojo/dom-style','dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
-        function(declare, ModalDialog, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, Evented,
-            query, template, stubxml, stubeexml, stubhtml, dom, gadgetSpecService, on, domClass, domStyle) {
+        function(declare, ModalDialog, WidgetsInTemplateMixin, Evented, query, template, 
+            stubxml, stubeexml, stubhtml, dom, gadgetSpecService, on, domClass, domStyle) {
   return declare('CreationModalDialogWidget', [ModalDialog, WidgetsInTemplateMixin, Evented], {
     templateString : template,
     

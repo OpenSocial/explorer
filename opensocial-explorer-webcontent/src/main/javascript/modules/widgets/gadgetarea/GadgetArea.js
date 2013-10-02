@@ -84,6 +84,10 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       topic.subscribe("setSelection", function(selection) {
         self.getContainer().selection.setSelection(selection);
       });
+      
+      topic.subscribe("updateToken", function(token, ttl) {
+        self.updateContainerSecurityToken(token, ttl);
+      });
     },
 
     getContainer : function() {
