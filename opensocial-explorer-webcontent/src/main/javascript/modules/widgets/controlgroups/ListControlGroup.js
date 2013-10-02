@@ -23,7 +23,7 @@
  * @module modules/widgets/controlgroups/ListControlGroup
  * @augments module:modules/widgets/controlgroups/ControlGroup
  */
-define(['dojo/_base/declare', 'modules/widgets/controlgroups/ControlGroup', 'dojo/query', 'dojo/dom-construct',
+define(['dojo/_base/declare', './ControlGroup', 'dojo/query', 'dojo/dom-construct',
         'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, ControlGroup, query, domConstruct) {
   return declare('ListsControlGroupWidget', [ ControlGroup ], {

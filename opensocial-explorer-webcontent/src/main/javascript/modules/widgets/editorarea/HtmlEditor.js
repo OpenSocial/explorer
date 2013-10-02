@@ -23,7 +23,7 @@
  * @module modules/widgets/editorarea/HtmlEditor
  * @requires module:modules/widgets/editorarea/Editor
  */
-define(['dojo/_base/declare', 'modules/widgets/editorarea/Editor'],
+define(['dojo/_base/declare', './Editor'],
     function(declare, Editor, template) {
   return declare('HtmlEditorWidget', [ Editor ], {
     mode : 'application/xml'

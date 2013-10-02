@@ -23,7 +23,7 @@
  * @module modules/widgets/gadgetarea/GadgetModalDialog
  * @augments module:modules/widgets/ModalDialog
  */
-define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'dojo/dom-class', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
+define(['dojo/_base/declare',  '../ModalDialog', 'dojo/query', 'dojo/dom-class', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, ModalDialog, query, domClass) {
   return declare('GadgetModalDialogWidget', [ ModalDialog ], {
 

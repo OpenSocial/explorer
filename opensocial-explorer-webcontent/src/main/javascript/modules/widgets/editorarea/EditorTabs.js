@@ -33,8 +33,8 @@
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dojo/_base/array', 'dojo/text!./../../templates/EditorTabs.html',
-        'dojo/dom-construct', 'modules/widgets/editorarea/CssEditor', 'modules/widgets/editorarea/GadgetEditor', 'modules/widgets/editorarea/HtmlEditor', 'modules/widgets/editorarea/JSEditor',
-        'modules/widgets/editorarea/JSONEditor', 'dojo/query'],
+        'dojo/dom-construct', './CssEditor', './GadgetEditor', './HtmlEditor', './JSEditor',
+        './JSONEditor', 'dojo/query'],
         function(declare, WidgetBase, TemplatedMixin,
             arrayUtil, template, domConstruct, CssEditor, GadgetEditor, HtmlEditor, JSEditor, JSONEditor, query) {
   return declare('EditorTabsWidget', [ WidgetBase, TemplatedMixin ], {

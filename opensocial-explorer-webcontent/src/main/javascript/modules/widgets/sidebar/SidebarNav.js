@@ -34,8 +34,8 @@
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 
         'dijit/_WidgetsInTemplateMixin', 'dojo/text!./../../templates/SidebarNav.html', 
-        'dojo/dom-construct', 'dojo/Evented', 'modules/widgets/sidebar/CreationModalDialog',
-        'modules/gadget-spec-service', 'dojo/store/Memory', 'dojo/store/Observable', 'dojo/on',
+        'dojo/dom-construct', 'dojo/Evented', './CreationModalDialog',
+        '../../gadget-spec-service', 'dojo/store/Memory', 'dojo/store/Observable', 'dojo/on',
         'dijit/tree/ObjectStoreModel', 'dijit/Tree', 'dojo/dom', 'dojo/dom-class', 'dojo/query', 'dojo/domReady!'],
         function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, template, domConstruct, Evented,
             CreationModalDialog, gadgetSpecService, Memory, Observable, on, ObjectStoreModel, Tree, dom, domClass, query) {

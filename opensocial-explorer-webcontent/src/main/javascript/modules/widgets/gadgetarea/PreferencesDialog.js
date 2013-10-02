@@ -27,9 +27,9 @@
  * @requires module:modules/widgets/controlgroups/EnumControlGroup
  * @requires module:modules/widgets/controlgroups/ListControlGroup
  */
-define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'dojo/dom-construct',
-        'modules/widgets/controlgroups/StringControlGroup', 'modules/widgets/controlgroups/BooleanControlGroup', 
-        'modules/widgets/controlgroups/EnumControlGroup', 'modules/widgets/controlgroups/ListControlGroup', 'dojo/on', 
+define(['dojo/_base/declare',  '../ModalDialog', 'dojo/query', 'dojo/dom-construct',
+        '../controlgroups/StringControlGroup', '../controlgroups/BooleanControlGroup', 
+        '../controlgroups/EnumControlGroup', '../controlgroups/ListControlGroup', 'dojo/on', 
         'dojo/topic', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, ModalDialog, query, domConstruct, StringControlGroup, BooleanControlGroup, EnumControlGroup, 
             ListControlGroup, on, topic) {

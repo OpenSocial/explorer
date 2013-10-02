@@ -32,7 +32,7 @@
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin',
         'dojo/query', 'dojo/text!./../../templates/EditorToolbar.html', 'dojo/on', 'dojo/Evented',
-        'dojo/dom-class', 'modules/gadget-spec-service', 
+        'dojo/dom-class', '../../gadget-spec-service', 
         'dojo/NodeList-manipulate', 'dojo/NodeList-dom', 'dojo/ready', 'dojo/domReady!'],
         function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, query, 
             template, on, Evented, domClass, gadgetSpecService) {

@@ -28,8 +28,8 @@
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetsInTemplateMixin.html|WidgetsInTemplateMixin Documentation}
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dojo/Evented.html|Evented Documentation}
 */
-define(['dojo/_base/lang', 'dojo/_base/declare', 'modules/widgets/DropDownMenu', 'dojo/Evented', 'dojo/topic',
-        'dojo/query', 'dojo/dom-class', 'modules/widgets/MenuItemWidget', 'modules/opensocial-data',
+define(['dojo/_base/lang', 'dojo/_base/declare', '../DropDownMenu', 'dojo/Evented', 'dojo/topic',
+        'dojo/query', 'dojo/dom-class', '../MenuItemWidget', '../../opensocial-data',
         'dojo/text!./../../templates/GadgetDropDownMenu.html', 'dijit/_WidgetsInTemplateMixin',
         'dojo/on', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(lang, declare, DropDownMenu, Evented, topic, query, domClass, MenuItemWidget, osData, template, WidgetsInTemplateMixin, on) {

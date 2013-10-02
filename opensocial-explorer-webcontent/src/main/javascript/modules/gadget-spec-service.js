@@ -22,7 +22,7 @@
 *
 * @module modules/gadget-spec-service
 */
-define(['dojo/request/xhr', 'dojo/json', 'modules/url-util'], function(xhr, json, urlUtil) {
+define(['dojo/request/xhr', 'dojo/json', './url-util'], function(xhr, json, urlUtil) {
   function getGadgetSpecBase(id, success, error) {
     xhr(urlUtil.getContextRoot() + '/gadgetspec/' + id, {
       handleAs: "json"

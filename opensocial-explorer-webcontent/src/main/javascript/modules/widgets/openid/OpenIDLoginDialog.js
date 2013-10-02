@@ -25,8 +25,8 @@
 * @requires module:modules/openid-service
 * @requires module:modules/widgets/openid/AuthProvider
 */
-define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'dojo/dom-construct',
-        'dojo/on', 'modules/widgets/openid/AuthProvider', 'dojo/_base/array', 'modules/openid-service', 
+define(['dojo/_base/declare',  '../ModalDialog', 'dojo/query', 'dojo/dom-construct',
+        'dojo/on', './AuthProvider', 'dojo/_base/array', '../../openid-service', 
         'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, ModalDialog, query, domConstruct, on, AuthProvider, array, openIdService) {
   var OpenIDLoginDialog = declare('OpenIDLoginDialog', [ ModalDialog ], {

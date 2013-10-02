@@ -40,10 +40,10 @@
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dojo/Evented.html|Evented Documentation}
  */
 define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin', 'dojo/Evented', 'dojo/topic',
-         'dojo/query', 'dojo/on', 'dojo/text!./../../templates/EditorArea.html', 'modules/widgets/editorarea/EditorToolbar',
-         'modules/widgets/editorarea/EditorTabs', 'modules/widgets/editorarea/GadgetEditor', 'modules/widgets/editorarea/HtmlEditor', 
-         'modules/widgets/editorarea/CssEditor', 'modules/widgets/editorarea/JSEditor', 'modules/widgets/editorarea/JSONEditor', 'modules/widgets/editorarea/EditorTab',
-         'dojo/dom-construct', 'dojo/dom-class', 'modules/gadget-spec-service', 'modules/url-util', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom' ], 
+         'dojo/query', 'dojo/on', 'dojo/text!./../../templates/EditorArea.html', './EditorToolbar',
+         './EditorTabs', './GadgetEditor', './HtmlEditor', 
+         './CssEditor', './JSEditor', './JSONEditor', './EditorTab',
+         'dojo/dom-construct', 'dojo/dom-class', '../../gadget-spec-service', '../../url-util', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom' ], 
          function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, Evented, topic, query, on, template, EditorToolbar, EditorTabs, GadgetEditor, 
              HtmlEditor, CssEditor, JSEditor, JSONEditor, EditorTab, domConstruct, domClass,
              gadgetSpecService, urlUtil) {

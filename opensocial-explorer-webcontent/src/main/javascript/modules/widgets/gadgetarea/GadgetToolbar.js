@@ -30,7 +30,7 @@
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dojo/query', 'dojo/text!./../../templates/GadgetToolbar.html',
-        'modules/widgets/gadgetarea/GadgetMenuButton', 'modules/widgets/gadgetarea/PreferencesDialog', 
+        './GadgetMenuButton', './PreferencesDialog', 
         'dojo/dom-construct', 'dijit/_WidgetsInTemplateMixin', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, WidgetBase, TemplatedMixin, query, template, GadgetMenuButton, PreferencesDialog, domConstruct,
             WidgetsInTemplateMixin) {

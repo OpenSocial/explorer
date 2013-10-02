@@ -31,7 +31,7 @@
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dojo/text!./../../templates/GadgetMenuButton.html',
-        'modules/widgets/gadgetarea/GadgetDropDownMenu', 'dojo/dom-construct',
+        './GadgetDropDownMenu', 'dojo/dom-construct',
         'dijit/_WidgetsInTemplateMixin'],
         function(declare, WidgetBase, TemplatedMixin, template, GadgetDropDownMenu, domConstruct,
             WidgetsInTemplateMixin) {

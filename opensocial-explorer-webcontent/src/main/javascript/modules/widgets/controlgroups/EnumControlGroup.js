@@ -23,7 +23,7 @@
  * @module modules/widgets/controlgroups/EnumControlGroup
  * @augments module:modules/widgets/controlgroups/ControlGroup
  */
-define(['dojo/_base/declare', 'modules/widgets/controlgroups/ControlGroup',
+define(['dojo/_base/declare', './ControlGroup',
         'dojo/_base/array', 'dojo/query', 'dojo/dom-construct',
         'dojo/dom-attr', 'dojo/on', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, ControlGroup, arrayUtil, query, domConstruct, domAttr, on) {

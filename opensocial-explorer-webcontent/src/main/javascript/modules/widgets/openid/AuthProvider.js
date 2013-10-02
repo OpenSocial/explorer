@@ -29,7 +29,7 @@
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dojo/query', 'dojo/text!./../../templates/AuthProvider.html',
         'dojo/dom', 'dojo/dom-class', 'dojo/_base/lang', 'dojo/on',
-        'dojo/request/xhr', 'modules/widgets/gadgetarea/GadgetArea',
+        'dojo/request/xhr', '../gadgetarea/GadgetArea',
         'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, WidgetBase, TemplatedMixin, query, template, dom, domClass, lang, on, xhr, GadgetArea) {
   return declare('AuthProvider', [ WidgetBase, TemplatedMixin ], {
