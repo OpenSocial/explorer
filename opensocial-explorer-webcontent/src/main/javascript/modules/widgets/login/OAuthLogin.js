@@ -32,7 +32,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
         'dojo/dom', 'dojo/dom-class', 'dojo/on', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, WidgetBase, TemplatedMixin, lang,
             query, template, domConstruct, topic, dom, domClass, on) {
-  return declare('OAuthLogin', [ WidgetBase, TemplatedMixin ], {
+  return declare('OAuthLoginWidget', [ WidgetBase, TemplatedMixin ], {
     templateString : template,
     
     /**

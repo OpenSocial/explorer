@@ -30,7 +30,7 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dijit/_WidgetsInT
         'modules/openid-service',  'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, ModalDialog, WidgetsInTemplateMixin, query, domConstruct,
             OAuthLogin, topic, openIdService) {
-  return declare('LoginDialog', [ ModalDialog, WidgetsInTemplateMixin ], {
+  return declare('LoginDialogWidget', [ ModalDialog, WidgetsInTemplateMixin ], {
     
     /**
      * Called right after widget is added to the dom. See link for more information.

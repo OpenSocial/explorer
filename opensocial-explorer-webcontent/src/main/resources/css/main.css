@@ -16,7 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
- 
+
+.creationMenu {
+	margin-bottom: 30px;
+}
+
 .center {
 	text-align: center;
 }

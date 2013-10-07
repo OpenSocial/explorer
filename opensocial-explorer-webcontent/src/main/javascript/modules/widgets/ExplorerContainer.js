@@ -43,9 +43,7 @@
  * @fires module:modules/widgets/ExplorerContainer#navigateee
  * @fires module:modules/widgets/ExplorerContainer#destroyelement
  */
-define(['dojo/_base/declare',
-        'dojo/_base/array',
-        'dojo/dom-construct', './opensocial-data',
+define(['dojo/_base/declare','dojo/_base/array', 'dojo/dom-construct', 'modules/openid-service',
         'dojo/_base/window', 'dojo/dom', 'dojo/json', 'dojo/Deferred', "dojo/_base/lang", 'dojo/Evented'],
         function(declare, arrayUtil, domConstruct, osData, win, dom,
                 JSON, Deferred, lang, Evented) {

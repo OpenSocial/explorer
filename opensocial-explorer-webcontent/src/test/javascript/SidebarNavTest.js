@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['modules/widgets/sidebar/SidebarNav'], function(SidebarNav){
+define(['modules/widgets/SidebarNav'], function(SidebarNav){
   describe('A SidebarNav widget', function() {
     beforeEach(function() {
       var div = document.createElement("div");

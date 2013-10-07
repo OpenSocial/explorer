@@ -29,7 +29,7 @@
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dojo/topic',
         'dojo/_base/array', 'dojo/text!./../../templates/GadgetArea.html', 'modules/widgets/gadgetarea/GadgetToolbar',
         'dojo/dom-construct','modules/widgets/Loading', 'modules/opensocial-data', 'modules/widgets/gadgetarea/GadgetModalDialog',
-        'dojo/_base/window', 'dojo/dom', 'dojo/json', 'modules/ExplorerContainer', 'dojo/on'],
+        'dojo/_base/window', 'dojo/dom', 'dojo/json', 'modules/widgets/ExplorerContainer', 'dojo/on'],
         function(declare, WidgetBase, TemplatedMixin, topic, arrayUtil, template, GadgetToolbar, 
             domConstruct, Loading, osData, GadgetModalDialog, win, dom, JSON, ExplorerContainer, on) {
       return declare('GadgetAreaWidget', [ WidgetBase, TemplatedMixin ], {

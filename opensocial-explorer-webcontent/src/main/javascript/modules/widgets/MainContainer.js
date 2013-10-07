@@ -24,13 +24,15 @@
  * @augments dijit/_WidgetBase
  * @augments dijit/_TemplatedMixin
  * @augments dijit/_WidgetsInTemplateMixin
+ * @requires module:modules/widgets/creation/CreationMenu
+ * @requires module:modules/widgets/login/LoginDialog
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_TemplatedMixin.html|TemplatedMixin Documentation}
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetsInTemplateMixin.html|WidgetsInTemplateMixin Documentation}
  */
-define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin', 
+define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin', 'modules/widgets/creation/CreationMenu',
         'modules/widgets/login/LoginDialog', 'dojo/query', 'dojo/on', 'dojo/text!./../templates/MainContainer.html'], 
-         function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, LoginDialog, query, on, template) {
+         function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, CreationMenu, LoginDialog, query, on, template) {
   return declare('MainContainerWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin ], {
     templateString : template,
 

@@ -16,12 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['modules/widgets/sidebar/CreationModalDialog', 'modules/widgets/sidebar/SidebarNav',
+define(['modules/widgets/creation/CreationSpecModal', 'modules/widgets/SidebarNav',
         'dojo/query', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'], 
-    function(CreationModalDialog, SidebarNav, query){
-  describe('A CreationModalDialog widget', function(){
+    function(CreationSpecModal, SidebarNav, query){
+  describe('A CreationSpecModal widget', function(){
     it("can be shown and hidden", function() {
-      var dialog = new CreationModalDialog();
+      var dialog = new CreationSpecModal();
       dialog.show();
       expect(dialog.domNode.getAttribute('class')).toBe('modal fade in');
       dialog.hide();
@@ -30,7 +30,7 @@ define(['modules/widgets/sidebar/CreationModalDialog', 'modules/widgets/sidebar/
     });
     
     it("closes upon user toggle of the exit button", function() {
-      var dialog = new CreationModalDialog();
+      var dialog = new CreationSpecModal();
       dialog.show();
       expect(dialog.domNode.getAttribute('class')).toBe('modal fade in');
       dialog.creationExit.click();
@@ -38,7 +38,7 @@ define(['modules/widgets/sidebar/CreationModalDialog', 'modules/widgets/sidebar/
     });
     
     it("has text fields that reset upon submission", function() {
-      var dialog = new CreationModalDialog();
+      var dialog = new CreationSpecModal();
       spyOn(dialog, 'getGadgetSpecService').andReturn({
         createNewGadgetSpec : function(fakeData, callbacks) {
           var data = {id: "12345"};
@@ -62,7 +62,7 @@ define(['modules/widgets/sidebar/CreationModalDialog', 'modules/widgets/sidebar/
     });
     
     it("can create a new gadget", function() {
-      var dialog = new CreationModalDialog();
+      var dialog = new CreationSpecModal();
       var fakeData = {
           title:          "Sample Gadget",
           cssResources:   [{content: "", name: "samplegadget.css"}],
@@ -93,7 +93,7 @@ define(['modules/widgets/sidebar/CreationModalDialog', 'modules/widgets/sidebar/
     });
     
     it("can create a new embedded-experience", function() {
-      var dialog = new CreationModalDialog();
+      var dialog = new CreationSpecModal();
       var fakeData = {
           title:          "Embedded Experience",
           cssResources:   [{content: "", name: "embeddedexperience.css"}],
