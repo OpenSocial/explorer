@@ -20,16 +20,16 @@
 /**
  * Contains the EditorToolbar, EditorTabs, and Editors
  *
- * @module modules/widgets/editorarea/EditorArea
- * @requires module:modules/widgets/editorarea/EditorToolbar
- * @requires module:modules/widgets/editorarea/EditorTabs
- * @requires module:modules/widgets/editorarea/GadgetEditor
- * @requires module:modules/widgets/editorarea/HtmlEditor
- * @requires module:modules/widgets/editorarea/CssEditor
- * @requires module:modules/widgets/editorarea/JSEditor
- * @requires module:modules/widgets/editorarea/JSONEditor
- * @requires module:modules/widgets/editorarea/EditorTab
- * @requires module:modules/gadget-spec-service
+ * @module explorer/widgets/editorarea/EditorArea
+ * @requires module:explorer/widgets/editorarea/EditorToolbar
+ * @requires module:explorer/widgets/editorarea/EditorTabs
+ * @requires module:explorer/widgets/editorarea/GadgetEditor
+ * @requires module:explorer/widgets/editorarea/HtmlEditor
+ * @requires module:explorer/widgets/editorarea/CssEditor
+ * @requires module:explorer/widgets/editorarea/JSEditor
+ * @requires module:explorer/widgets/editorarea/JSONEditor
+ * @requires module:explorer/widgets/editorarea/EditorTab
+ * @requires module:explorer/gadget-spec-service
  * @augments dijit/_WidgetBase
  * @augments dijit/_TemplatedMixin
  * @augments dijit/_WidgetsInTemplateMixin
@@ -53,7 +53,7 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
     /**
      * Called right after widget is added to the dom. See link for more information.
      *
-     * @memberof module:modules/widgets/editorarea/EditorArea#
+     * @memberof module:explorer/widgets/editorarea/EditorArea#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     startup : function() {
@@ -88,7 +88,7 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
     /**
      * Posts a spec to the servlet. This method is used when rerendering a spec.
      *
-     * @memberof module:modules/widgets/editorarea/EditorArea#
+     * @memberof module:explorer/widgets/editorarea/EditorArea#
      *
      * @param {Function} thenFunction - Callback function to execute if the POST to the servlet is successful.
      */
@@ -105,7 +105,7 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
     /**
      * Displays the spec's code - resets the tabs and adds the necessary tabs and editors to the Ui.
      *
-     * @memberof module:modules/widgets/editorarea/EditorArea#
+     * @memberof module:explorer/widgets/editorarea/EditorArea#
      * @param {String} id - The ID of the spec to display
      */
     displaySpec : function(id) {
@@ -124,7 +124,7 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
     /**
      * Adds a spec's tabs to the Ui and adjusts the render button according to the type of spec.
      *
-     * @memberof module:modules/widgets/editorarea/EditorArea#
+     * @memberof module:explorer/widgets/editorarea/EditorArea#
      * @param {Object} data - Data of the spec.
      */
     addToUi : function(data) {
@@ -148,7 +148,7 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
     /**
      * Creates the necessary EditorTabs and Editors for a spec.
      *
-     * @memberof module:modules/widgets/editorarea/EditorArea#
+     * @memberof module:explorer/widgets/editorarea/EditorArea#
      * @param {Object} data - Data of the spec.
      * @param {EditorTabs} editorTabs - Contains each EditorTab of the spec.
      */
@@ -189,7 +189,7 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
     /**
      * Creates an EditorTab of a spec.
      *
-     * @memberof module:modules/widgets/editorarea/EditorArea#
+     * @memberof module:explorer/widgets/editorarea/EditorArea#
      * @param {Object} resource - An object that contains data about a spec's particular resource (e.g. jsResource).
      * @param {EditorTabs} editorTabs - Contains each EditorTab of the spec.
      * @param {Boolean} isActive - Whether or not the tab is the focused tab.
@@ -205,7 +205,7 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
     /**
      * Sets the title of a spec in the Ui.
      *
-     * @memberof module:modules/widgets/editorarea/EditorArea#
+     * @memberof module:explorer/widgets/editorarea/EditorArea#
      * @param {String} title - Title of the spec.
      */
     setTitle : function(title) {
@@ -215,7 +215,7 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
     /**
      * Gets the GadgetSpec object.
      *
-     * @memberof module:modules/widgets/editorarea/EditorArea#
+     * @memberof module:explorer/widgets/editorarea/EditorArea#
      * @returns {Object} The GadgetSpec object.
      */
     getGadgetSpec : function() {
@@ -225,7 +225,7 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
     /**
      * Gets the context root.
      *
-     * @memberof module:modules/widgets/editorarea/EditorArea#
+     * @memberof module:explorer/widgets/editorarea/EditorArea#
      * @returns {String} The context root.
      */
     getContextRoot : function() {
@@ -235,7 +235,7 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
     /**
      * Getter method for EditorTabs.
      *
-     * @memberof module:modules/widgets/editorarea/EditorArea#
+     * @memberof module:explorer/widgets/editorarea/EditorArea#
      * @returns {EditorTabs} The EditorTabs object.
      */
     getEditorTabs : function() {
@@ -245,7 +245,7 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
     /**
      * Getter method for the GadgetSpecService module for testing purposes.
      *
-     * @memberof module:modules/widgets/editorarea/EditorArea#
+     * @memberof module:explorer/widgets/editorarea/EditorArea#
      * @returns {gadgetSpecService} The gadgetSpecService object.
      */
     getGadgetSpecService : function() {
@@ -255,7 +255,7 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
     /**
      * Destroys this instance of EditorArea. For testing purposes.
      *
-     * @memberof module:modules/widgets/editorarea/EditorArea#
+     * @memberof module:explorer/widgets/editorarea/EditorArea#
      */
     destroy : function() {
       this.inherited(arguments);

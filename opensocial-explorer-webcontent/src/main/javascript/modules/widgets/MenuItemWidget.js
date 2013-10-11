@@ -20,7 +20,7 @@
 /**
  * An individual item in the DropDownMenu.
  *
- * @module modules/widgets/MenuItemWidget
+ * @module explorer/widgets/MenuItemWidget
  * @augments dijit/_WidgetBase
  * @augments dijit/_TemplatedMixin
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
@@ -28,7 +28,7 @@
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dojo/text!./../templates/MenuItem.html', 'dojo/dom-construct',
-        'dojo/dom-class', 'modules/widgets/DropDownMenu', 'dojo/on'],
+        'dojo/dom-class', './DropDownMenu', 'dojo/on'],
         function(declare, WidgetBase, TemplatedMixin, template, domConstruct, domClass, DropDownMenu, on) {
   return declare('MenuItemWidget', [ WidgetBase, TemplatedMixin ], {
     templateString : template,
@@ -36,7 +36,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Called right after widget is added to the dom. See link for more information.
      *
-     * @memberof module:modules/widgets/MenuItemWidget#
+     * @memberof module:explorer/widgets/MenuItemWidget#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     startup : function() {
@@ -52,7 +52,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Sets the MenuItem's submenu.
      *
-     * @memberof module:modules/widgets/MenuItemWidget#
+     * @memberof module:explorer/widgets/MenuItemWidget#
      * @param {MenuItemWidget[]} menuItems - The array of MenuItems to add to the submenu.
      * @param {String} opt-direction - The direction the submenu will display when moused over.
      */
@@ -67,7 +67,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Creates the submenu of the MenuItem if it doesn't exist yet and adds it to the dom in the specified direction.
      *
-     * @memberof module:modules/widgets/MenuItemWidget#
+     * @memberof module:explorer/widgets/MenuItemWidget#
      * @param {MenuItemWidget[]} menuItems - The array of MenuItems to add to the submenu.
      * @param {String} opt_direction - The direction the submenu will display when moused over.
      */
@@ -86,7 +86,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Adds a MenuItem to the child DropDownMenu of this MenuItem.
      *
-     * @memberof module:modules/widgets/MenuItemWidget#
+     * @memberof module:explorer/widgets/MenuItemWidget#
      * @param {MenuItemWidget} menuItem - The MenuItem to add.
      * @param {String} opt_direction - The direction the submenu will display when moused over.
      */
@@ -98,7 +98,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Removes a MenuItem from the child DropDownMenu of this MenuItem.
      *
-     * @memberof module:modules/widgets/MenuItemWidget#
+     * @memberof module:explorer/widgets/MenuItemWidget#
      * @param {String} menuName - The name of MenuItem to remove.
      */
     removeSubMenuItem : function(menuName) {
@@ -108,7 +108,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Gets a MenuItem from the child DropDownMenu of this MenuItem.
      *
-     * @memberof module:modules/widgets/MenuItemWidget#
+     * @memberof module:explorer/widgets/MenuItemWidget#
      * @param {String} menuName - The name of MenuItem to retrieve.
      * @returns {MenuItemWidget} The MenuItem that matches the name.
      */

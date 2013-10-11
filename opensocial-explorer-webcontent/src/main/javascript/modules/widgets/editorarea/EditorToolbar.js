@@ -20,7 +20,7 @@
 /**
  * Toolbar for EditorArea that contains a spec's title and render buttons.
  *
- * @module modules/widgets/editorarea/EditorToolbar
+ * @module explorer/widgets/editorarea/EditorToolbar
  * @augments dijit/_WidgetBase
  * @augments dijit/_TemplatedMixin
  * @augments dijit/_WidgetsInTemplateMixin
@@ -42,7 +42,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
     /**
      * Called right before widget is added to the dom. See link for more information.
      *
-     * @memberof module:modules/widgets/editorarea/EditorToolbar#
+     * @memberof module:explorer/widgets/editorarea/EditorToolbar#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     postCreate: function() {
@@ -59,7 +59,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
     /**
      * Sets the innerHTML of the EditorToolbar.
      *
-     * @memberof module:modules/widgets/editorarea/EditorToolbar#
+     * @memberof module:explorer/widgets/editorarea/EditorToolbar#
      * @param {String} title - The title to set.
      */
     setTitle: function(title) {
@@ -69,7 +69,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
     /**
      * Shows the RenderEEButton in the dom.
      *
-     * @memberof module:modules/widgets/editorarea/EditorToolbar#
+     * @memberof module:explorer/widgets/editorarea/EditorToolbar#
      */
     showRenderEEButton: function() {
       domClass.remove(this.renderEEButton, "hide");
@@ -78,7 +78,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
     /**
      * Hides the RenderEEButton in the dom.
      *
-     * @memberof module:modules/widgets/editorarea/EditorToolbar#
+     * @memberof module:explorer/widgets/editorarea/EditorToolbar#
      */
     hideRenderEEButton: function() {
       domClass.add(this.renderEEButton, "hide");
@@ -87,7 +87,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
     /**
      * Shows the RenderGadgetButton in the dom.
      *
-     * @memberof module:modules/widgets/editorarea/EditorToolbar#
+     * @memberof module:explorer/widgets/editorarea/EditorToolbar#
      */
     showRenderGadgetButton: function() {
       domClass.remove(this.renderGadgetButton, "hide");
@@ -96,7 +96,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
     /**
      * Hides the RenderGadgetButton in the dom.
      *
-     * @memberof module:modules/widgets/editorarea/EditorToolbar#
+     * @memberof module:explorer/widgets/editorarea/EditorToolbar#
      */
     hideRenderGadgetButton: function() {
       domClass.add(this.renderGadgetButton, "hide");
@@ -105,7 +105,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
     /**
      * Getter method for the GadgetSpecService module for testing purposes.
      *
-     * @memberof module:modules/widgets/editorarea/EditorToolbar#
+     * @memberof module:explorer/widgets/editorarea/EditorToolbar#
      * @returns {gadgetSpecService} The gadgetSpecService object.
      */
     getGadgetSpecService : function() {

@@ -20,9 +20,9 @@
 /**
  * A drop-down menu that displays MenuItems about a gadget's metadata.
  *
- * @module modules/widgets/gadgetarea/GadgetDropDownMenu
- * @requires module:modules/widgets/MenuItemWidget 
- * @augments module:modules/widgets/DropDownMenu
+ * @module explorer/widgets/gadgetarea/GadgetDropDownMenu
+ * @requires module:explorer/widgets/MenuItemWidget 
+ * @augments module:explorer/widgets/DropDownMenu
  * @augments dijit/_WidgetsInTemplateMixin
  * @augments dojo/Evented
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetsInTemplateMixin.html|WidgetsInTemplateMixin Documentation}
@@ -39,7 +39,7 @@ define(['dojo/_base/lang', 'dojo/_base/declare', '../DropDownMenu', 'dojo/Evente
     /**
      * Called right after widget is added to the dom. See link for more information.
      *
-     * @memberof module:modules/widgets/gadgetarea/GadgetDropDownMenu#
+     * @memberof module:explorer/widgets/gadgetarea/GadgetDropDownMenu#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     startup : function() {
@@ -73,7 +73,7 @@ define(['dojo/_base/lang', 'dojo/_base/declare', '../DropDownMenu', 'dojo/Evente
     /**
      * Adds a gadget's views to a MenuItemWidget in the GadgetDropDownMenu.
      *
-     * @memberof module:modules/widgets/gadgetarea/GadgetDropDownMenu#
+     * @memberof module:explorer/widgets/gadgetarea/GadgetDropDownMenu#
      * @param {Object} views - The views object in the gadget's metadata.
      */
     setViews : function(views) {
@@ -91,7 +91,7 @@ define(['dojo/_base/lang', 'dojo/_base/declare', '../DropDownMenu', 'dojo/Evente
     /**
      * Adds a gadget's actions to a MenuItemWidget in the GadgetDropDownMenu.
      *
-     * @memberof module:modules/widgets/gadgetarea/GadgetDropDownMenu#
+     * @memberof module:explorer/widgets/gadgetarea/GadgetDropDownMenu#
      * @param {Object} action - The action object in the gadget's metadata to add.
      */
     addAction : function(action) {
@@ -113,7 +113,7 @@ define(['dojo/_base/lang', 'dojo/_base/declare', '../DropDownMenu', 'dojo/Evente
     /**
      * Removes a gadget's actions from a MenuItemWidget in the GadgetDropDownMenu.
      *
-     * @memberof module:modules/widgets/gadgetarea/GadgetDropDownMenu#
+     * @memberof module:explorer/widgets/gadgetarea/GadgetDropDownMenu#
      * @param {Object} action - The action object in the gadget's metadata to remove.
      */
     removeAction : function(action) {
@@ -137,7 +137,7 @@ define(['dojo/_base/lang', 'dojo/_base/declare', '../DropDownMenu', 'dojo/Evente
     /**
      * Publishes a gadget's selection given the type.
      *
-     * @memberof module:modules/widgets/gadgetarea/GadgetDropDownMenu#
+     * @memberof module:explorer/widgets/gadgetarea/GadgetDropDownMenu#
      * @param {String} type - The type of the selection.
      */
     publishSelection : function(type) {

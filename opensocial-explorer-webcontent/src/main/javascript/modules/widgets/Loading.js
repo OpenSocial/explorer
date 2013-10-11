@@ -20,7 +20,7 @@
 /**
  * Loading bar used in GadgetArea when a gadget is loading.
  *
- * @module modules/widgets/Loading
+ * @module explorer/widgets/Loading
  * @augments dijit/_WidgetBase
  * @augments dijit/_TemplatedMixin
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
@@ -35,7 +35,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Shows the Loading bar in the dom.
      *
-     * @memberof module:modules/widgets/Loading#
+     * @memberof module:explorer/widgets/Loading#
      */
     show : function() {
       domClass.remove(this.domNode, 'hide');
@@ -44,7 +44,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Hides the Loading bar in the dom.
      *
-     * @memberof module:modules/widgets/Loading#
+     * @memberof module:explorer/widgets/Loading#
      */
     hide : function() {
       domClass.add(this.domNode, 'hide');

@@ -20,8 +20,8 @@
 /**
  * A ControlGroup for the enum option of the PreferencesDialog.
  *
- * @module modules/widgets/controlgroups/EnumControlGroup
- * @augments module:modules/widgets/controlgroups/ControlGroup
+ * @module explorer/widgets/controlgroups/EnumControlGroup
+ * @augments module:explorer/widgets/controlgroups/ControlGroup
  */
 define(['dojo/_base/declare', './ControlGroup',
         'dojo/_base/array', 'dojo/query', 'dojo/dom-construct',
@@ -32,7 +32,7 @@ define(['dojo/_base/declare', './ControlGroup',
     /**
      * Called right before widget is added to the dom. See link for more information.
      *
-     * @memberof module:modules/widgets/controlgroups/EnumControlGroup#
+     * @memberof module:explorer/widgets/controlgroups/EnumControlGroup#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     postCreate : function() {
@@ -57,7 +57,7 @@ define(['dojo/_base/declare', './ControlGroup',
     /**
      * Gets the value of the EnumControlGroup dropdown.
      *
-     * @memberof module:modules/widgets/controlgroups/EnumControlGroup#
+     * @memberof module:explorer/widgets/controlgroups/EnumControlGroup#
      * @return {String} The enumeration selected.
      */
     getValue : function() {
@@ -67,7 +67,7 @@ define(['dojo/_base/declare', './ControlGroup',
     /**
      * Handles the user selection of an option in the dropdown.
      *
-     * @memberof module:modules/widgets/controlgroups/EnumControlGroup#
+     * @memberof module:explorer/widgets/controlgroups/EnumControlGroup#
      * @param {HTMLOptionsCollection} options - The options of the dropdown.
      * @param {String} selected - The option selected.
      */
@@ -86,7 +86,7 @@ define(['dojo/_base/declare', './ControlGroup',
     /**
      * Sets the value of the EnumControlGroup dropdown.
      *
-     * @memberof module:modules/widgets/controlgroups/EnumControlGroup#
+     * @memberof module:explorer/widgets/controlgroups/EnumControlGroup#
      * @param {String} selected - The option selected.
      */
     setValue : function(selected) {

@@ -20,7 +20,7 @@
 /**
  * The modal template widget.
  *
- * @module modules/widgets/ModalDialog
+ * @module explorer/widgets/ModalDialog
  * @augments dijit/_WidgetBase
  * @augments dijit/_TemplatedMixin
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
@@ -37,7 +37,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Called right after widget is added to the dom. See link for more information.
      *
-     * @memberof module:modules/widgets/ModalDialog#
+     * @memberof module:explorer/widgets/ModalDialog#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     startup : function() {
@@ -50,7 +50,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Shows the ModalDialog in the dom.
      *
-     * @memberof module:modules/widgets/ModalDialog#
+     * @memberof module:explorer/widgets/ModalDialog#
      */
     show : function() {
       domClass.remove(this.domNode, 'hide');
@@ -61,7 +61,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Hides the ModalDialog in the dom.
      *
-     * @memberof module:modules/widgets/ModalDialog#
+     * @memberof module:explorer/widgets/ModalDialog#
      */
     hide : function() {
       domClass.add(this.domNode, 'hide');
@@ -72,7 +72,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Sets the header title in the ModalDialog.
      *
-     * @memberof module:modules/widgets/ModalDialog#
+     * @memberof module:explorer/widgets/ModalDialog#
      * @param {String} title - The title to be set.
      */
     setHeaderTitle : function(title) {

@@ -20,8 +20,8 @@
 /**
 * Editor for the css tab of a spec. Inherits from Editor.
 *
-* @module modules/widgets/editorarea/CssEditor
-* @requires module:modules/widgets/editorarea/Editor
+* @module explorer/widgets/editorarea/CssEditor
+* @requires module:explorer/widgets/editorarea/Editor
 */
 define(['dojo/_base/declare', './Editor'],
     function(declare, Editor) {
