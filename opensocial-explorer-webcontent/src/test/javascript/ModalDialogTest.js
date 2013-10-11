@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['modules/widgets/ModalDialog','dojo/query', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'], function(ModalDialog, dojoQuery){
+define(['explorer/widgets/ModalDialog','dojo/query', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'], function(ModalDialog, dojoQuery){
   describe('A ModalDialog widget', function(){
     it("can be hidden", function() {
       var dialog = new ModalDialog();

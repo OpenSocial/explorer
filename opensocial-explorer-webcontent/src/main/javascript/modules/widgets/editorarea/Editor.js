@@ -20,7 +20,7 @@
 /**
  * Displays the code of a particular EditorTab.
  *
- * @module modules/widgets/editorarea/Editor
+ * @module explorer/widgets/editorarea/Editor
  * @augments dijit/_WidgetBase
  * @augments dijit/_TemplatedMixin
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
@@ -36,7 +36,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Called right after widget is added to the dom. See link for more information.
      *
-     * @memberof module:modules/widgets/editorarea/Editor#
+     * @memberof module:explorer/widgets/editorarea/Editor#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     startup : function() {
@@ -61,7 +61,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Shows the Editor.
      *
-     * @memberof module:modules/widgets/editorarea/Editor#
+     * @memberof module:explorer/widgets/editorarea/Editor#
      */
     show : function() {
       domClass.remove(this.domNode, 'hide');
@@ -71,7 +71,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Hides the Editor.
      *
-     * @memberof module:modules/widgets/editorarea/Editor#
+     * @memberof module:explorer/widgets/editorarea/Editor#
      */
     hide : function() {
       domClass.add(this.domNode, 'hide');
@@ -80,7 +80,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Gets the content of the CodeMirror
      *
-     * @memberof module:modules/widgets/editorarea/Editor#
+     * @memberof module:explorer/widgets/editorarea/Editor#
      * @returns {String} Content of CodeMirror
      */
     getContent : function() {
@@ -90,7 +90,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Refreshes the CodeMirror.
      *
-     * @memberof module:modules/widgets/editorarea/Editor#
+     * @memberof module:explorer/widgets/editorarea/Editor#
      */
     refresh : function() {
       this.editor.refresh();

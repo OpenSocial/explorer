@@ -1,7 +1,7 @@
 dojoConfig = {
   packages: [{
-  	name: 'modules',
-  	location: '../../../../src/main/javascript/modules'
+    name: 'explorer',
+    location: '../../../../src/main/javascript/modules'
   }],
   isDebug: false,
   parseOnLoad: true,

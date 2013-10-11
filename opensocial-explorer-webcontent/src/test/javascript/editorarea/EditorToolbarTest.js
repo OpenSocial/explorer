@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['modules/widgets/editorarea/EditorToolbar', 'dojo/query', 'dojo/dom-class',
+define(['explorer/widgets/editorarea/EditorToolbar', 'dojo/query', 'dojo/dom-class',
   'dojo/NodeList-manipulate', 'dojo/NodeList-dom'], function(EditorToolbar, query, domClass){
   describe('An EditorToolbar widget', function() {
     var editorArea;

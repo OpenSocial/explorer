@@ -20,16 +20,16 @@
 /**
  * A modal window that serves as a UI for the Preferences Gadget example.
  *
- * @module modules/widgets/gadgetarea/PreferencesDialog
- * @augments module:modules/widgets/ModalDialog
- * @requires module:modules/widgets/controlgroups/BooleanControlGroup
- * @requires module:modules/widgets/controlgroups/StringControlGroup
- * @requires module:modules/widgets/controlgroups/EnumControlGroup
- * @requires module:modules/widgets/controlgroups/ListControlGroup
+ * @module explorer/widgets/gadgetarea/PreferencesDialog
+ * @augments module:explorer/widgets/ModalDialog
+ * @requires module:explorer/widgets/controlgroups/BooleanControlGroup
+ * @requires module:explorer/widgets/controlgroups/StringControlGroup
+ * @requires module:explorer/widgets/controlgroups/EnumControlGroup
+ * @requires module:explorer/widgets/controlgroups/ListControlGroup
  */
-define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'dojo/dom-construct',
-        'modules/widgets/controlgroups/StringControlGroup', 'modules/widgets/controlgroups/BooleanControlGroup', 
-        'modules/widgets/controlgroups/EnumControlGroup', 'modules/widgets/controlgroups/ListControlGroup', 'dojo/on', 
+define(['dojo/_base/declare',  '../ModalDialog', 'dojo/query', 'dojo/dom-construct',
+        '../controlgroups/StringControlGroup', '../controlgroups/BooleanControlGroup', 
+        '../controlgroups/EnumControlGroup', '../controlgroups/ListControlGroup', 'dojo/on', 
         'dojo/topic', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, ModalDialog, query, domConstruct, StringControlGroup, BooleanControlGroup, EnumControlGroup, 
             ListControlGroup, on, topic) {
@@ -50,7 +50,7 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'doj
     /**
      * Called right before widget is added to the dom. See link for more information.
      *
-     * @memberof module:modules/widgets/gadgetarea/PreferencesDialog#
+     * @memberof module:explorer/widgets/gadgetarea/PreferencesDialog#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     postCreate : function() {
@@ -74,7 +74,7 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'doj
     /**
      * Called right after widget is added to the dom. See link for more information.
      *
-     * @memberof module:modules/widgets/gadgetarea/PreferencesDialog#
+     * @memberof module:explorer/widgets/gadgetarea/PreferencesDialog#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     startup : function() {
@@ -85,7 +85,7 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'doj
     /**
      * Adds the prefs gadget's metadata to the modal.
      *
-     * @memberof module:modules/widgets/gadgetarea/PreferencesDialog#
+     * @memberof module:explorer/widgets/gadgetarea/PreferencesDialog#
      * @params {Object} prefs - The prefs object in a gadget's metadata.
      */
     addPrefsToUI : function(prefs) {
@@ -102,7 +102,7 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'doj
     /**
      * Adds each pref in prefs to the modal.
      *
-     * @memberof module:modules/widgets/gadgetarea/PreferencesDialog#
+     * @memberof module:explorer/widgets/gadgetarea/PreferencesDialog#
      * @params {Object} prefs - The prefs object in a gadget's metadata.
      */
     addPrefToUI : function(pref) {
@@ -127,7 +127,7 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'doj
     /**
      * Adds each pref in prefs to the modal.
      *
-     * @memberof module:modules/widgets/gadgetarea/PreferencesDialog#
+     * @memberof module:explorer/widgets/gadgetarea/PreferencesDialog#
      * @params {Object} prefs - The prefs object in a gadget's metadata.
      */
     notifyPrefsChangedListeners : function() {
@@ -148,7 +148,7 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'doj
     /**
      * Gets the prefs from the control groups.
      *
-     * @memberof module:modules/widgets/gadgetarea/PreferencesDialog#
+     * @memberof module:explorer/widgets/gadgetarea/PreferencesDialog#
      * @returns {Object} The prefs object assembled from the control groups.
      */
     getPrefs : function() {
@@ -164,7 +164,7 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'doj
     /**
      * Checks whether the prefs' fields are valid (has values).
      *
-     * @memberof module:modules/widgets/gadgetarea/PreferencesDialog#
+     * @memberof module:explorer/widgets/gadgetarea/PreferencesDialog#
      * @returns {Boolean} Whether or not the fields are valid.
      */
     isValid : function() {
@@ -175,7 +175,7 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'doj
     /**
      * Adds a listener function to the instance variable prefsChangedListeners.
      *
-     * @memberof module:modules/widgets/gadgetarea/PreferencesDialog#
+     * @memberof module:explorer/widgets/gadgetarea/PreferencesDialog#
      * @param {Function} listener - A callback function that updates the prefs and rerenders the gadget.
      */
     addPrefsChangedListener : function(listener) {
@@ -185,7 +185,7 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'doj
     /**
      * Sets each control group that exists in a spec's prefs.
      *
-     * @memberof module:modules/widgets/gadgetarea/PreferencesDialog#
+     * @memberof module:explorer/widgets/gadgetarea/PreferencesDialog#
      * @param {Object} prefs - The prefs object in a gadget's metadata.
      */
     setPrefs : function(prefs) {
@@ -202,7 +202,7 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'doj
     /**
      * Destroys the PreferencesDialog.
      *
-     * @memberof module:modules/widgets/gadgetarea/PreferencesDialog#
+     * @memberof module:explorer/widgets/gadgetarea/PreferencesDialog#
      */
     destroy : function() {
       this.showHandle.remove();

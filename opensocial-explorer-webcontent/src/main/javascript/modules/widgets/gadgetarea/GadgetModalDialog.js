@@ -20,17 +20,17 @@
 /**
  * A modal window that displays the results of the open-views gadget example.
  *
- * @module modules/widgets/gadgetarea/GadgetModalDialog
- * @augments module:modules/widgets/ModalDialog
+ * @module explorer/widgets/gadgetarea/GadgetModalDialog
+ * @augments module:explorer/widgets/ModalDialog
  */
-define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'dojo/dom-class', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
+define(['dojo/_base/declare',  '../ModalDialog', 'dojo/query', 'dojo/dom-class', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, ModalDialog, query, domClass) {
   return declare('GadgetModalDialogWidget', [ ModalDialog ], {
 
     /**
      * Called right before widget is added to the dom. See link for more information.
      *
-     * @memberof module:modules/widgets/gadgetarea/GadgetModalDialog#
+     * @memberof module:explorer/widgets/gadgetarea/GadgetModalDialog#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     postCreate : function() {
@@ -46,7 +46,7 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'doj
     /**
      * Called right after widget is added to the dom. See link for more information.
      *
-     * @memberof module:modules/widgets/gadgetarea/GadgetModalDialog#
+     * @memberof module:explorer/widgets/gadgetarea/GadgetModalDialog#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     startup : function() {
@@ -57,7 +57,7 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'doj
     /**
      * Gets the domNode of the gadget that is rendered in the iframe of the GadgetModalDialog.
      *
-     * @memberof module:modules/widgets/gadgetarea/GadgetModalDialog#
+     * @memberof module:explorer/widgets/gadgetarea/GadgetModalDialog#
      * @return {Object} The domNode of the gadget.
      */
     getGadgetNode : function() {
@@ -67,7 +67,7 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dojo/query', 'doj
     /**
      * Removes the modal when the user exits out of it.
      *
-     * @memberof module:modules/widgets/gadgetarea/GadgetModalDialog#
+     * @memberof module:explorer/widgets/gadgetarea/GadgetModalDialog#
      * @param {Object} opt_site
      */
     hide : function(opt_site) {

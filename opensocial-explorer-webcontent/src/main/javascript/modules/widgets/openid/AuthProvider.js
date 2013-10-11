@@ -20,7 +20,7 @@
 /**
  * Responsible for handling the OpenIDLoginDialog and the security token of OpenID.
  *
- * @module modules/widgets/openid/AuthProvider
+ * @module explorer/widgets/openid/AuthProvider
  * @augments dijit/_WidgetBase
  * @augments dijit/_TemplatedMixin
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
@@ -29,7 +29,7 @@
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dojo/query', 'dojo/text!./../../templates/AuthProvider.html',
         'dojo/dom', 'dojo/dom-class', 'dojo/_base/lang', 'dojo/on',
-        'dojo/request/xhr', 'modules/widgets/gadgetarea/GadgetArea',
+        'dojo/request/xhr', '../gadgetarea/GadgetArea',
         'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, WidgetBase, TemplatedMixin, query, template, dom, domClass, lang, on, xhr, GadgetArea) {
   return declare('AuthProvider', [ WidgetBase, TemplatedMixin ], {
@@ -38,7 +38,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Called right after widget is added to the dom. See link for more information.
      *
-     * @memberof module:modules/widgets/openid/AuthProvider#
+     * @memberof module:explorer/widgets/openid/AuthProvider#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     startup : function() {
@@ -52,7 +52,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Starts the OpenID popup process.
      *
-     * @memberof module:modules/widgets/openid/AuthProvider#
+     * @memberof module:explorer/widgets/openid/AuthProvider#
      * @param discoveryUrl
      */
     popup : function(discoveryUrl) {
@@ -88,7 +88,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Open the popup and set the security token.
      *
-     * @memberof module:modules/widgets/openid/AuthProvider#
+     * @memberof module:explorer/widgets/openid/AuthProvider#
      * @param fGetPopup
      */
     openPopup : function(fGetPopup) {
@@ -102,10 +102,10 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Close the OAuth popup, update the security token and indicate the user is logged in.
      *
-     * @memberof module:modules/widgets/openid/AuthProvider#
+     * @memberof module:explorer/widgets/openid/AuthProvider#
      */
     closePopup : function() {
-      require(['modules/widgets/openid/OpenIDLoginDialog'], function(OpenIDLoginDialog) {
+      require(['explorer/widgets/openid/OpenIDLoginDialog'], function(OpenIDLoginDialog) {
         OpenIDLoginDialog.getInstance().hide();
       });
       GadgetArea.getInstance().updateContainerSecurityToken(this.securityToken, this.securityTokenTTL);

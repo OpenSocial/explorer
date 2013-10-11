@@ -20,7 +20,7 @@
 /**
  * Container widget to delegate cross module method calls.
  *
- * @module modules/widgets/MainContainer
+ * @module explorer/widgets/MainContainer
  * @augments dijit/_WidgetBase
  * @augments dijit/_TemplatedMixin
  * @augments dijit/_WidgetsInTemplateMixin
@@ -37,7 +37,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
     /**
      * Called right before widget is added to the dom. See link for more information.
      *
-     * @memberof module:modules/widgets/MainContainer#
+     * @memberof module:explorer/widgets/MainContainer#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     postCreate: function() {
