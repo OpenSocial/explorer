@@ -137,14 +137,13 @@ public class OpenIDServlet extends ExplorerInjectedServlet {
       String content = obj.toString();
       resp.setContentType(HTML_CONTENT_TYPE);
 
-      // FIXME: Write some code to automatically close the popup and provide a link for the user to close it.
       writer = resp.getWriter();
       writer.print(
           "<html>" +
               "<head>" +
                 "<script type='text/javascript'>" +
                   "var evt = document.createEvent('Event');" +
-                  "evt.initEvent('myEvent', true, true);" +
+                  "evt.initEvent('returnSecurityToken', true, true);" +
                   "document.responseObj = " + content + ";" +
                   "window.opener.document.dispatchEvent(evt);" +
                 "</script>" +

@@ -70,7 +70,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
      */
     onPopupOpen: function() {
       var self = this;
-      document.addEventListener("myEvent", function(obj) {
+      document.addEventListener("returnSecurityToken", function(obj) {
         var responseObj = self.popup.win_.document.responseObj;
         self.securityToken = responseObj.securityToken;
         self.securityTokenTTL = responseObj.securityTokenTTL;

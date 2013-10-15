@@ -28,8 +28,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.http.HttpResponse;
 import org.apache.shindig.common.servlet.InjectedServlet;
+import org.apache.shindig.gadgets.http.HttpResponse;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
 
@@ -69,8 +69,8 @@ public abstract class ExplorerInjectedServlet extends InjectedServlet {
     return Iterables.toArray(splitPath, String.class);
   }
 
-  protected JSONObject parseResponseToJson(HttpResponse response) throws JSONException, UnsupportedEncodingException, IllegalStateException, IOException {
-    BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
+  protected JSONObject parseResponseToJson(HttpResponse response) throws JSONException, IllegalStateException, IOException {
+    BufferedReader reader = new BufferedReader(new InputStreamReader(response.getResponse(), "UTF-8"));
     StringBuilder builder = new StringBuilder();
     for (String line = null; (line = reader.readLine()) != null;) {
         builder.append(line).append("\n");
@@ -81,7 +81,7 @@ public abstract class ExplorerInjectedServlet extends InjectedServlet {
   
 
   protected String parseResponseToString(HttpResponse response) throws IOException {
-    BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
+    BufferedReader reader = new BufferedReader(new InputStreamReader(response.getResponse(), "UTF-8"));
     StringBuilder builder = new StringBuilder();
     for (String line = null; (line = reader.readLine()) != null;) {
         builder.append(line);
@@ -97,6 +97,9 @@ public abstract class ExplorerInjectedServlet extends InjectedServlet {
     String[] pairs = query.split("&");
     for (String pair : pairs) {
       int index = pair.indexOf("=");
+      if(index == -1) {
+        throw new UnsupportedEncodingException();
+      }
       query_pairs.put(URLDecoder.decode(pair.substring(0, index), "UTF-8"), URLDecoder.decode(pair.substring(index + 1), "UTF-8"));
     }
     return query_pairs;
