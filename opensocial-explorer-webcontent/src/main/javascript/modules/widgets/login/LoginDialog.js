@@ -58,7 +58,7 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dijit/_WidgetsInT
       
       if(!this.providers) {
         var self = this;
-        openIdService.getProviders({
+        self.getOpenIdServiceProviders().getProviders({
           success : function(data) {
             self.providers = data;
             for(var key in data) {
@@ -101,6 +101,16 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dijit/_WidgetsInT
       }
       
       this.inherited(arguments);
+    },
+    
+    /**
+     * Getter method for the GadgetSpecService module for testing purposes.
+     *
+     * @memberof module:modules/widgets/login/LoginDialog#
+     * @returns {openIdService} The openIdService object.
+     */
+    getOpenIdServiceProviders: function() {
+      return openIdService;
     }
   });           
 });
