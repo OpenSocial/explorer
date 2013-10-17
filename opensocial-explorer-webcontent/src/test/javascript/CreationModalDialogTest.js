@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['modules/widgets/sidebar/CreationModalDialog', 'modules/widgets/sidebar/SidebarNav',
+define(['explorer/widgets/sidebar/CreationModalDialog', 'explorer/widgets/sidebar/SidebarNav',
         'dojo/query', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'], 
     function(CreationModalDialog, SidebarNav, query){
   describe('A CreationModalDialog widget', function(){

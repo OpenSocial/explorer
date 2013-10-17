@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['modules/widgets/editorarea/EditorArea'], function(EditorArea){
+define(['explorer/widgets/editorarea/EditorArea'], function(EditorArea){
   describe('An EditorArea widget', function() {
     beforeEach(function() {
       var div = document.createElement("div");

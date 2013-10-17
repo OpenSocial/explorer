@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['modules/widgets/DropDownMenu', 'modules/widgets/MenuItemWidget'], function(DropDownMenu, MenuItemWidget){
+define(['explorer/widgets/DropDownMenu', 'explorer/widgets/MenuItemWidget'], function(DropDownMenu, MenuItemWidget){
   describe('A DropDownMenu widget', function() {
     it("can add a menu item", function() {
       var dropDownMenu = new DropDownMenu();

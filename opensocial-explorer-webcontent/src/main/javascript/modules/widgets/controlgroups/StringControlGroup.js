@@ -20,10 +20,10 @@
 /**
  * A ControlGroup for the string option of the PreferencesDialog.
  *
- * @module modules/widgets/controlgroups/StringControlGroup
- * @augments module:modules/widgets/controlgroups/ControlGroup
+ * @module explorer/widgets/controlgroups/StringControlGroup
+ * @augments module:explorer/widgets/controlgroups/ControlGroup
  */
-define(['dojo/_base/declare', 'modules/widgets/controlgroups/ControlGroup',
+define(['dojo/_base/declare', './ControlGroup',
         'dojo/query', 'dojo/dom-construct', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, ControlGroup, query, domConstruct, domClass) {
   return declare('StringControlGroupWidget', [ ControlGroup ], {
@@ -31,7 +31,7 @@ define(['dojo/_base/declare', 'modules/widgets/controlgroups/ControlGroup',
     /**
      * Called right before widget is added to the dom. See link for more information.
      *
-     * @memberof module:modules/widgets/controlgroups/StringControlGroup#
+     * @memberof module:explorer/widgets/controlgroups/StringControlGroup#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     postCreate : function() {
@@ -42,7 +42,7 @@ define(['dojo/_base/declare', 'modules/widgets/controlgroups/ControlGroup',
     /**
      * Gets the value of the StringControlGroup inputbox.
      *
-     * @memberof module:modules/widgets/controlgroups/StringControlGroup#
+     * @memberof module:explorer/widgets/controlgroups/StringControlGroup#
      * @return {String} The value of the inputbox.
      */
     getValue : function() {
@@ -52,7 +52,7 @@ define(['dojo/_base/declare', 'modules/widgets/controlgroups/ControlGroup',
     /**
      * Sets the value of the StringControlGroup inputbox.
      *
-     * @memberof module:modules/widgets/controlgroups/StringControlGroup#
+     * @memberof module:explorer/widgets/controlgroups/StringControlGroup#
      * @param {String} The value to set.
      */
     setValue : function(value) {

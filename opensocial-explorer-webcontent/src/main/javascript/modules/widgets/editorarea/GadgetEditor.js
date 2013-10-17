@@ -20,10 +20,10 @@
 /**
  * Editor for the gadget tab of a spec. Inherits from Editor.
  *
- * @module modules/widgets/editorarea/GadgetEditor
- * @requires module:modules/widgets/editorarea/Editor
+ * @module explorer/widgets/editorarea/GadgetEditor
+ * @requires module:explorer/widgets/editorarea/Editor
  */
-define(['dojo/_base/declare', 'modules/widgets/editorarea/Editor'],
+define(['dojo/_base/declare', './Editor'],
     function(declare, Editor, template) {
   return declare('GadgetEditorWidget', [ Editor ], {
     mode : 'application/xml'

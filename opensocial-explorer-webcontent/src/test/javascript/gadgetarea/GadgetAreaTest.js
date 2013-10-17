@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['modules/widgets/gadgetarea/GadgetArea', 'dojo/_base/declare', 'dojo/Evented', 'dojo/dom-class', 'dojo/query',
+define(['explorer/widgets/gadgetarea/GadgetArea', 'dojo/_base/declare', 'dojo/Evented', 'dojo/dom-class', 'dojo/query',
         'dojo/topic'], 
         function(GadgetArea, declare, Evented, domClass, query, topic){
   describe('An GadgetArea widget', function() {

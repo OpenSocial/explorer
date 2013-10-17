@@ -20,7 +20,7 @@
 /**
  * Toolbar for GadgetArea that contains a gadget's title and the GadgetMenuButton.
  *
- * @module modules/widgets/gadgetarea/GadgetToolbar
+ * @module explorer/widgets/gadgetarea/GadgetToolbar
  * @augments dijit/_WidgetBase
  * @augments dijit/_TemplatedMixin
  * @augments dijit/_WidgetsInTemplateMixin
@@ -30,7 +30,7 @@
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dojo/query', 'dojo/text!./../../templates/GadgetToolbar.html',
-        'modules/widgets/gadgetarea/GadgetMenuButton', 'modules/widgets/gadgetarea/PreferencesDialog', 
+        './GadgetMenuButton', './PreferencesDialog', 
         'dojo/dom-construct', 'dijit/_WidgetsInTemplateMixin', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, WidgetBase, TemplatedMixin, query, template, GadgetMenuButton, PreferencesDialog, domConstruct,
             WidgetsInTemplateMixin) {
@@ -40,7 +40,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Gets the title of the gadget.
      *
-     * @memberof module:modules/widgets/gadgetarea/GadgetToolbar#
+     * @memberof module:explorer/widgets/gadgetarea/GadgetToolbar#
      * @param {Object} metadata - Object with the gadget's metadata.
      */
     getTitle : function(metadata) {
@@ -57,7 +57,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
      * Takes the gadget's metadata and sets the GadgetToolbar's title, constructs the GadgetDropDownMenu, 
      * and adds the gadget's preferences to the PreferencesDialog.
      * 
-     * @memberof module:modules/widgets/gadgetarea/GadgetToolbar#
+     * @memberof module:explorer/widgets/gadgetarea/GadgetToolbar#
      * @param {Object} metadata - Object with the gadget's metadata.
      */
     setGadgetMetadata : function(metadata) {
@@ -69,7 +69,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Getter method for the PreferencesDialog.
      * 
-     * @memberof module:modules/widgets/gadgetarea/GadgetToolbar#
+     * @memberof module:explorer/widgets/gadgetarea/GadgetToolbar#
      * @returns {PreferencesDialog} - The PreferencesDialog object.
      */
     getPrefDialog : function() {
@@ -79,7 +79,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Adds an action by handing it off to the GadgetDropDownMenu.
      * 
-     * @memberof module:modules/widgets/gadgetarea/GadgetToolbar#
+     * @memberof module:explorer/widgets/gadgetarea/GadgetToolbar#
      * @params {Object} action - The action object in a gadget's metadata.
      */
     addAction : function(action) {
@@ -90,7 +90,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Removes an action by handing it off to the GadgetDropDownMenu.
      * 
-     * @memberof module:modules/widgets/gadgetarea/GadgetToolbar#
+     * @memberof module:explorer/widgets/gadgetarea/GadgetToolbar#
      * @params {Object} action - The action object in a gadget's metadata.
      */
     removeAction : function(action) {

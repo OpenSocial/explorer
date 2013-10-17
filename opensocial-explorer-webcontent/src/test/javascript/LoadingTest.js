@@ -17,7 +17,7 @@
  * under the License.
  */
 
-define(['modules/widgets/Loading'], function(Loading){
+define(['explorer/widgets/Loading'], function(Loading){
   describe("A Loading widget", function() {
     it("can be shown", function() {
       var loading = new Loading();

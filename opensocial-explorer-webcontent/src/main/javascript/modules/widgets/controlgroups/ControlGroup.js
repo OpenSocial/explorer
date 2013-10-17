@@ -20,7 +20,7 @@
 /**
  * A ControlGroup template for features of the PreferencesDialog.
  *
- * @module modules/widgets/controlgroups/ControlGroup
+ * @module explorer/widgets/controlgroups/ControlGroup
  * @augments dijit/_WidgetBase
  * @augments dijit/_TemplatedMixin
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
@@ -35,7 +35,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Sets the label of the ControlGroup.
      * 
-     * @memberof module:modules/widgets/controlgroups/ControlGroup#
+     * @memberof module:explorer/widgets/controlgroups/ControlGroup#
      * @param {String} name - The name to set.
      */
     setLabel : function(name) {
@@ -46,7 +46,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
      * Gets the value of the ControlGroup. This method must be overridden.
      * 
      * @abstract
-     * @memberof module:modules/widgets/controlgroups/ControlGroup#
+     * @memberof module:explorer/widgets/controlgroups/ControlGroup#
      */
     getValue : function() {
 
@@ -57,7 +57,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
      * 
      * @abstract
      * @param {String} value - The value to set.
-     * @memberof module:modules/widgets/controlgroups/ControlGroup#
+     * @memberof module:explorer/widgets/controlgroups/ControlGroup#
      */
     setValue : function(value) {
 
