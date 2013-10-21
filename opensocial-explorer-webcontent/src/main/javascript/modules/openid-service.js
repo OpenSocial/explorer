@@ -21,14 +21,14 @@
 *
 * Handles all xhr calls between client and servlet side for OpenID.
 *
-* @module modules/openid-service
+* @module explorer/openid-service
 */
 define(['dojo/request/xhr', 'dojo/json'], function(xhr, json) {
   return {
     /**
      * Gets the OpenID providers.
      *
-     * @memberof module:modules/openid-service
+     * @memberof module:explorer/openid-service
      * @param {Object} callbacks - Object with a success and an error function.
      * @param {Function} callbacks.success - Fired if xhr was successful.
      * @param {Function} callbacks.error - Fired if xhr was not successful.

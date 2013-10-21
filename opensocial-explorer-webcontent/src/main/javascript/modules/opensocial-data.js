@@ -20,7 +20,7 @@
 /**
 * Contains the sample OpenSocial data used in the Explorer.
 *
-* @module modules/opensocial-data
+* @module explorer/opensocial-data
 */
 define(['dojo/_base/declare'], function(declare) {
   var person = {
@@ -46,7 +46,7 @@ define(['dojo/_base/declare'], function(declare) {
     /**
      * Gets the default gadget spec's data.
      *
-     * @memberof module:modules/opensocial-data
+     * @memberof module:explorer/opensocial-data
      * @param {String} type - Object with a success and an error function.
      * @returns {Object} The OpenSocial sample json matching the type.
      */

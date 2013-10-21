@@ -19,8 +19,9 @@
 /**
  * Main JS file the OpenSocial Explorer.
  */
-require(['modules/widgets/editorarea/EditorArea', 'modules/widgets/gadgetarea/GadgetArea', 'modules/widgets/sidebar/SidebarNav', 
-         'modules/widgets/login/LoginDialog', 'dojo/query', 'dojo/dom-class', 'dojo/_base/event', 'dojo/ready',
+require(['explorer/widgets/editorarea/EditorArea', 'explorer/widgets/gadgetarea/GadgetArea', 'explorer/widgets/sidebar/SidebarNav', 
+         'explorer/widgets/login/LoginDialog', 'dojo/query', 'dojo/dom-class', 'dojo/_base/event', 'dojo/ready',
+
          'dojo/NodeList-manipulate', 'dojo/NodeList-dom', 'dojo/NodeList-traverse'], 
          function(EditorArea, GadgetArea, SidebarNav, LoginDialog, query, domClass, event, ready) {
   /*

@@ -20,10 +20,10 @@
 /**
  * A ControlGroup for the boolean option of the PreferencesDialog.
  *
- * @module modules/widgets/controlgroups/BooleanControlGroup
- * @augments module:modules/widgets/controlgroups/ControlGroup
+ * @module explorer/widgets/controlgroups/BooleanControlGroup
+ * @augments module:explorer/widgets/controlgroups/ControlGroup
  */
-define(['dojo/_base/declare', 'modules/widgets/controlgroups/ControlGroup', 'dojo/query', 'dojo/dom-construct',
+define(['dojo/_base/declare', './ControlGroup', 'dojo/query', 'dojo/dom-construct',
         'dojo/dom-attr', 'dojo/on', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, ControlGroup, query, domConstruct, domAttr, on) {
   return declare('BooleanControlGroupWidget', [ ControlGroup ], {
@@ -34,7 +34,7 @@ define(['dojo/_base/declare', 'modules/widgets/controlgroups/ControlGroup', 'doj
     /**
      * Called right before widget is added to the dom. See link for more information.
      *
-     * @memberof module:modules/widgets/controlgroups/BooleanControlGroup#
+     * @memberof module:explorer/widgets/controlgroups/BooleanControlGroup#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     postCreate : function() {
@@ -55,7 +55,7 @@ define(['dojo/_base/declare', 'modules/widgets/controlgroups/ControlGroup', 'doj
     /**
      * Gets the state of the BooleanControlGroup checkbox.
      *
-     * @memberof module:modules/widgets/controlgroups/BooleanControlGroup#
+     * @memberof module:explorer/widgets/controlgroups/BooleanControlGroup#
      * @return {Boolean} Whether or not the checkbox is checked.
      */
     getValue : function() {
@@ -65,7 +65,7 @@ define(['dojo/_base/declare', 'modules/widgets/controlgroups/ControlGroup', 'doj
     /**
      * Sets the state of the BooleanControlGroup checkbox.
      *
-     * @memberof module:modules/widgets/controlgroups/BooleanControlGroup#
+     * @memberof module:explorer/widgets/controlgroups/BooleanControlGroup#
      * @param {Boolean} checked - Whether or not the checkbox should be checked.
      */
     setValue : function(checked) {

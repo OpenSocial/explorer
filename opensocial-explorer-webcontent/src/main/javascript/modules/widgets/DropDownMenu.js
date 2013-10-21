@@ -20,7 +20,7 @@
 /**
  * A drop-down menu that displays MenuItems.
  *
- * @module modules/widgets/DropDownMenu
+ * @module explorer/widgets/DropDownMenu
  * @augments dijit/_WidgetBase
  * @augments dijit/_TemplatedMixin
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
@@ -39,7 +39,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Adds a MenuItem to the menu.
      *
-     * @memberof module:modules/widgets/DropDownMenu#
+     * @memberof module:explorer/widgets/DropDownMenu#
      * @param {MenuItemWidget} menuItem - The MenuItem to add.
      */
     addMenuItem : function(menuItem) {
@@ -51,7 +51,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Clears all existing MenuItems in the menuItems array.
      *
-     * @memberof module:modules/widgets/DropDownMenu#
+     * @memberof module:explorer/widgets/DropDownMenu#
      */
     clearMenuItems : function() {
       for(var i = 0; i < this.menuItems.length; i++) {
@@ -63,7 +63,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Removes a MenuItem from the menuItems array.
      *
-     * @memberof module:modules/widgets/DropDownMenu#
+     * @memberof module:explorer/widgets/DropDownMenu#
      * @param {String} menuName - The name of MenuItem to remove.
      */
     removeMenuItem : function(menuName) {
@@ -86,7 +86,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Gets a MenuItem from the menuItems array.
      *
-     * @memberof module:modules/widgets/DropDownMenu#
+     * @memberof module:explorer/widgets/DropDownMenu#
      * @param {String} menuName - The name of MenuItem to retrieve.
      * @returns {MenuItemWidget} The MenuItem that matches the name.
      */

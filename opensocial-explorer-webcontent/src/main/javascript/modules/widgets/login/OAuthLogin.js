@@ -21,7 +21,7 @@
  * Handles the OAuth login process via a popup. Multiple instances of this module are created
  * in the LoginDialog for each individual login option.
  *
- * @module modules/widgets/login/OAuthLogin
+ * @module explorer/widgets/login/OAuthLogin
  * @augments dijit/_WidgetBase
  * @augments dijit/_TemplatedMixin
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
@@ -38,7 +38,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
     /**
      * Called right after widget is added to the dom. See link for more information.
      *
-     * @memberof module:modules/widgets/login/OAuthLogin#
+     * @memberof module:explorer/widgets/login/OAuthLogin#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     startup : function() {
@@ -52,7 +52,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
     /**
      * Creates and opens the popup for user authentication.
      *
-     * @memberof module:modules/widgets/login/OAuthLogin#
+     * @memberof module:explorer/widgets/login/OAuthLogin#
      */
     togglePopup : function() {
       var self = this,
@@ -68,7 +68,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
     /**
      * The method that is called when the security token event listener is triggered.
      *
-     * @memberof module:modules/widgets/login/OAuthLogin#
+     * @memberof module:explorer/widgets/login/OAuthLogin#
      */
     onSecurityTokenListener : function() {
       var responseObj = this.popup.win_.document.responseObj;
@@ -82,7 +82,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
     /**
      * Handler for when the popup window opens.
      *
-     * @memberof module:modules/widgets/login/OAuthLogin#
+     * @memberof module:explorer/widgets/login/OAuthLogin#
      */
     onPopupOpen: function() {
       this.onSecurityTokenListener = lang.hitch(this, this.onSecurityTokenListener);
@@ -92,7 +92,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
     /**
      * Handler for when the popup window closes.
      *
-     * @memberof module:modules/widgets/login/OAuthLogin#
+     * @memberof module:explorer/widgets/login/OAuthLogin#
      */
     onPopupClose: function() {
       document.removeEventListener("returnSecurityToken", this.onSecurityTokenListener);

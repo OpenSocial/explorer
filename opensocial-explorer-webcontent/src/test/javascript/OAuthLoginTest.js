@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['modules/widgets/login/OAuthLogin', 'dojo/query', 'dojo/topic',
+define(['explorer/widgets/login/OAuthLogin', 'dojo/query', 'dojo/topic',
         'dojo/NodeList-manipulate', 'dojo/NodeList-dom'], 
     function(OAuthLogin, query, topic){
   describe('An OAuthLogin widget', function(){

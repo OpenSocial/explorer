@@ -20,7 +20,7 @@
 /**
  * A Clickable tab representing a particular resource of a spec.
  *
- * @module modules/widgets/editorarea/EditorTab
+ * @module explorer/widgets/editorarea/EditorTab
  * @augments dijit/_WidgetBase
  * @augments dijit/_TemplatedMixin
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
@@ -42,7 +42,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Called right before widget is added to the dom. See link for more information.
      *
-     * @memberof module:modules/widgets/editorarea/EditorTab#
+     * @memberof module:explorer/widgets/editorarea/EditorTab#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     postCreate : function() {
@@ -61,7 +61,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Activation handler for when the tab is clicked. Shows the code for the particular tab.
      *
-     * @memberof module:modules/widgets/editorarea/EditorTab#
+     * @memberof module:explorer/widgets/editorarea/EditorTab#
      */
     activate : function() {
       domClass.add(this.domNode, 'active');
@@ -71,7 +71,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Deactivation handler for when a different tab is clicked. Hides the code for the particular tab.
      *
-     * @memberof module:modules/widgets/editorarea/EditorTab#
+     * @memberof module:explorer/widgets/editorarea/EditorTab#
      */
     deactivate : function() {
       domClass.remove(this.domNode, 'active');
@@ -81,7 +81,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Adds a listener function to the instance variable preActivationListeners.
      *
-     * @memberof module:modules/widgets/editorarea/EditorTab#
+     * @memberof module:explorer/widgets/editorarea/EditorTab#
      * @param {Function} listener - A callback function that deactivates all other tabs when this tab is clicked.
      */
     addPreActivationListener : function(listener) {
@@ -91,7 +91,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Destroys this instance of EditorTab. For testing purposes.
      *
-     * @memberof module:modules/widgets/editorarea/EditorTab#
+     * @memberof module:explorer/widgets/editorarea/EditorTab#
      */
     destroy : function() {
       this.editor.destroy();
@@ -101,7 +101,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Gets the spec's resource for this particular tab.
      *
-     * @memberof module:modules/widgets/editorarea/EditorTab#
+     * @memberof module:explorer/widgets/editorarea/EditorTab#
      * @returns {Object} Object containing the content and name of the tab's resource.
      */
     getResource : function() {
@@ -114,7 +114,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Getter method for the editor.
      *
-     * @memberof module:modules/widgets/editorarea/EditorTab#
+     * @memberof module:explorer/widgets/editorarea/EditorTab#
      * @returns {Editor} The editor corresponding to the tab.
      */
     getEditor : function() {

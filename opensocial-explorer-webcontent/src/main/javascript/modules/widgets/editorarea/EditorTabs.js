@@ -20,12 +20,12 @@
 /**
  * Contains all the tabs of a spec's resources.
  *
- * @module modules/widgets/editorarea/EditorTabs
- * @requires module:modules/widgets/editorarea/GadgetEditor
- * @requires module:modules/widgets/editorarea/HtmlEditor
- * @requires module:modules/widgets/editorarea/CssEditor
- * @requires module:modules/widgets/editorarea/JSEditor
- * @requires module:modules/widgets/editorarea/JSONEditor
+ * @module explorer/widgets/editorarea/EditorTabs
+ * @requires module:explorer/widgets/editorarea/GadgetEditor
+ * @requires module:explorer/widgets/editorarea/HtmlEditor
+ * @requires module:explorer/widgets/editorarea/CssEditor
+ * @requires module:explorer/widgets/editorarea/JSEditor
+ * @requires module:explorer/widgets/editorarea/JSONEditor
  * @augments dijit/_WidgetBase
  * @augments dijit/_TemplatedMixin
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
@@ -33,8 +33,8 @@
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dojo/_base/array', 'dojo/text!./../../templates/EditorTabs.html',
-        'dojo/dom-construct', 'modules/widgets/editorarea/CssEditor', 'modules/widgets/editorarea/GadgetEditor', 'modules/widgets/editorarea/HtmlEditor', 'modules/widgets/editorarea/JSEditor',
-        'modules/widgets/editorarea/JSONEditor', 'dojo/query'],
+        'dojo/dom-construct', './CssEditor', './GadgetEditor', './HtmlEditor', './JSEditor',
+        './JSONEditor', 'dojo/query'],
         function(declare, WidgetBase, TemplatedMixin,
             arrayUtil, template, domConstruct, CssEditor, GadgetEditor, HtmlEditor, JSEditor, JSONEditor, query) {
   return declare('EditorTabsWidget', [ WidgetBase, TemplatedMixin ], {
@@ -47,7 +47,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Adds a tab to the dom. Also adds a activation listener to the tab.
      *
-     * @memberof module:modules/widgets/editorarea/EditorTabs#
+     * @memberof module:explorer/widgets/editorarea/EditorTabs#
      * @param {EditorTab} tab - The EditorTab to add.
      */
     addTab : function(tab) {
@@ -60,7 +60,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * A callback function that returns a function that deactivates all tabs in EditorTabs.
      *
-     * @memberof module:modules/widgets/editorarea/EditorTabs#
+     * @memberof module:explorer/widgets/editorarea/EditorTabs#
      * @returns {Function} Deactivates all the tabs in EditorTabs.
      */
     tabActivated : function() {
@@ -75,7 +75,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Destroys each EditorTab and resets the tabs array.
      *
-     * @memberof module:modules/widgets/editorarea/EditorTabs#
+     * @memberof module:explorer/widgets/editorarea/EditorTabs#
      */
     removeAllTabs : function() {
       for(var i = 0; i < this.tabs.length; i++) {
@@ -87,7 +87,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Gets a spec's title and resources as a JSON.
      *
-     * @memberof module:modules/widgets/editorarea/EditorTabs#
+     * @memberof module:explorer/widgets/editorarea/EditorTabs#
      * @returns {Object} The gadgetspec's data.
      */
     getGadgetSpec : function() {
@@ -120,7 +120,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Refreshes each EditorTab.
      *
-     * @memberof module:modules/widgets/editorarea/EditorTabs#
+     * @memberof module:explorer/widgets/editorarea/EditorTabs#
      */
     refreshEditors : function() {
       arrayUtil.forEach(this.tabs, function(tab) {

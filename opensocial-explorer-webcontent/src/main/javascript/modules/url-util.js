@@ -20,7 +20,7 @@
 /**
 * Utility module for parsing URLs.
 *
-* @module modules/url-util
+* @module explorer/url-util
 */
 define([], function() {
   return {
@@ -28,13 +28,13 @@ define([], function() {
      * Gets the context root of where the OpenSocial Explorer is running.
      * This may not be the same context root of the container page.
      * 
-     * @memberof module:modules/url-util
+     * @memberof module:explorer/url-util
      * @returns {String} The context root.
      */
     getContextRoot : function() {
-      var modulePath = require.toUrl('modules');
+      var modulePath = require.toUrl('explorer');
       var pathArray = modulePath.split('/');
-      //modules is at js/modules so we need to pop 2 paths off the array
+      //explorer is at js/explorer so we need to pop 2 paths off the array
       pathArray.pop();
       pathArray.pop();
       return pathArray.join('/');
