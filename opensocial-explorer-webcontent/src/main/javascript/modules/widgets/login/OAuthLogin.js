@@ -43,6 +43,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
      */
     startup : function() {
       var self = this;
+      
       on(this.loginLink, 'click', function() {
         self.togglePopup();
       });
@@ -61,6 +62,21 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
 
       self.popup = new gadgets.oauth.Popup(this.endpoint, windowOptions, openCallback, closeCallback);
       self.popup.createOpenerOnClick()();
+      topic.publish("hideModal");
+    },
+    
+    /**
+     * The method that is called when the security token event listener is triggered.
+     *
+     * @memberof module:modules/widgets/login/OAuthLogin#
+     */
+    onSecurityTokenListener : function() {
+      var responseObj = this.popup.win_.document.responseObj;
+      this.securityToken = responseObj.securityToken;
+      this.securityTokenTTL = responseObj.securityTokenTTL;
+      this.popup.win_.close();
+      topic.publish("updateToken", this.securityToken, this.securityTokenTTL);
+      query('#login')[0].innerHTML = "Welcome!";
     },
     
     /**
@@ -69,13 +85,8 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
      * @memberof module:modules/widgets/login/OAuthLogin#
      */
     onPopupOpen: function() {
-      var self = this;
-      document.addEventListener("returnSecurityToken", function(obj) {
-        var responseObj = self.popup.win_.document.responseObj;
-        self.securityToken = responseObj.securityToken;
-        self.securityTokenTTL = responseObj.securityTokenTTL;
-        self.popup.win_.close();
-      });
+      this.onSecurityTokenListener = lang.hitch(this, this.onSecurityTokenListener);
+      document.addEventListener("returnSecurityToken", this.onSecurityTokenListener);
     },
 
     /**
@@ -84,11 +95,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
      * @memberof module:modules/widgets/login/OAuthLogin#
      */
     onPopupClose: function() {
-      if(this.securityToken) {
-        topic.publish("updateToken", this.securityToken, this.securityTokenTTL);
-        topic.publish("hideModal");
-        query('#login')[0].innerHTML = "Welcome!";
-      }
+      document.removeEventListener("returnSecurityToken", this.onSecurityTokenListener);
     }
   });
 });
