@@ -1,0 +1,58 @@
+<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div id="creation-header" class="modal-header center">
+		<button data-dojo-attach-point="creationExit" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3>Services</h3>
+	</div>
+	<div id="creation-body" class="modal-body center">
+		<div class="tabbable">
+			<ul class="nav nav-tabs">
+				<li data-dojo-attach-point="servicesTab" class="tab active">
+					<a href="#services">Services</a>
+				</li>
+				<li data-dojo-attach-point="newServiceTab" class="tab">
+					<a href="#newservice">New Service</a>
+				</li>
+			</ul>
+			<div class="tab-content">
+				<div class="tab-pane active" data-dojo-attach-point="servicesContent">
+					<p>No existing services. Click 'New Service' to create a new service!</p>
+				</div>
+				<div class="tab-pane center" data-dojo-attach-point="newServiceContent">
+					<ul class="nav nav-pills inline-block">
+						<li data-dojo-attach-point="generalPill" class="pill active inline">
+							<a href="#general">General</a>
+						</li>
+						<li data-dojo-attach-point="advancedPill" class="pill inline">
+							<a href="#advanced">Advanced</a>
+						</li>
+					</ul>
+					<div class="pill-content">
+						<div class="pill-pane active" data-dojo-attach-point="generalContent">
+							<p>General</p>
+							<select data-dojo-attach-point="creationSelection">
+								<option>OAuth</option>
+								<option>OAuth2</option>
+							</select>
+							<input data-dojo-attach-point="serviceName" class="creation" type="text" placeholder="Name">
+							<input data-dojo-attach-point="serviceKey" class="creation" type="text" placeholder="Key">
+							<input data-dojo-attach-point="serviceSecret" class="creation" type="text" placeholder="Secret">
+						</div>
+						<div class="pill-pane" data-dojo-attach-point="advancedContent">
+							<p>Advanced</p>
+						</div>
+					</div>
+					
+					<button data-dojo-attach-point="creationSubmit" id="creation-submit" class="btn btn-success">Create!</button>
+
+				</div>
+			</div>
+		</div>
+
+		<!-- 
+		<input data-dojo-attach-point="creationTitle" class="creation" type="text" placeholder="Title">
+		<input data-dojo-attach-point="creationAuthor" class="creation" type="text" placeholder="Author">
+		<textarea data-dojo-attach-point="creationDescription" class="creation" rows="3" placeholder="Description"></textarea>
+	-->
+	</div>
+	
+</div>

@@ -17,6 +17,22 @@
  * under the License.
  */
 
+.pointer {
+	cursor: pointer;
+}
+
+.inline-block {
+	display: inline-block;
+}
+
+.inline {
+	display: inline;
+}
+
+.left {
+	float: left;
+}
+
 .creationMenu {
 	margin-bottom: 30px;
 }

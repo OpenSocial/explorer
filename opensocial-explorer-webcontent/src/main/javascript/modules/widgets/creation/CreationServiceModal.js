@@ -25,19 +25,35 @@
  * @augments dijit/_WidgetsInTemplateMixin
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetsInTemplateMixin.html|WidgetsInTemplateMixin Documentation}
  */
-define(['dojo/_base/declare', 'modules/widgets/ModalDialog', 'dijit/_WidgetsInTemplateMixin',
-        'dojo/query', 'dojo/dom', 'dojo/on', 'dojo/dom-construct', 'dojo/dom-class', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
-        function(declare, ModalDialog, WidgetsInTemplateMixin, query, dom, on, domConstruct, domClass) {
+define(['dojo/_base/declare', 'modules/widgets/ModalDialog', 'dijit/_WidgetsInTemplateMixin', 'dojo/text!./../../templates/CreationServiceModal.html',
+        'dojo/query', 'dojo/dom', 'dojo/on', 'dojo/dom-construct', 'dojo/dom-class', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom', 'dojo/domReady!'],
+        function(declare, ModalDialog, WidgetsInTemplateMixin, template, query, dom, on, domConstruct, domClass) {
   return declare('CreationServiceModalWidget', [ModalDialog, WidgetsInTemplateMixin], {
-    
+    templateString: template,
     /**
      * Called right before widget is added to the dom. See link for more information.
      *
      * @memberof module:modules/widgets/creation/CreationSpecModal#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
-    startup: function() {
+    postCreate: function() {
       var self = this;
+      query('.tab', this.domNode).on('click', function(e) {
+        domClass.toggle(self.newServiceTab, 'active');
+        domClass.toggle(self.servicesTab, 'active');
+        
+        domClass.toggle(self.newServiceContent, 'active');
+        domClass.toggle(self.servicesContent, 'active');
+      });
+      
+      query('.pill', this.domNode).on('click', function(e) {
+        domClass.toggle(self.advancedPill, 'active');
+        domClass.toggle(self.generalPill, 'active');
+        
+        domClass.toggle(self.advancedContent, 'active');
+        domClass.toggle(self.generalContent, 'active');
+      });
+      /*
       var modalBody = query('.modal-body', this.domNode);
       var modalHeader = query('.modal-header', this.domNode);
       var modalFooter = query('.modal-footer', this.domNode);
