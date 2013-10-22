@@ -65,7 +65,7 @@ public class FacebookLoginServletTest {
     codec = createMock(SecurityTokenCodec.class);
     servlet = new FacebookLoginServlet();
     servlet.injectDependencies(fetcher, codec);
-    servlet.injectDependencies("clientId", "clientSecret", "redirectUri", "popupDestination");
+    servlet.injectDependencies("clientId", "clientSecret", "redirectUri");
   }
 
   @After
@@ -91,7 +91,8 @@ public class FacebookLoginServletTest {
   @Test
   public void testDoGetRedirect() throws Exception {
     expect(req.getPathInfo()).andReturn("/popup");
-    resp.sendRedirect("popupDestination"); expectLastCall();
+    resp.sendRedirect("https://www.facebook.com/dialog/oauth?redirect_uri=redirectUri&client_id=clientId&response_type=code");
+    expectLastCall();
     
     replay(req);
     replay(resp);

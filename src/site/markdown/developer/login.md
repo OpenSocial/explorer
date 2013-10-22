@@ -34,13 +34,14 @@ file looks like this:
 	explorer.googlelogin.clientid=<insert client id here>
 	explorer.googlelogin.clientsecret=<insert client secret here>
 	explorer.googlelogin.redirecturi=<insert redirect uri here>
-	explorer.googlelogin.popupdestination=<insert popup destination here>
 	
 	#FacebookLogin details
 	explorer.facebooklogin.clientid=<insert client id here>
 	explorer.facebooklogin.clientsecret=<insert client secret here>
 	explorer.facebooklogin.redirecturi=<insert redirect uri here>
-	explorer.facebooklogin.popupdestination=<insert popup destination here>
+
+The servlets receive this metadata via Google Guice injection and use it to generate 
+the user login popup url and for the security token creation process.
 
 ###Facebook OAuth Login
 ---------------------
@@ -53,14 +54,6 @@ By default, the redirecturi is the endpoint served by the Facebook Login servlet
 If you need to change the endpoint, modify the [Facebook login servlet](https://github.com/OpenSocial/explorer/blob/master/java/server/src/main/java/org/opensocial/explorer/server/login/FacebookLoginServlet.java)
 file accordingly as well as the [web.xml](https://github.com/OpenSocial/explorer/blob/master/java/server/src/main/webapp/WEB-INF/web.xml).
 
-The popup destination is the url of the popup window where the user enters their Facebook credentials, which is
-https://www.facebook.com/dialog/oauth. However, you also need to provide some additional query parameters:
-
-	redirect_uri=<insert redirect uri here>
-	client_id=<insert redirect uri here>
-	response_type=code
-	
-The url must be encoded or Facebook will not recognize it.
 
 ###Google OAuth Login
 
@@ -73,13 +66,4 @@ By default, the redirecturi is the endpoint served by the Google Login servlet: 
 Again, be sure to modify both the [Google login servlet](https://github.com/OpenSocial/explorer/blob/master/java/server/src/main/java/org/opensocial/explorer/server/login/GoogleLoginServlet.java) 
 and [web.xml](https://github.com/OpenSocial/explorer/blob/master/java/server/src/main/webapp/WEB-INF/web.xml) if you need to change this.
 
-Google's popup destination goes to https://accounts.google.com/o/oauth2/auth with the additional query parameters:
-
-	scope=https://www.googleapis.com/auth/userinfo.profile
-	redirect_uri=<insert redirect uri here>
-	client_id=<insert redirect uri here>
-	response_type=code
-	approval_prompt=force
-
-Don't forget to encode the url!
 

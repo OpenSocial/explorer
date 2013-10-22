@@ -57,13 +57,11 @@ public class GoogleLoginServlet extends LoginServlet {
   @Inject
   public void injectDependencies(@Named("explorer.googlelogin.clientid") String clientId,
                                  @Named("explorer.googlelogin.clientsecret") String clientSecret,
-                                 @Named("explorer.googlelogin.redirecturi") String redirectUri,
-                                 @Named("explorer.googlelogin.popupdestination") String popupDestination) {
+                                 @Named("explorer.googlelogin.redirecturi") String redirectUri) {
     
     this.clientId = clientId;
     this.clientSecret = clientSecret;
     this.redirectUri = redirectUri;
-    this.popupDestination = popupDestination;
   }
   
   @Override
@@ -79,7 +77,14 @@ public class GoogleLoginServlet extends LoginServlet {
 
       // Redirect to Google Login for authentication.
       if("popup".equals(paths[0])) {
-        resp.sendRedirect(this.popupDestination);
+        String destination = 
+            "https://accounts.google.com/o/oauth2/auth" +
+            "?redirect_uri=" + this.redirectUri +
+            "&client_id=" + this.clientId +
+            "&response_type=code" +
+            "&scope=https://www.googleapis.com/auth/userinfo.profile" +
+            "&approval_prompt=force";
+        resp.sendRedirect(destination);
       }
 
       // Callback from Google Servers after user has accepted or declined access.
@@ -92,7 +97,6 @@ public class GoogleLoginServlet extends LoginServlet {
           Preconditions.checkNotNull(clientId);
           Preconditions.checkNotNull(clientSecret);
           Preconditions.checkNotNull(redirectUri);
-          Preconditions.checkNotNull(popupDestination);
           
           HttpRequest googleRequest = this.constructGooglePostRequest(req);
           HttpResponse googleResponse = fetcher.fetch(googleRequest);

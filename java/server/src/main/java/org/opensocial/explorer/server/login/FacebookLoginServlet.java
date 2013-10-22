@@ -3,6 +3,7 @@ package org.opensocial.explorer.server.login;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,13 +53,11 @@ public class FacebookLoginServlet extends LoginServlet {
   @Inject
   public void injectDependencies(@Named("explorer.facebooklogin.clientid") String clientId,
                                  @Named("explorer.facebooklogin.clientsecret") String clientSecret,
-                                 @Named("explorer.facebooklogin.redirecturi") String redirectUri,
-                                 @Named("explorer.facebooklogin.popupdestination") String popupDestination) {
+                                 @Named("explorer.facebooklogin.redirecturi") String redirectUri) {
 
     this.clientId = clientId;
     this.clientSecret = clientSecret;
     this.redirectUri = redirectUri;
-    this.popupDestination = popupDestination;
   }
   
   @Override
@@ -72,9 +71,14 @@ public class FacebookLoginServlet extends LoginServlet {
         return;
       }
 
-      // Redirect to Google Login for authentication.
+      // Redirect to Facebook Login for authentication.
       if("popup".equals(paths[0])) {
-        resp.sendRedirect(this.popupDestination);
+        String destination = 
+            "https://www.facebook.com/dialog/oauth" +
+            "?redirect_uri=" + this.redirectUri +
+            "&client_id=" + this.clientId +
+            "&response_type=code";
+        resp.sendRedirect(destination);
       }
 
       // Callback from Facebook Servers after user has accepted or declined access.
@@ -87,7 +91,6 @@ public class FacebookLoginServlet extends LoginServlet {
           Preconditions.checkNotNull(clientId);
           Preconditions.checkNotNull(clientSecret);
           Preconditions.checkNotNull(redirectUri);
-          Preconditions.checkNotNull(popupDestination);
           
           String authCode = req.getParameter("code");
           String accessToken = this.requestToken(authCode);
