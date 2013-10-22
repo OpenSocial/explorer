@@ -33,7 +33,7 @@
 {
   "providers" : {
     "google" : {
-      "name" : "Google",
+      "name" : "Google OpenID",
       "url" : "https://www.google.com/accounts/o8/id",
       "imageUrl" : "http://g.etfv.co/http://www.google.com"
     }

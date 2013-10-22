@@ -127,6 +127,11 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
         // We can effectively ignore gadgetUrl, because we'll get it from the site's holder in reRenderGadget
         self.reRenderGadget(opt_params);
       });
+      
+      // When a user logs in and a security token is generated, we update it in this module.
+      topic.subscribe("updateToken", function(token, ttl) {
+        self.updateContainerSecurityToken(token, ttl);
+      });
     },
     
     /**

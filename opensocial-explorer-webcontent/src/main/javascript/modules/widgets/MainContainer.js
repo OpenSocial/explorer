@@ -28,9 +28,9 @@
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_TemplatedMixin.html|TemplatedMixin Documentation}
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetsInTemplateMixin.html|WidgetsInTemplateMixin Documentation}
  */
-define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin',
-         'dojo/query', 'dojo/on', 'dojo/text!./../templates/MainContainer.html'], 
-         function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, query, on, template) {
+define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin', 
+        'explorer/widgets/login/LoginDialog', 'dojo/query', 'dojo/on', 'dojo/text!./../templates/MainContainer.html'], 
+         function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, LoginDialog, query, on, template) {
   return declare('MainContainerWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin ], {
     templateString : template,
 
@@ -42,6 +42,12 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
      */
     postCreate: function() {
       var self = this;
+      
+      on(this.sidebarNav, 'show', function(node) {
+        self.editorArea.displaySpec(node.id);
+        self.editorArea.setTitle(node.name); 
+      }); 
+      
       on(this.sidebarNav, 'show', function(node) {
         self.editorArea.displaySpec(node.id);
         self.editorArea.setTitle(node.name); 
@@ -55,6 +61,10 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
       on(this.editorArea, 'renderEE', function(id) {
         self.gadgetArea.renderEmbeddedExperience(document.location.protocol + '//' + document.location.host + self.editorArea.getContextRoot() + '/gadgetspec/' + id + '/' + self.editorArea.getGadgetSpec().gadgetResource.name, self.editorArea.getGadgetSpec().eeResource.content);
         self.sidebarNav.setNewId(id);
+      });
+      
+      query('#login').on('click', function(e) {
+        self.loginModal.show();
       });
     }
   });

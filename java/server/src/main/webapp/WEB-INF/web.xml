@@ -271,6 +271,22 @@
       org.apache.shindig.social.core.oauth2.OAuth2Servlet
     </servlet-class>
   </servlet>
+  
+  <!-- Serve Google Login -->
+  <servlet>
+    <servlet-name>googleLogin</servlet-name>
+    <servlet-class>
+      org.opensocial.explorer.server.login.GoogleLoginServlet
+    </servlet-class>
+  </servlet>
+  
+  <!-- Serve Facebook Login -->
+  <servlet>
+    <servlet-name>facebookLogin</servlet-name>
+    <servlet-class>
+      org.opensocial.explorer.server.login.FacebookLoginServlet
+    </servlet-class>
+  </servlet>
 
   <servlet>
     <servlet-name>rpcSwf</servlet-name>
@@ -285,6 +301,16 @@
       org.opensocial.explorer.server.openid.OpenIDServlet
     </servlet-class>
   </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>googleLogin</servlet-name>
+    <url-pattern>/googleLogin/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>facebookLogin</servlet-name>
+    <url-pattern>/facebookLogin/*</url-pattern>
+  </servlet-mapping>
   
   <servlet-mapping>
     <servlet-name>gadgetspec</servlet-name>
