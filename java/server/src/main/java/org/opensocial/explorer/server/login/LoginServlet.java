@@ -27,7 +27,6 @@ public abstract class LoginServlet extends ExplorerInjectedServlet {
   protected String clientId;
   protected String clientSecret;
   protected String redirectUri;
-  protected String popupDestination;
   
   public LoginServlet() {
     super();

@@ -67,7 +67,7 @@ public class GoogleLoginServletTest {
     codec = createMock(SecurityTokenCodec.class);
     servlet = new GoogleLoginServlet();
     servlet.injectDependencies(fetcher, codec);
-    servlet.injectDependencies("clientId", "clientSecret", "redirectUri", "popupDestination");
+    servlet.injectDependencies("clientId", "clientSecret", "redirectUri");
   }
 
   @After
@@ -93,7 +93,8 @@ public class GoogleLoginServletTest {
   @Test
   public void testDoGetRedirect() throws Exception {
     expect(req.getPathInfo()).andReturn("/popup");
-    resp.sendRedirect("popupDestination"); expectLastCall();
+    resp.sendRedirect("https://accounts.google.com/o/oauth2/auth?redirect_uri=redirectUri&client_id=clientId&response_type=code&scope=https://www.googleapis.com/auth/userinfo.profile&approval_prompt=force");
+    expectLastCall();
     
     replay(req);
     replay(resp);
