@@ -16,8 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['modules/widgets/creation/CreationSpecModal', 'modules/widgets/SidebarNav',
-        'dojo/query', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'], 
+define(['explorer/widgets/creation/CreationSpecModal', 'explorer/widgets/SidebarNav','dojo/query', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'], 
     function(CreationSpecModal, SidebarNav, query){
   describe('A CreationSpecModal widget', function(){
     it("can be shown and hidden", function() {

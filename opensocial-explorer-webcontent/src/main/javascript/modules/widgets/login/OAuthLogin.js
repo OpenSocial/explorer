@@ -21,7 +21,7 @@
  * Handles the OAuth login process via a popup. Multiple instances of this module are created
  * in the LoginDialog for each individual login option.
  *
- * @module modules/widgets/login/OAuthLogin
+ * @module explorer/widgets/login/OAuthLogin
  * @augments dijit/_WidgetBase
  * @augments dijit/_TemplatedMixin
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
@@ -38,11 +38,12 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
     /**
      * Called right after widget is added to the dom. See link for more information.
      *
-     * @memberof module:modules/widgets/login/OAuthLogin#
+     * @memberof module:explorer/widgets/login/OAuthLogin#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     startup : function() {
       var self = this;
+      
       on(this.loginLink, 'click', function() {
         self.togglePopup();
       });
@@ -51,7 +52,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
     /**
      * Creates and opens the popup for user authentication.
      *
-     * @memberof module:modules/widgets/login/OAuthLogin#
+     * @memberof module:explorer/widgets/login/OAuthLogin#
      */
     togglePopup : function() {
       var self = this,
@@ -61,34 +62,40 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
 
       self.popup = new gadgets.oauth.Popup(this.endpoint, windowOptions, openCallback, closeCallback);
       self.popup.createOpenerOnClick()();
+      topic.publish("hideModal");
+    },
+    
+    /**
+     * The method that is called when the security token event listener is triggered.
+     *
+     * @memberof module:explorer/widgets/login/OAuthLogin#
+     */
+    onSecurityTokenListener : function() {
+      var responseObj = this.popup.win_.document.responseObj;
+      this.securityToken = responseObj.securityToken;
+      this.securityTokenTTL = responseObj.securityTokenTTL;
+      this.popup.win_.close();
+      topic.publish("updateToken", this.securityToken, this.securityTokenTTL);
+      query('#login')[0].innerHTML = "Welcome!";
     },
     
     /**
      * Handler for when the popup window opens.
      *
-     * @memberof module:modules/widgets/login/OAuthLogin#
+     * @memberof module:explorer/widgets/login/OAuthLogin#
      */
     onPopupOpen: function() {
-      var self = this;
-      document.addEventListener("returnSecurityToken", function(obj) {
-        var responseObj = self.popup.win_.document.responseObj;
-        self.securityToken = responseObj.securityToken;
-        self.securityTokenTTL = responseObj.securityTokenTTL;
-        self.popup.win_.close();
-      });
+      this.onSecurityTokenListener = lang.hitch(this, this.onSecurityTokenListener);
+      document.addEventListener("returnSecurityToken", this.onSecurityTokenListener);
     },
 
     /**
      * Handler for when the popup window closes.
      *
-     * @memberof module:modules/widgets/login/OAuthLogin#
+     * @memberof module:explorer/widgets/login/OAuthLogin#
      */
     onPopupClose: function() {
-      if(this.securityToken) {
-        topic.publish("updateToken", this.securityToken, this.securityTokenTTL);
-        topic.publish("hideModal");
-        query('#login')[0].innerHTML = "Welcome!";
-      }
+      document.removeEventListener("returnSecurityToken", this.onSecurityTokenListener);
     }
   });
 });

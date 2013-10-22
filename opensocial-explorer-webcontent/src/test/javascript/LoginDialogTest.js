@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['modules/widgets/login/LoginDialog', 'dojo/query',
+define(['explorer/widgets/login/LoginDialog', 'dojo/query',
         'dojo/NodeList-manipulate', 'dojo/NodeList-dom'], 
     function(LoginDialog, query) {
   describe('A LoginDialog widget', function() {

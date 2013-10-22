@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['modules/widgets/login/OAuthLogin', 'dojo/query', 'dojo/topic',
+define(['explorer/widgets/login/OAuthLogin', 'dojo/query', 'dojo/topic',
         'dojo/NodeList-manipulate', 'dojo/NodeList-dom'], 
     function(OAuthLogin, query, topic){
   describe('An OAuthLogin widget', function(){
@@ -24,6 +24,7 @@ define(['modules/widgets/login/OAuthLogin', 'dojo/query', 'dojo/topic',
       var div = document.createElement("div");
       div.style.display = 'none';
       div.id = 'login';
+      div.innerHTML = '';
       document.body.appendChild(div);
     });
   
@@ -40,45 +41,40 @@ define(['modules/widgets/login/OAuthLogin', 'dojo/query', 'dojo/topic',
       }); 
       
       var calledFunction = jasmine.createSpy('calledFunction');
-      var popup = {};
-      var oauth = {};
       
-      window.gadgets.oauth = oauth;
-      oauth.Popup = jasmine.createSpy('Popup').andReturn(popup);
+      var popup = {};
       popup.createOpenerOnClick = jasmine.createSpy('createOpenerOnClick').andReturn(calledFunction);
+      
+      window.gadgets.oauth = {};
+      window.gadgets.oauth.Popup = jasmine.createSpy('Popup').andReturn(popup);
 
       oAuthLogin.togglePopup();
       
-      expect(oauth.Popup).toHaveBeenCalled();
+      expect(window.gadgets.oauth.Popup).toHaveBeenCalled();
       expect(popup.createOpenerOnClick).toHaveBeenCalled();
       expect(calledFunction).toHaveBeenCalled();
       
       oAuthLogin.destroy();
     });
     
-    
-    it("listens for the security token from the server", function() {
+    it("listens for the security token from the server and updates the welcome text", function() {
       var oAuthLogin = new OAuthLogin({
         imageUrl: "testImageUrl",
         name: "testName",
         endpoint: "testEndpoint"
       });
-      
       var calledFunction = jasmine.createSpy('calledFunction');
+      
       var popup = {};
-      var oauth = {};
-      var win_ = {};
-      var document = {};
-      
-      window.gadgets.oauth = oauth;
-      oauth.Popup = jasmine.createSpy('Popup').andReturn(popup);
       popup.createOpenerOnClick = jasmine.createSpy('createOpenerOnClick').andReturn(calledFunction);
-      popup.win_ = win_;
-      win_.document = document;
-      document.responseObj = {securityToken: "abc123", securityTokenTTL: 456};
+      popup.win_ = {};
+      popup.win_.close = jasmine.createSpy('close');
+      popup.win_.document = {};
+      popup.win_.document.responseObj = {securityToken: "abc123", securityTokenTTL: 456};
       
-      win_.close = jasmine.createSpy('close');
-
+      window.gadgets.oauth = {};
+      window.gadgets.oauth.Popup = jasmine.createSpy('Popup').andReturn(popup);
+      
       oAuthLogin.togglePopup();
       oAuthLogin.onPopupOpen();
       
@@ -88,33 +84,45 @@ define(['modules/widgets/login/OAuthLogin', 'dojo/query', 'dojo/topic',
       
       expect(oAuthLogin.securityToken).toBe("abc123");
       expect(oAuthLogin.securityTokenTTL).toBe(456);
-      expect(win_.close).toHaveBeenCalled();
+      expect(popup.win_.close).toHaveBeenCalled();
+      expect(document.getElementById('login').innerHTML).toBe("Welcome!");
+      
+      oAuthLogin.onPopupClose();
       oAuthLogin.destroy();
     });
     
-    it("can close a popup, hide the login modal, and update the welcome text", function() {
+    it("closes removes the event listener if the user closes the window without logging in", function() {
       var oAuthLogin = new OAuthLogin({
         imageUrl: "testImageUrl",
         name: "testName",
         endpoint: "testEndpoint"
       });
+
+      var calledFunction = jasmine.createSpy('calledFunction');
       
-      oAuthLogin.securityToken = "abc123";
-      oAuthLogin.securityTokenTTL = 456;
+      var popup = {};
+      popup.createOpenerOnClick = jasmine.createSpy('createOpenerOnClick').andReturn(calledFunction);
+      popup.win_ = {};
+      popup.win_.close = jasmine.createSpy('close');
+      popup.win_.document = {};
+      popup.win_.document.responseObj = {securityToken: "abc123", securityTokenTTL: 456};
       
-      var testSecurityToken, testSecurityTokenTTL;
-      topic.subscribe('updateToken', function(securityToken, securityTokenTTL) {
-        testSecurityToken = securityToken;
-        testSecurityTokenTTL = securityTokenTTL;
-      });
+      window.gadgets.oauth = {};
+      window.gadgets.oauth.Popup = jasmine.createSpy('Popup').andReturn(popup);
+      
+      oAuthLogin.togglePopup();
+      oAuthLogin.onPopupOpen();
       
       oAuthLogin.onPopupClose();
       
-      expect(testSecurityToken).toBe('abc123');
-      expect(testSecurityTokenTTL).toBe(456);
-      expect(document.getElementById('login').innerHTML).toBe("Welcome!");
+      spyOn(oAuthLogin, 'onSecurityTokenListener');
+      var evt = window.document.createEvent('Event');
+      evt.initEvent('returnSecurityToken', true, true);
+      window.document.dispatchEvent(evt);
       
+      expect(oAuthLogin.onSecurityTokenListener).not.toHaveBeenCalled();
+      expect(document.getElementById('login').innerHTML).not.toBe("Welcome!");
       oAuthLogin.destroy();
-    }); 
+    });
   });
 });

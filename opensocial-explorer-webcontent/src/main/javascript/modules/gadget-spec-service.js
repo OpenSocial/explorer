@@ -20,9 +20,9 @@
 /**
 * Handles all xhr calls between client and servlet side for specs.
 *
-* @module modules/gadget-spec-service
+* @module explorer/gadget-spec-service
 */
-define(['dojo/request/xhr', 'dojo/json', 'modules/url-util'], function(xhr, json, urlUtil) {
+define(['dojo/request/xhr', 'dojo/json', './url-util'], function(xhr, json, urlUtil) {
   function getGadgetSpecBase(id, success, error) {
     xhr(urlUtil.getContextRoot() + '/gadgetspec/' + id, {
       handleAs: "json"
@@ -40,7 +40,7 @@ define(['dojo/request/xhr', 'dojo/json', 'modules/url-util'], function(xhr, json
     /**
      * Gets the default gadget spec's data.
      *
-     * @memberof module:modules/gadget-spec-service
+     * @memberof module:explorer/gadget-spec-service
      * @param {Object} callbacks - Object with a success and an error function.
      * @param {Function} callbacks.success - Fired if xhr was successful.
      * @param {Function} callbacks.error - Fired if xhr was not successful.
@@ -52,7 +52,7 @@ define(['dojo/request/xhr', 'dojo/json', 'modules/url-util'], function(xhr, json
     /**
      * Gets a gadget spec's data.
      *
-     * @memberof module:modules/gadget-spec-service
+     * @memberof module:explorer/gadget-spec-service
      * @param {String} id - The ID of the gadget spec.
      * @param {Object} callbacks - Object with a success and an error function.
      * @param {Function} callbacks.success - Fired if xhr was successful.
@@ -65,7 +65,7 @@ define(['dojo/request/xhr', 'dojo/json', 'modules/url-util'], function(xhr, json
     /**
      * Posts a new spec to the servlet.
      *
-     * @memberof module:modules/gadget-spec-service
+     * @memberof module:explorer/gadget-spec-service
      * @param {Object} specData - Data of the new spec to be posted.
      * @param {Object} callbacks - Object with a success and an error function.
      * @param {Function} callbacks.success - Fired if xhr was successful.
@@ -85,7 +85,7 @@ define(['dojo/request/xhr', 'dojo/json', 'modules/url-util'], function(xhr, json
     /**
      * Gets the json representation of the spec tree.
      *
-     * @memberof module:modules/gadget-spec-service
+     * @memberof module:explorer/gadget-spec-service
      * @param {Object} callbacks - Object with a success and an error function.
      * @param {Function} callbacks.success - Fired if xhr was successful.
      * @param {Function} callbacks.error - Fired if xhr was not successful.

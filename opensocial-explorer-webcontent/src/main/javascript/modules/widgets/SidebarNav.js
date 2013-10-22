@@ -20,9 +20,9 @@
 /**
  * Contains the Dojo Tree Control for specs.
  *
- * @module modules/widgets/SidebarNav
- * @requires module:modules/widgets/creation/CreationSpecModal
- * @requires module:modules/gadget-spec-service
+ * @module explorer/widgets/SidebarNav
+ * @requires module:explorer/widgets/creation/CreationSpecModal
+ * @requires module:explorer/gadget-spec-service
  * @augments dijit/_WidgetBase
  * @augments dijit/_TemplatedMixin
  * @augments dijit/_WidgetsInTemplateMixin
@@ -34,8 +34,8 @@
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 
         'dijit/_WidgetsInTemplateMixin', 'dojo/text!./../templates/SidebarNav.html', 
-        'dojo/dom-construct', 'dojo/Evented', 'modules/widgets/creation/CreationSpecModal',
-        'modules/gadget-spec-service', 'dojo/store/Memory', 'dojo/store/Observable', 'dojo/on', 'dojo/topic',
+        'dojo/dom-construct', 'dojo/Evented', 'explorer/widgets/creation/CreationSpecModal',
+        'explorer/gadget-spec-service', 'dojo/store/Memory', 'dojo/store/Observable', 'dojo/on', 'dojo/topic',
         'dijit/tree/ObjectStoreModel', 'dijit/Tree', 'dojo/dom', 'dojo/dom-class', 'dojo/query', 'dojo/domReady!'],
         function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, template, domConstruct, Evented,
             CreationSpecModal, gadgetSpecService, Memory, Observable, on, topic, ObjectStoreModel, Tree, dom, domClass, query) {
@@ -48,7 +48,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Called right after widget is added to the dom. See link for more information.
      *
-     * @memberof module:modules/widgets/SidebarNav#
+     * @memberof module:explorer/widgets/SidebarNav#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     startup : function() {
@@ -105,7 +105,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
     * Adds a new spec to the Tree Control. If a user-created spec doesn't exist yet, a folder called "My Specs" is also added.
     *
-    * @memberof module:modules/widgets/SidebarNav#
+    * @memberof module:explorer/widgets/SidebarNav#
     *
     * @param {String} title - Title of the spec to be added.
     * @param {String} specId - Id of the spec to be added.
@@ -125,7 +125,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Gets the ID path of the spec in the tree control. Used to set the specTree focus to the particular spec.
      *
-     * @memberof module:modules/widgets/SidebarNav#
+     * @memberof module:explorer/widgets/SidebarNav#
      *
      * @param {String} path - Accumulator parameter, starts as an empty array and is built up and eventually returned.
      * @param {String} startId - Id of the current object in the path.
@@ -146,7 +146,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Gets the ID of the default spec in the specTree (The spec that is initally displayed).
      *
-     * @memberof module:modules/widgets/SidebarNav#
+     * @memberof module:explorer/widgets/SidebarNav#
      *
      * @returns {String} The default spec's ID.
      */
@@ -158,7 +158,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Gets the name of the default spec in the specTree (The spec that is initally displayed).
      *
-     * @memberof module:modules/widgets/SidebarNav#
+     * @memberof module:explorer/widgets/SidebarNav#
      *
      * @returns {String} The default spec's name.
      */
@@ -172,7 +172,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
      * When a spec is added or rerendered, the servlet assigns a new ID to the updated spec. 
      * We use this method so that the spec's ID in the Dojo Tree is representative of its updated counterpart server-side.
      *
-     * @memberof module:modules/widgets/SidebarNav#
+     * @memberof module:explorer/widgets/SidebarNav#
      *
      * @param {String} The default spec's ID.
      */
@@ -184,7 +184,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Opens the CreationSpecModal for adding a new spec.
      *
-     * @memberof module:modules/widgets/SidebarNav#
+     * @memberof module:explorer/widgets/SidebarNav#
      */
     toggleModal: function() {
       domClass.remove(this.creationSpecModal.domNode, 'hide');
@@ -195,7 +195,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Getter method for the GadgetSpecService module for testing purposes.
      *
-     * @memberof module:modules/widgets/SidebarNav#
+     * @memberof module:explorer/widgets/SidebarNav#
      * @returns {gadgetSpecService} The gadgetSpecService object.
      */
     getGadgetSpecService : function() {

@@ -16,8 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['modules/widgets/ExplorerContainer', 'dojo/on', 'dojo/json', 'dojo/dom-construct'], 
-        function(ExplorerContainer, on, JSON, domConstruct){
+define(['explorer/widgets/ExplorerContainer', 'dojo/on', 'dojo/json', 'dojo/dom-construct'],
+        function(ExplorerContainer, on, JSON, domConstruct) {
   describe('An OpenSocial container', function() {
     var container;
     var actions;

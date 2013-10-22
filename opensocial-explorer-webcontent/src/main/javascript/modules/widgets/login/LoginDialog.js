@@ -20,14 +20,14 @@
 /**
 * A modal window that allows users to login.
 *
-* @module modules/widgets/login/LoginDialog
-* @augments module:modules/widgets/ModalDialog
-* @requires module:modules/openid-service
-* @requires module:modules/widgets/login/OAuthLogin
+* @module explorer/widgets/login/LoginDialog
+* @augments module:explorer/widgets/ModalDialog
+* @requires module:explorer/openid-service
+* @requires module:explorer/widgets/login/OAuthLogin
 */
-define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dijit/_WidgetsInTemplateMixin', 
-        'dojo/query', 'dojo/dom-construct', 'modules/widgets/login/OAuthLogin', 'dojo/topic', 
-        'modules/openid-service',  'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
+define(['dojo/_base/declare',  'explorer/widgets/ModalDialog', 'dijit/_WidgetsInTemplateMixin', 
+        'dojo/query', 'dojo/dom-construct', 'explorer/widgets/login/OAuthLogin', 'dojo/topic', 
+        '../../openid-service',  'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, ModalDialog, WidgetsInTemplateMixin, query, domConstruct,
             OAuthLogin, topic, openIdService) {
   return declare('LoginDialogWidget', [ ModalDialog, WidgetsInTemplateMixin ], {
@@ -35,7 +35,7 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dijit/_WidgetsInT
     /**
      * Called right after widget is added to the dom. See link for more information.
      *
-     * @memberof module:modules/widgets/login/LoginDialog#
+     * @memberof module:explorer/widgets/login/LoginDialog#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     startup : function() {
@@ -49,9 +49,9 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dijit/_WidgetsInT
     },
 
     /**
-     * Shows the OpenIDLoginDialog modal.
+     * Shows the LoginDialog modal.
      *
-     * @memberof module:modules/widgets/login/LoginDialog#
+     * @memberof module:explorer/widgets/login/LoginDialog#
      */
     show : function() {
       var modalBodies = query('.modal-body', this.domNode);
@@ -106,7 +106,7 @@ define(['dojo/_base/declare',  'modules/widgets/ModalDialog', 'dijit/_WidgetsInT
     /**
      * Getter method for the GadgetSpecService module for testing purposes.
      *
-     * @memberof module:modules/widgets/login/LoginDialog#
+     * @memberof module:explorer/widgets/login/LoginDialog#
      * @returns {openIdService} The openIdService object.
      */
     getOpenIdServiceProviders: function() {

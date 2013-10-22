@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['modules/widgets/gadgetarea/PreferencesDialog', 'dojo/query', 
+define(['explorer/widgets/gadgetarea/PreferencesDialog', 'dojo/query', 
         'dojo/topic', 'dojo/dom-class'], function(PreferencesDialog, query, topic, domClass){
   describe('A PreferencesDialog widget', function() {
     

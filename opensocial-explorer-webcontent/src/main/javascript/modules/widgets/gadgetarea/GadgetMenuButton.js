@@ -20,8 +20,8 @@
 /**
  * The button located in the GadgetToolbar that toggles the GadgetDropDownMenu widget.
  *
- * @module modules/widgets/gadgetarea/GadgetMenuButton
- * @requires module:modules/widgets/GadgetDropDownMenu
+ * @module explorer/widgets/gadgetarea/GadgetMenuButton
+ * @requires module:explorer/widgets/GadgetDropDownMenu
  * @augments dijit/_WidgetBase
  * @augments dijit/_TemplatedMixin
  * @augments dijit/_WidgetsInTemplateMixin
@@ -31,7 +31,7 @@
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dojo/text!./../../templates/GadgetMenuButton.html',
-        'modules/widgets/gadgetarea/GadgetDropDownMenu', 'dojo/dom-construct',
+        './GadgetDropDownMenu', 'dojo/dom-construct',
         'dijit/_WidgetsInTemplateMixin'],
         function(declare, WidgetBase, TemplatedMixin, template, GadgetDropDownMenu, domConstruct,
             WidgetsInTemplateMixin) {
@@ -41,7 +41,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Populates the GadgetDropDownmenu with the gadget's metadata.
      *
-     * @memberof module:modules/widgets/gadgetarea/GadgetMenuButton#
+     * @memberof module:explorer/widgets/gadgetarea/GadgetMenuButton#
      * @param {Object} metadata - Object with the gadget's metadata.
      */
     constructMenu : function(metadata) {
@@ -51,7 +51,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Getter method for the GadgetDropDownMenu.
      *
-     * @memberof module:modules/widgets/gadgetarea/GadgetMenuButton#
+     * @memberof module:explorer/widgets/gadgetarea/GadgetMenuButton#
      * @returns {GadgetDropDownMenu} The DropDownMenu connected to this button.
      */
     getGadgetDropDownMenu : function() {
