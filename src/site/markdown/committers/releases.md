@@ -107,7 +107,7 @@ project.
 *  <b>pom.xml.releaseBackup:</b> A backup unmodified version of the POM file.
 
 It is good practice to review the changes made to the different POM files to make sure everything
-apears correct.  You can easily do this with any diff tool.  The main things to look for is that
+appears correct.  You can easily do this with any diff tool.  The main things to look for is that
 the versions and SCM elements are modified correctly.  If you find something that is wrong you
 can clean the release by running 
 
@@ -198,7 +198,7 @@ We need to get the word out about the new release, here are some channels we can
 
 1.  [The OpenSocial Blog](http://blog.opensocial.org/)
 2.  Twitter accounts, specifically the [OpenSocial](https://twitter.com/opensocial) one.
-3.  The [OpenSocail Spec Google Group](https://groups.google.com/forum/?fromgroups#!forum/opensocial-and-gadgets-spec).
+3.  The [OpenSocial Spec Google Group](https://groups.google.com/forum/?fromgroups#!forum/opensocial-and-gadgets-spec).
 
 
 

@@ -61,6 +61,7 @@
       <item name="Getting Started" href="developer/getting-started.html" />
       <item name="Writing Unit Tests" href="developer/unit-tests.html" />
       <item name="Adding Gadget Specs" href="developer/adding-gadget-specs.html" />
+      <item name="Logging In" href="developer/login.html" />
     </menu>
     <menu name="Committer Resources">
       <item name="Performing Releases" href="committers/releases.html" />
