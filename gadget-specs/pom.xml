@@ -21,7 +21,7 @@
   <parent>
     <artifactId>opensocial-explorer</artifactId>
     <groupId>org.opensocial.explorer</groupId>
-    <version>0.0.2</version>
+    <version>0.0.3-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
   <artifactId>opensocial-explorer-gadget-specs</artifactId>
@@ -54,6 +54,6 @@
     <url>${project.parent.scm.url}</url>
     <connection>${project.parent.scm.connection}</connection>
     <developerConnection>${project.parent.scm.developerConnection}</developerConnection>
-    <tag>opensocial-explorer-0.0.2</tag>
+    <tag>HEAD</tag>
   </scm>
 </project>
