@@ -17,6 +17,10 @@
  * under the License.
  */
 
+.block {
+	display: block;
+}
+
 .pointer {
 	cursor: pointer;
 }

@@ -20,72 +20,66 @@
 /**
  * A modal window that allows users to create a new spec along with information about the spec.
  *
- * @module modules/widgets/creation/CreationSpecModal
- * @augments module:modules/widgets/ModalDialog
+ * @module explorer/widgets/creation/CreationSpecModal
+ * @augments module:explorer/widgets/ModalDialog
  * @augments dijit/_WidgetsInTemplateMixin
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetsInTemplateMixin.html|WidgetsInTemplateMixin Documentation}
  */
-define(['dojo/_base/declare', 'modules/widgets/ModalDialog', 'dijit/_WidgetsInTemplateMixin', 'dojo/text!./../../templates/CreationServiceModal.html',
+define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInTemplateMixin', 'dojo/text!./../../templates/CreationServiceModal.html',
         'dojo/query', 'dojo/dom', 'dojo/on', 'dojo/dom-construct', 'dojo/dom-class', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom', 'dojo/domReady!'],
         function(declare, ModalDialog, WidgetsInTemplateMixin, template, query, dom, on, domConstruct, domClass) {
   return declare('CreationServiceModalWidget', [ModalDialog, WidgetsInTemplateMixin], {
     templateString: template,
+    dropdownValue: "OAuth",
     /**
      * Called right before widget is added to the dom. See link for more information.
      *
-     * @memberof module:modules/widgets/creation/CreationSpecModal#
+     * @memberof module:explorer/widgets/creation/CreationSpecModal#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     postCreate: function() {
       var self = this;
       query('.tab', this.domNode).on('click', function(e) {
-        domClass.toggle(self.newServiceTab, 'active');
-        domClass.toggle(self.servicesTab, 'active');
-        
-        domClass.toggle(self.newServiceContent, 'active');
-        domClass.toggle(self.servicesContent, 'active');
+        if(!domClass.contains(this, "active")) {
+          domClass.toggle(self.newServiceTab, 'active');
+          domClass.toggle(self.servicesTab, 'active');
+          
+          domClass.toggle(self.newServiceContent, 'active');
+          domClass.toggle(self.servicesContent, 'active');
+        }
       });
       
       query('.pill', this.domNode).on('click', function(e) {
-        domClass.toggle(self.advancedPill, 'active');
-        domClass.toggle(self.generalPill, 'active');
-        
-        domClass.toggle(self.advancedContent, 'active');
-        domClass.toggle(self.generalContent, 'active');
+        if(!domClass.contains(this, "active")) {
+          domClass.toggle(self.advancedPill, 'active');
+          domClass.toggle(self.generalPill, 'active');
+          
+          domClass.toggle(self.oAuth2AdvancedContent, 'active');
+          domClass.toggle(self.oAuth2GeneralContent, 'active');
+        }
       });
-      /*
-      var modalBody = query('.modal-body', this.domNode);
-      var modalHeader = query('.modal-header', this.domNode);
-      var modalFooter = query('.modal-footer', this.domNode);
       
-      var services = domConstruct.create('div', {id: 'existingServices'});
-      var title = domConstruct.create('h3', {innerHTML: 'Add Service'});
-      var name = domConstruct.create('input', {type: 'text', placeholder: 'Name'});
-      var key = domConstruct.create('input', {type: 'text', placeholder: 'Key'});
-      var secret = domConstruct.create('input', {type: 'text', placeholder: 'Secret'}); 
-      var button = domConstruct.create('button', {'class': 'btn btn-success', innerHTML: 'Create!', id: 'serviceButton'});
-      
-      modalHeader.addClass('center');
-      modalBody.addClass('center');
-      modalFooter.addClass('center');
-      this.setHeaderTitle('Services');
-      modalBody.append(services);
-      modalBody.append(title);
-      modalBody.append(name);
-      modalBody.append(key);
-      modalBody.append(secret);
-      modalFooter.append(button);
-      query('input', this.domNode).addClass('creation');
-      
-      this.inherited(arguments);
-      
-      query('#serviceButton').on('click', function() {
-        alert('weeeeeeeee');
+      query(this.serviceSelection, this.domNode).on('click', function(e) {
+        var value = self.serviceSelection.value;
+        if(value !== self.dropdownValue) {
+          if(value == "OAuth") {
+            query('.pill').addClass("hide");
+            query(self.oAuthContent).addClass("active");
+            query(self.oAuth2AdvancedContent).removeClass("active");
+            query(self.oAuth2GeneralContent).removeClass("active");
+          };
+          
+          if(value == "OAuth2") {
+            query('.pill').removeClass("hide");
+            query(self.generalPill).addClass("active");
+            query(self.advancedPill).removeClass("active");
+            query(self.oAuth2GeneralContent).addClass("active");
+            query(self.oAuthContent).removeClass("active");
+          }
+          
+          self.dropdownValue = value;
+        };
       });
-      /*
-      on(this.creationExit, 'click', function() {
-        self.hide();
-      }); */
     }
   });
 });
