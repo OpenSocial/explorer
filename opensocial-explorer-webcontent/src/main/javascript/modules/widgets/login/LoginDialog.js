@@ -67,7 +67,7 @@ define(['dojo/_base/declare',  'explorer/widgets/ModalDialog', 'dijit/_WidgetsIn
                 var openIdLoginControl = new OAuthLogin({
                   imageUrl: metadata.imageUrl,
                   name: metadata.name,
-                  endpoint: "/openid/authrequest?openid_identifier=" + encodeURIComponent(metadata.url)
+                  endpoint: "openid/authrequest?openid_identifier=" + encodeURIComponent(metadata.url)
                 });
                 modalBodies.append(openIdLoginControl.domNode);
                 openIdLoginControl.startup();
@@ -84,7 +84,7 @@ define(['dojo/_base/declare',  'explorer/widgets/ModalDialog', 'dijit/_WidgetsIn
         this.facebookOAuth = new OAuthLogin({
           imageUrl: "http://g.etfv.co/http://www.facebook.com",
           name: "Facebook",
-          endpoint: "/facebookLogin/popup"
+          endpoint: "facebookLogin/popup"
         });
         modalBodies.append(this.facebookOAuth.domNode);
         this.facebookOAuth.startup();
@@ -94,7 +94,7 @@ define(['dojo/_base/declare',  'explorer/widgets/ModalDialog', 'dijit/_WidgetsIn
         this.googleOAuth = new OAuthLogin({
           imageUrl: "http://g.etfv.co/http://www.google.com",
           name: "Google OAuth",
-          endpoint: "/googleLogin/popup"
+          endpoint: "googleLogin/popup"
         });
         modalBodies.append(this.googleOAuth.domNode);
         this.googleOAuth.startup();

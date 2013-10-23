@@ -50,7 +50,7 @@ Once registered, set the Site URL in the App Dashboard to your development envir
 
 Now you can fill in the Facebook section of [explorer.properties](https://github.com/OpenSocial/explorer/blob/master/java/server/config/opensocial-explorer.properties):
 enter the App Id and App Secret from the dashboard into clientid and clientsecret.
-By default, the redirecturi is the endpoint served by the Facebook Login servlet: /facebookLogin/token.
+By default, the redirecturi is the endpoint served by the Facebook Login servlet: facebookLogin/token.
 If you need to change the endpoint, modify the [Facebook login servlet](https://github.com/OpenSocial/explorer/blob/master/java/server/src/main/java/org/opensocial/explorer/server/login/FacebookLoginServlet.java)
 file accordingly as well as the [web.xml](https://github.com/OpenSocial/explorer/blob/master/java/server/src/main/webapp/WEB-INF/web.xml).
 
@@ -62,7 +62,7 @@ Click on Create Client ID, select web application, and use http://localhost:8080
 
 You can now fill out the Google section of [explorer.properties](https://github.com/OpenSocial/explorer/blob/master/java/server/config/opensocial-explorer.properties):
 enter the given Client ID and Client secret.
-By default, the redirecturi is the endpoint served by the Google Login servlet: /googleLogin/token.
+By default, the redirecturi is the endpoint served by the Google Login servlet: googleLogin/token.
 Again, be sure to modify both the [Google login servlet](https://github.com/OpenSocial/explorer/blob/master/java/server/src/main/java/org/opensocial/explorer/server/login/GoogleLoginServlet.java) 
 and [web.xml](https://github.com/OpenSocial/explorer/blob/master/java/server/src/main/webapp/WEB-INF/web.xml) if you need to change this.
 
