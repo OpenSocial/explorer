@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.shindig.common.Nullable;
 import org.apache.shindig.common.servlet.Authority;
 import org.openid4java.OpenIDException;
 import org.openid4java.consumer.ConsumerException;
@@ -59,11 +60,10 @@ public class OpenIDConsumer {
 
   @Inject
   public OpenIDConsumer(@Named("explorer.openid.callbackUrl") String openIDCallbackURL,
-                        ConsumerManager manager, 
+                        ConsumerManager manager, @Named("shindig.contextroot") String contextRoot,
                         Authority authority) throws ConsumerException {
     this.returnToUrl = openIDCallbackURL.replaceAll("%origin%", authority.getOrigin())
-                                        .replaceAll("%authority%", authority.getAuthority())
-                                        .replaceAll("%scheme%", authority.getScheme());
+                                        .replaceAll("%contextRoot%", contextRoot);
     this.manager = manager;
   }
 

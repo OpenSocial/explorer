@@ -27,6 +27,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.shindig.auth.SecurityTokenException;
+import org.apache.shindig.common.servlet.Authority;
 import org.apache.shindig.common.uri.UriBuilder;
 import org.apache.shindig.gadgets.GadgetException;
 import org.apache.shindig.gadgets.http.HttpRequest;
@@ -50,11 +51,11 @@ import javax.servlet.http.HttpServletResponse;
  * including handling login callbacks from the Google Authorization server.
  * 
  * <pre>
- * GET /googleLogin/popup
+ * GET googleLogin/popup
  * - This endpoint is reached from the client-side popup when the user clicks login. 
  * - This servlet sends back a redirect to Google's login and authorization page.
  * 
- * GET /googleLogin/token
+ * GET googleLogin/token
  * - The callback URL from Google after the user has accepted or declined authorization.
  * 
  * - If the user has declined, Google returns an error parameter in the callback URL.
@@ -75,11 +76,13 @@ public class GoogleLoginServlet extends LoginServlet {
   @Inject
   public void injectDependencies(@Named("explorer.googlelogin.clientid") String clientId,
                                  @Named("explorer.googlelogin.clientsecret") String clientSecret,
-                                 @Named("explorer.googlelogin.redirecturi") String redirectUri) {
+                                 @Named("explorer.googlelogin.redirecturi") String redirectUri,
+                                 Authority authority) {
     
     this.clientId = clientId;
     this.clientSecret = clientSecret;
-    this.redirectUri = redirectUri;
+    this.redirectUri = redirectUri.replaceAll("%origin%", authority.getOrigin())
+                                  .replaceAll("%contextRoot%", contextRoot);
   }
   
   @Override

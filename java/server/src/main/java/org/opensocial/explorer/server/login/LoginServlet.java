@@ -25,6 +25,8 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shindig.common.Nullable;
+import org.apache.shindig.common.servlet.Authority;
 import org.apache.shindig.auth.SecurityTokenCodec;
 import org.apache.shindig.auth.SecurityTokenException;
 import org.apache.shindig.gadgets.http.HttpFetcher;
@@ -34,6 +36,7 @@ import org.opensocial.explorer.server.openid.OpenIDSecurityToken;
 import org.opensocial.explorer.specserver.servlet.ExplorerInjectedServlet;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 public abstract class LoginServlet extends ExplorerInjectedServlet {
   private static final long serialVersionUID = 8540523171562319098L;
@@ -45,16 +48,20 @@ public abstract class LoginServlet extends ExplorerInjectedServlet {
   protected String clientId;
   protected String clientSecret;
   protected String redirectUri;
+  protected String contextRoot;
   
   public LoginServlet() {
     super();
   }
   
   @Inject
-  public void injectDependencies(HttpFetcher fetcher, SecurityTokenCodec codec) {
+  public void injectDependencies(HttpFetcher fetcher, 
+                                 SecurityTokenCodec codec,
+                                 @Named("shindig.contextroot") String contextRoot) {
     checkInitialized();
     this.fetcher = fetcher;
     this.codec = codec;
+    this.contextRoot = contextRoot;
   }
   
   protected void closePopup(HttpServletResponse resp) throws IOException {

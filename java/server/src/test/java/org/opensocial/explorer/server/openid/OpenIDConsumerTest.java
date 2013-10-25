@@ -193,7 +193,7 @@ public class OpenIDConsumerTest {
     expect(mockManager.associate(anyObject(List.class))).andReturn(info);
     expect(mockManager.authenticate(eq(info), eq("http://example.com:80/openid/openidcallback"))).andReturn(authRequest);
     replay(mockManager);
-    consumer = new OpenIDConsumer("%origin%/openid/openidcallback", mockManager, mockAuthority);
+    consumer = new OpenIDConsumer("%origin%/openid/openidcallback", mockManager, "mockContextRoot", mockAuthority);
     assertFalse(consumer.authRequest("discover", req, resp));
   }
   
@@ -210,7 +210,7 @@ public class OpenIDConsumerTest {
     expect(mockManager.associate(anyObject(List.class))).andReturn(info);
     expect(mockManager.authenticate(eq(info), eq("http://example.com:80/openid/openidcallback"))).andReturn(authRequest);
     replay(mockManager);
-    consumer = new OpenIDConsumer("%origin%/openid/openidcallback", mockManager, mockAuthority);
+    consumer = new OpenIDConsumer("%origin%/openid/openidcallback", mockManager, "mockContextRoot", mockAuthority);
     assertFalse(consumer.authRequest("discover", req, resp));
   }
 
@@ -231,7 +231,7 @@ public class OpenIDConsumerTest {
     expect(mockManager.authenticate(eq(info), eq("http://example.com:80/openid/openidcallback"))).andReturn(authRequest);
     expect(mockManager.verify(eq("http://example.com/request?query"), anyObject(ParameterList.class), anyObject(DiscoveryInformation.class))).andReturn(result);
     replay(mockManager);
-    consumer = new OpenIDConsumer("%origin%/openid/openidcallback", mockManager, mockAuthority);
+    consumer = new OpenIDConsumer("%origin%/openid/openidcallback", mockManager, "mockContextRoot", mockAuthority);
     assertEquals(id, consumer.verifyResponse(req));
   }
   
@@ -251,7 +251,7 @@ public class OpenIDConsumerTest {
     expect(mockManager.authenticate(eq(info), eq("http://example.com:80/openid/openidcallback"))).andReturn(authRequest);
     expect(mockManager.verify(eq("http://example.com/request?query"), anyObject(ParameterList.class), anyObject(DiscoveryInformation.class))).andReturn(result);
     replay(mockManager);
-    consumer = new OpenIDConsumer("%origin%/openid/openidcallback", mockManager, mockAuthority);
+    consumer = new OpenIDConsumer("%origin%/openid/openidcallback", mockManager, "mockContextRoot", mockAuthority);
     assertNull(consumer.verifyResponse(req));
   }
   
@@ -272,7 +272,7 @@ public class OpenIDConsumerTest {
     expect(mockManager.authenticate(eq(info), eq("http://example.com:80/openid/openidcallback"))).andReturn(authRequest);
     expect(mockManager.verify(eq("http://example.com/request?query"), anyObject(ParameterList.class), anyObject(DiscoveryInformation.class))).andReturn(result);
     replay(mockManager);
-    consumer = new OpenIDConsumer("%origin%/openid/openidcallback", mockManager, mockAuthority);
+    consumer = new OpenIDConsumer("%origin%/openid/openidcallback", mockManager, "mockContextRoot", mockAuthority);
     assertEquals(id, consumer.verifyResponse(req));
     verify(authSuccess);
     verify(session);
