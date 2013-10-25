@@ -57,7 +57,7 @@ public abstract class LoginServlet extends ExplorerInjectedServlet {
   @Inject
   public void injectDependencies(HttpFetcher fetcher, 
                                  SecurityTokenCodec codec,
-                                 @Nullable @Named("shindig.contextroot") String contextRoot) {
+                                 @Named("shindig.contextroot") String contextRoot) {
     checkInitialized();
     this.fetcher = fetcher;
     this.codec = codec;

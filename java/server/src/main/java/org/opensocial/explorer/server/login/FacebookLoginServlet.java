@@ -78,7 +78,7 @@ public class FacebookLoginServlet extends LoginServlet {
     this.clientId = clientId;
     this.clientSecret = clientSecret;
     this.redirectUri = redirectUri.replaceAll("%origin%", authority.getOrigin())
-                                  .replaceAll("%contextRoot", contextRoot);
+                                  .replaceAll("%contextRoot%", contextRoot);
   }
   
   @Override
