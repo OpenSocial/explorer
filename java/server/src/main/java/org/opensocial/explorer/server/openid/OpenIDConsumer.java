@@ -60,7 +60,7 @@ public class OpenIDConsumer {
 
   @Inject
   public OpenIDConsumer(@Named("explorer.openid.callbackUrl") String openIDCallbackURL,
-                        ConsumerManager manager, @Nullable @Named("shindig.contextroot") String contextRoot,
+                        ConsumerManager manager, @Named("shindig.contextroot") String contextRoot,
                         Authority authority) throws ConsumerException {
     this.returnToUrl = openIDCallbackURL.replaceAll("%origin%", authority.getOrigin())
                                         .replaceAll("%contextRoot%", contextRoot);
