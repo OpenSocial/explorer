@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shindig.auth.SecurityTokenCodec;
 import org.apache.shindig.auth.SecurityTokenException;
+import org.apache.shindig.common.servlet.Authority;
 import org.apache.shindig.gadgets.GadgetException;
 import org.apache.shindig.gadgets.http.HttpFetcher;
 import org.apache.shindig.gadgets.http.HttpRequest;
@@ -54,18 +55,24 @@ public class FacebookLoginServletTest {
   private HttpServletResponse resp;
   private HttpFetcher fetcher;
   private SecurityTokenCodec codec;
+  private Authority authority;
   private ByteArrayOutputStream stream = new ByteArrayOutputStream();
   private PrintWriter writer = new PrintWriter(stream);
   
   @Before
   public void setUp() throws Exception {
+    servlet = new FacebookLoginServlet();
     req = createMock(HttpServletRequest.class);
     resp = createMock(HttpServletResponse.class);
     fetcher = createMock(HttpFetcher.class);
     codec = createMock(SecurityTokenCodec.class);
-    servlet = new FacebookLoginServlet();
-    servlet.injectDependencies(fetcher, codec);
-    servlet.injectDependencies("clientId", "clientSecret", "redirectUri");
+    authority = createMock(Authority.class);
+    
+    servlet.injectDependencies(fetcher, codec, "contextRoot");
+    
+    expect(authority.getOrigin()).andReturn("");
+    replay(authority);
+    servlet.injectDependencies("clientId", "clientSecret", "redirectUri", authority);
   }
 
   @After

@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shindig.auth.SecurityTokenException;
+import org.apache.shindig.common.servlet.Authority;
 import org.apache.shindig.common.uri.UriBuilder;
 import org.apache.shindig.gadgets.GadgetException;
 import org.apache.shindig.gadgets.http.HttpRequest;
@@ -43,11 +44,11 @@ import com.google.inject.name.Named;
  * including handling login callbacks from the Facebook Authorization server.
  * 
  * <pre>
- * GET /facebookLogin/popup
+ * GET facebookLogin/popup
  * - This endpoint is reached from the client-side popup when the user clicks login. 
  * - This servlet sends back a redirect to Facebook's login and authorization page.
  * 
- * GET /googleLogin/token
+ * GET facebookLogin/token
  * - The callback URL from Facebook after the user has accepted or declined authorization.
  * 
  * - If the user has declined, Facebook returns an error parameter in the callback URL.
@@ -71,11 +72,13 @@ public class FacebookLoginServlet extends LoginServlet {
   @Inject
   public void injectDependencies(@Named("explorer.facebooklogin.clientid") String clientId,
                                  @Named("explorer.facebooklogin.clientsecret") String clientSecret,
-                                 @Named("explorer.facebooklogin.redirecturi") String redirectUri) {
-
+                                 @Named("explorer.facebooklogin.redirecturi") String redirectUri,
+                                 Authority authority) {
+    
     this.clientId = clientId;
     this.clientSecret = clientSecret;
-    this.redirectUri = redirectUri;
+    this.redirectUri = redirectUri.replaceAll("%origin%", authority.getOrigin())
+                                  .replaceAll("%contextRoot", contextRoot);
   }
   
   @Override
