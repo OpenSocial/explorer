@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.opensocial.explorer</groupId>
     <artifactId>opensocial-explorer</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.2-SNAPSHOT</version>
   </parent>
 
   <artifactId>opensocial-explorer-assembly</artifactId>
@@ -34,7 +34,7 @@
   <!-- ====================================================================== -->
   <properties>
     <maven-assembly-plugin.version>2.2.1</maven-assembly-plugin.version>
-    <opensocial-explorer.version>0.0.2</opensocial-explorer.version>
+    <opensocial-explorer.version>0.0.2-SNAPSHOT</opensocial-explorer.version>
   </properties>
   
   <!-- ====================================================================== -->
@@ -44,7 +44,7 @@
     <url>${project.parent.scm.url}</url>
     <connection>${project.parent.scm.connection}</connection>
     <developerConnection>${project.parent.scm.developerConnection}</developerConnection>
-    <tag>opensocial-explorer-0.0.2</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <!-- ====================================================================== -->
