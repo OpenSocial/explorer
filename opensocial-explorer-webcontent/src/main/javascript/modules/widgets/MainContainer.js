@@ -48,11 +48,6 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
         self.editorArea.setTitle(node.name); 
       }); 
       
-      on(this.sidebarNav, 'show', function(node) {
-        self.editorArea.displaySpec(node.id);
-        self.editorArea.setTitle(node.name); 
-      }); 
-      
       on(this.editorArea, 'renderGadget', function(id) {
         self.gadgetArea.renderGadget(document.location.protocol + '//' + document.location.host + self.editorArea.getContextRoot() + '/gadgetspec/' + id + '/' + self.editorArea.getGadgetSpec().gadgetResource.name);
         self.sidebarNav.setNewId(id);
