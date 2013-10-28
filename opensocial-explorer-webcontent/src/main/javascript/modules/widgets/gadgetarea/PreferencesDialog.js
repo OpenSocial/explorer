@@ -30,9 +30,9 @@
 define(['dojo/_base/declare',  '../ModalDialog', 'dojo/query', 'dojo/dom-construct',
         '../controlgroups/StringControlGroup', '../controlgroups/BooleanControlGroup', 
         '../controlgroups/EnumControlGroup', '../controlgroups/ListControlGroup', 'dojo/on', 
-        'dojo/topic', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
+        'dojo/topic', 'dojo/_base/event', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, ModalDialog, query, domConstruct, StringControlGroup, BooleanControlGroup, EnumControlGroup, 
-            ListControlGroup, on, topic) {
+            ListControlGroup, on, topic, event) {
   return declare('PreferencesDialogWidget', [ ModalDialog ], {
 
     constructor : function() {
@@ -62,10 +62,12 @@ define(['dojo/_base/declare',  '../ModalDialog', 'dojo/query', 'dojo/dom-constru
       query('.modal-body', this.domNode).append(form);
       on(closeBtn, 'click', function(e) {
         self.hide();
+        event.stop(e);
       });
       on(saveBtn, 'click', function(e) {
         self.hide();
         self.notifyPrefsChangedListeners.call(self);
+        event.stop(e);
       });
       footer.append(saveBtn);
       footer.append(closeBtn);
