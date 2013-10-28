@@ -118,8 +118,12 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
       
       var path = this.getPath([], specId);
       var newNode = this.specStore.query({id: specId})[0];
-      this.specTree.set("path", path);
-      this.emit('show', newNode);
+      var self = this;
+      this.specTree.set('path', path).then(function() {
+        self.emit('show', newNode);
+      }, function(e) {
+        console.error('There was en error selecting the node with the id ' + specId);
+      });
     },
     
     /**
