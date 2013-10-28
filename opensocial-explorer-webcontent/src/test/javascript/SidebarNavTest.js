@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['explorer/widgets/sidebar/SidebarNav'], function(SidebarNav){
+define(['explorer/widgets/sidebar/SidebarNav', 'dojo/topic', 'dojo/Deferred', 'dojo/on'], function(SidebarNav, topic, Deferred, on){
   describe('A SidebarNav widget', function() {
     beforeEach(function() {
       var div = document.createElement("div");
@@ -108,60 +108,26 @@ define(['explorer/widgets/sidebar/SidebarNav'], function(SidebarNav){
       document.getElementById('testDiv').appendChild(sidebar.domNode);
       sidebar.startup();
       expect(sidebar.specStore.data.length).toBe(3);
-      sidebar.addSpec("Sample Gadget", "123");
-      expect(sidebar.specStore.data.length).toBe(5);
-      expect(sidebar.specStore.query({name: "My Specs"}).length).toBe(1);
-      expect(sidebar.specStore.query({name: "Sample Gadget"}).length).toBe(1);
-      sidebar.destroy();
-    });
-    
-    it("can set a selected node", function() {
-var sidebar = new SidebarNav();
-var data = [
-            {"id":"109641752",
-              "hasChildren":true,
-              "isDefault":false,
-              "name":"Specs",
-              "parent":"root"},
-            {"id":"-1583082176",
-              "hasChildren":false,
-              "isDefault":true,
-              "name":"Welcome",
-              "parent":"109641752"}]
-      spyOn(sidebar, 'getGadgetSpecService').andReturn({
-        getSpecTree : function(callbacks) {
-          callbacks.success(data);
-        }
-      }); 
       
-      document.getElementById('testDiv').appendChild(sidebar.domNode);
-      sidebar.startup();
-      
-      sidebar.specTree.selectedItems = [data[2]];
-      var calledPath;
-      runs(function() {
-        sidebar.selectNode(["root", "-1583082176"], "-1583082176").then(function(path) {
-          calledPath = path;
-        });
-      });        
-      waitsFor(function() {
-        return calledPath;
-      }, "The node was not selected.", 750);        
-      runs(function() {
-        expect(calledPath).toEqual(["root", "-1583082176"]);
+      var node;
+      on(sidebar, 'show', function(newNode) {
+        node = newNode;
       });
-      
-      sidebar.specTree.selectedItems = undefined;
       runs(function() {
-        sidebar.selectNode(["root", "-1583082176"], "-1583082176").then(function(path) {
-          calledPath = path;
-        });
+        var def = new Deferred();
+        def.resolve('foo');
+        spyOn(sidebar.specTree, 'set').andReturn(def);
+        sidebar.addSpec("Sample Gadget", "123");
       });        
       waitsFor(function() {
-        return calledPath;
+        return node;
       }, "The node was not selected.", 750);        
       runs(function() {
-        expect(calledPath).toEqual(["root", "-1583082176"]);
+        expect(node).toEqual({hasChildren : false, id : "123", isDefault : false, name : "Sample Gadget", parent : "myspecs"});
+        expect(sidebar.specStore.data.length).toBe(5);
+        expect(sidebar.specStore.query({name: "My Specs"}).length).toBe(1);
+        expect(sidebar.specStore.query({name: "Sample Gadget"}).length).toBe(1);
+        sidebar.destroy();
       });
     });
   });

@@ -36,9 +36,9 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dijit/_WidgetsInTemplateMixin', 'dojo/text!./../../templates/SidebarNav.html', 
         'dojo/dom-construct', 'dojo/Evented', './CreationModalDialog',
         '../../gadget-spec-service', 'dojo/store/Memory', 'dojo/store/Observable', 'dojo/on',
-        'dijit/tree/ObjectStoreModel', 'dijit/Tree', 'dojo/dom', 'dojo/dom-class', 'dojo/query', 'dojo/Deferred', 'dojo/domReady!'],
+        'dijit/tree/ObjectStoreModel', 'dijit/Tree', 'dojo/dom', 'dojo/dom-class', 'dojo/query', 'dojo/domReady!'],
         function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, template, domConstruct, Evented,
-            CreationModalDialog, gadgetSpecService, Memory, Observable, on, ObjectStoreModel, Tree, dom, domClass, query, Deferred  ) {
+            CreationModalDialog, gadgetSpecService, Memory, Observable, on, ObjectStoreModel, Tree, dom, domClass, query) {
   return declare('SidebarNavWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, Evented ], {
     templateString : template,
     specStore : null,
@@ -118,43 +118,12 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
       
       var path = this.getPath([], specId);
       var newNode = this.specStore.query({id: specId})[0];
-      this.specTree.set("path", path);
       var self = this;
-      this.selectNode(path, specId).then(function() {
+      this.specTree.set('path', path).then(function() {
         self.emit('show', newNode);
       }, function(e) {
         console.error('There was en error selecting the node with the id ' + specId);
       });
-    },
-    
-    /**
-     * Selects a node in the tree.
-     * 
-     * @memberof module:explorer/widgets/sidebar/SidebarNav#
-     * 
-     * @param {Array} path - The path to the node to select.
-     * @param {String} specId - The ID of the item that is being selected.
-     * @return {module:dojo/promise/Promise} Returns a 
-     * {@link http://dojotoolkit.org/reference-guide/1.8/dojo/promise/Promise.html#dojo-promise-promise|Dojo Promise}.
-     * Call the then method of this Promise with a function that takes in one parameter, the path to the node that was selected.
-     */
-    selectNode : function(path, specId) {
-      var deferred = new Deferred();
-      this.specTree.set("path", path);
-      var self = this;
-      var timer = window.setInterval(function() {
-        var selectedItems = self.specTree.get('selectedItems');
-        try{
-          if(!selectedItems || selectedItems.length == 0 || (selectedItems.length > 0 && selectedItems[0].id == specId)) {
-            window.clearInterval(timer);
-            deferred.resolve(path);
-          }
-        } catch(e) {
-          window.clearInterval(timer);
-          deferred.reject(e);
-        }
-      }, 50);
-      return deferred;
     },
     
     /**
