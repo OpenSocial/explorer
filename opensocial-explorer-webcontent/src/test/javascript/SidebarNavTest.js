@@ -54,7 +54,7 @@ define(['explorer/widgets/sidebar/SidebarNav'], function(SidebarNav){
       
       expect(sidebar.getGadgetSpecService).toHaveBeenCalled();
       expect(sidebar.specTree).not.toBe(null);
-      sidebar.destroy;
+      sidebar.destroy();
     }); 
     
     it("shows the creation modal when the add button is toggled", function() {
@@ -82,7 +82,7 @@ define(['explorer/widgets/sidebar/SidebarNav'], function(SidebarNav){
       expect(sidebar.creationModal.domNode.getAttribute('class')).toBe('modal hide fade');
       sidebar.addGadgetBtn.click();
       expect(sidebar.creationModal.domNode.getAttribute('class')).toBe('modal fade in');
-      sidebar.destroy;
+      sidebar.destroy();
     });
     
     it("can add a new spec", function() {
@@ -113,6 +113,56 @@ define(['explorer/widgets/sidebar/SidebarNav'], function(SidebarNav){
       expect(sidebar.specStore.query({name: "My Specs"}).length).toBe(1);
       expect(sidebar.specStore.query({name: "Sample Gadget"}).length).toBe(1);
       sidebar.destroy();
+    });
+    
+    it("can set a selected node", function() {
+var sidebar = new SidebarNav();
+var data = [
+            {"id":"109641752",
+              "hasChildren":true,
+              "isDefault":false,
+              "name":"Specs",
+              "parent":"root"},
+            {"id":"-1583082176",
+              "hasChildren":false,
+              "isDefault":true,
+              "name":"Welcome",
+              "parent":"109641752"}]
+      spyOn(sidebar, 'getGadgetSpecService').andReturn({
+        getSpecTree : function(callbacks) {
+          callbacks.success(data);
+        }
+      }); 
+      
+      document.getElementById('testDiv').appendChild(sidebar.domNode);
+      sidebar.startup();
+      
+      sidebar.specTree.selectedItems = [data[2]];
+      var calledPath;
+      runs(function() {
+        sidebar.selectNode(["root", "-1583082176"], "-1583082176").then(function(path) {
+          calledPath = path;
+        });
+      });        
+      waitsFor(function() {
+        return calledPath;
+      }, "The node was not selected.", 750);        
+      runs(function() {
+        expect(calledPath).toEqual(["root", "-1583082176"]);
+      });
+      
+      sidebar.specTree.selectedItems = undefined;
+      runs(function() {
+        sidebar.selectNode(["root", "-1583082176"], "-1583082176").then(function(path) {
+          calledPath = path;
+        });
+      });        
+      waitsFor(function() {
+        return calledPath;
+      }, "The node was not selected.", 750);        
+      runs(function() {
+        expect(calledPath).toEqual(["root", "-1583082176"]);
+      });
     });
   });
 });
