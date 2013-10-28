@@ -44,9 +44,9 @@
  * @fires module:explorer/widgets/ExplorerContainer#destroyelement
  */
 define(['dojo/_base/declare', 'dojo/_base/array', 'dojo/dom-construct', './opensocial-data',
-        'dojo/_base/window', 'dojo/dom', 'dojo/json', 'dojo/Deferred', "dojo/_base/lang", 'dojo/Evented'],
+        'dojo/_base/window', 'dojo/dom', 'dojo/json', 'dojo/Deferred', "dojo/_base/lang", 'dojo/Evented', 'dojo/topic'],
         function(declare, arrayUtil, domConstruct, osData, win, dom,
-                JSON, Deferred, lang, Evented) {
+                JSON, Deferred, lang, Evented, topic) {
             return declare([Evented], {
                 containerToken : null,
                 containerTokenTTL : 3600,
@@ -108,6 +108,21 @@ define(['dojo/_base/declare', 'dojo/_base/array', 'dojo/dom-construct', './opens
                   this.container.views.createElementForGadget = this.handleNavigateGadget();
                   this.container.views.createElementForEmbeddedExperience = this.handleNavigateEE();
                   this.container.views.destroyElement = this.handleDestroyElement();
+                  
+                  this.subscribe();
+                },
+                
+                /**
+                 * This classes topic subscriptions.  Subclasses may override this method to
+                 * add their own.
+                 * 
+                 * @memberof module:explorer/widgets/ExplorerContainer#
+                 */
+                subscribe : function() {
+                  var self = this;
+                  topic.subscribe('setSelection', function(selection) {
+                    self.getContainer().selection.setSelection(selection);
+                  });
                 },
                 
                 /**
