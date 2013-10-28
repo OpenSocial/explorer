@@ -118,9 +118,6 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
       
       var path = this.getPath([], specId);
       var newNode = this.specStore.query({id: specId})[0];
-      on(this.specTree, 'close', function(item, node) {
-        alert('focus');
-      });
       this.specTree.set("path", path);
       var self = this;
       this.selectNode(path, specId).then(function() {
