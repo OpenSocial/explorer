@@ -71,8 +71,14 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
     setupSubscriptions : function() {
       var self = this;
       //Published when a gadget switches views via the menu
-      topic.subscribe('reRenderGadgetView', function(params) {
+      this.reRenderGadgetViewHandle = topic.subscribe('reRenderGadgetView', function(params) {
         self.reRenderGadget(params);
+      });
+      
+      
+      // When a user logs in and a security token is generated, we update it in this module.
+      this.updateTokenHandle = topic.subscribe("updateToken", function(token, ttl) {
+        self.updateContainerSecurityToken(token, ttl);
       });
     },
     
@@ -126,11 +132,6 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       on(this.getExplorerContainer(), 'navigateforactions', function(gadgetUrl, opt_params) {
         // We can effectively ignore gadgetUrl, because we'll get it from the site's holder in reRenderGadget
         self.reRenderGadget(opt_params);
-      });
-      
-      // When a user logs in and a security token is generated, we update it in this module.
-      topic.subscribe("updateToken", function(token, ttl) {
-        self.updateContainerSecurityToken(token, ttl);
       });
     },
     
@@ -229,6 +230,12 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       this.inherited(arguments);
       if(this.gadgetDialog) {
         this.gadgetDialog.destroy();
+      }
+      if(this.reRenderGadgetViewHandle) {
+        this.reRenderGadgetViewHandle.remove();
+      }
+      if(this.updateTokenHandle) {
+        this.updateTokenHandle.remove();
       }
     },
     
