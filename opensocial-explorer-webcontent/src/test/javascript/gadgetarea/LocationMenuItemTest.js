@@ -49,7 +49,9 @@ define(['explorer/widgets/gadgetarea/LocationMenuItem', 'dojo/dom-construct',
         refreshed = true;
       });
       runs(function() {
-        locationMenu.sideMenuOption.domNode.click();
+        var event = document.createEvent("MouseEvents");
+        event.initEvent("click", true, true);
+        locationMenu.sideMenuOption.domNode.dispatchEvent(event);
       });
       
       waitsFor(function() {
@@ -70,7 +72,9 @@ define(['explorer/widgets/gadgetarea/LocationMenuItem', 'dojo/dom-construct',
         refreshed = true;
       });
       runs(function() {
-        locationMenu.bottomMenuOption.domNode.click();
+        var event = document.createEvent("MouseEvents");
+        event.initEvent("click", true, true);
+        locationMenu.bottomMenuOption.domNode.dispatchEvent(event);
       });
       
       waitsFor(function() {
