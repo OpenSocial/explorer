@@ -95,6 +95,16 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
      */
     removeAction : function(action) {
       this.gadgetMenuButton.getGadgetDropDownMenu().removeAction(action);
+    },
+    
+    /**
+     * Adds a menu item to the drop down menu.
+     * 
+     * @memberof module:explorer/widgets/gadgetarea/GadgetDropDownMenu#
+     * @param {module:explorer/widgets/MenuItemWidget} menuItem - The menu item to add.
+     */
+    addMenuItem : function(menuItem) {
+      this.gadgetMenuButton.getGadgetDropDownMenu().addMenuItem(menuItem);
     }
   });
 });
