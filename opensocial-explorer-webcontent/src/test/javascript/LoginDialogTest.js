@@ -40,7 +40,7 @@ define(['explorer/widgets/login/LoginDialog', 'dojo/query',
         getProviders : function(callbacks) {
           var data = {
               testPlatform: {
-                imageUrl: "testImageUrl",
+                imageUrl: "",
                 name: "testName",
                 url: "testUrl"
               }
@@ -50,7 +50,7 @@ define(['explorer/widgets/login/LoginDialog', 'dojo/query',
       });
       
       loginDialog.show();
-      expect(loginDialog.providers.testPlatform.imageUrl).toBe("testImageUrl");
+      expect(loginDialog.providers.testPlatform.imageUrl).toBe("");
       expect(loginDialog.providers.testPlatform.name).toBe("testName");
       expect(loginDialog.providers.testPlatform.url).toBe("testUrl");
       expect(query("a", loginDialog.domNode).innerHTML()).toBe("testName");

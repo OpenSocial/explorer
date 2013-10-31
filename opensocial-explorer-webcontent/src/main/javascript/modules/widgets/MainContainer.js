@@ -29,37 +29,59 @@
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetsInTemplateMixin.html|WidgetsInTemplateMixin Documentation}
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin', 
-        'explorer/widgets/login/LoginDialog', 'dojo/query', 'dojo/on', 'dojo/text!./../templates/MainContainer.html'], 
+        'explorer/widgets/login/LoginDialog', 'dojo/query', 'dojo/on', 'dojo/text!./../templates/MainContainer.html', 
+        'explorer/widgets/sidebar/SidebarNav', 'explorer/widgets/gadgetarea/GadgetArea', 'explorer/widgets/editorarea/EditorArea',
+        'explorer/widgets/gadgetarea/PreferencesDialog', 'explorer/widgets/login/LoginDialog'], 
          function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, LoginDialog, query, on, template) {
   return declare('MainContainerWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin ], {
     templateString : template,
-
+    
     /**
-     * Called right before widget is added to the dom. See link for more information.
+     * Called right after widget is added to the dom. See link for more information.
      *
      * @memberof module:explorer/widgets/MainContainer#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
-    postCreate: function() {
+    startup: function() {
+      this.inherited(arguments);
       var self = this;
-      
       on(this.sidebarNav, 'show', function(node) {
         self.editorArea.displaySpec(node.id);
         self.editorArea.setTitle(node.name); 
       }); 
       
       on(this.editorArea, 'renderGadget', function(id) {
-        self.gadgetArea.renderGadget(document.location.protocol + '//' + document.location.host + self.editorArea.getContextRoot() + '/gadgetspec/' + id + '/' + self.editorArea.getGadgetSpec().gadgetResource.name);
+        var url = document.location.protocol + '//' + document.location.host + self.editorArea.getContextRoot() + '/gadgetspec/' + id + '/' + self.editorArea.getGadgetSpec().gadgetResource.name;
+        self.gadgetArea.renderGadget(url).then(function(metadata) {
+          if(metadata && metadata[url]) {
+            self.prefDialog.addPrefsToUI(metadata[url].userPrefs);
+          }
+        });
         self.sidebarNav.setNewId(id);
       });
       
       on(this.editorArea, 'renderEE', function(id) {
-        self.gadgetArea.renderEmbeddedExperience(document.location.protocol + '//' + document.location.host + self.editorArea.getContextRoot() + '/gadgetspec/' + id + '/' + self.editorArea.getGadgetSpec().gadgetResource.name, self.editorArea.getGadgetSpec().eeResource.content);
+        var url = document.location.protocol + '//' + document.location.host + self.editorArea.getContextRoot() + '/gadgetspec/' + id + '/' + self.editorArea.getGadgetSpec().gadgetResource.name;
+        self.gadgetArea.renderEmbeddedExperience(url, self.editorArea.getGadgetSpec().eeResource.content).then(function(results) {
+          if(results.metadata && results.metadata[url]) {
+            self.prefDialog.addPrefsToUI(results.metadata[url].userPrefs);
+          }
+        }); 
         self.sidebarNav.setNewId(id);
+      });
+      
+      on(this.gadgetArea.getExplorerContainer(), 'setpreferences', function(site, url, prefs) {
+        self.prefDialog.setPrefs(prefs);
       });
       
       query('#login').on('click', function(e) {
         self.loginModal.show();
+      });
+      
+      this.prefDialog.addPrefsChangedListener(function(prefs) {
+        var params = {};
+        params[osapi.container.RenderParam.USER_PREFS] = prefs;
+        self.gadgetArea.reRenderGadget(params);
       });
     }
   });

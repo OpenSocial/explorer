@@ -43,7 +43,7 @@ define(['dojo/_base/declare',  'explorer/widgets/ModalDialog', 'dijit/_WidgetsIn
       this.setHeaderTitle('Sign-in or Create New Account');
       this.inherited(arguments);
       
-      topic.subscribe("hideModal", function() {
+      this.hideModalHandle = topic.subscribe("hideModal", function() {
         self.hide();
       });
     },
@@ -111,6 +111,19 @@ define(['dojo/_base/declare',  'explorer/widgets/ModalDialog', 'dijit/_WidgetsIn
      */
     getOpenIdServiceProviders: function() {
       return openIdService;
+    },
+    
+    /**
+     * Destroys this widget.
+     * 
+     * @memberof module:explorer/widgets/login/LoginDialog#
+     * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
+     */
+    destroy: function() {
+      this.inherited(arguments);
+      if(this.hideModalHandle) {
+        this.hideModalHandle.remove();
+      }
     }
   });           
 });
