@@ -2,46 +2,46 @@
   <head>
     <script type="text/javascript" src="open-views.js"></script>
   </head>
-  <body></body>
-</html>
-
-      <h3>What would you like to open?</h3>
-      <select id="type">
-        <option value="gadget">Gadget</option>
-        <option value="url">URL</option>
-        <option value="ee">Embedded Experience</option>
-      </select>
+  <body>
+  	<h3>What would you like to open?</h3>
+    <select id="type">
+      <option value="gadget">Gadget</option>
+      <option value="url">URL</option>
+      <option value="ee">Embedded Experience</option>
+    </select>
       
-      <h3>Where would you like to open it?</h3>
-      <select id="viewTarget">
-        <option></option>
-        <option value="TAB">Tab</option>
-        <option value="DIALOG">Dialog</option>
-        <option value="MODALDIALOG">Modal Dialog</option>
-        <option value="FLOAT">Float</option>
-        <option value="SIDEBAR">Sidebar</option>
+    <h3>Where would you like to open it?</h3>
+    <select id="viewTarget">
+      <option></option>
+      <option value="TAB">Tab</option>
+      <option value="DIALOG">Dialog</option>
+      <option value="MODALDIALOG">Modal Dialog</option>
+      <option value="FLOAT">Float</option>
+      <option value="SIDEBAR">Sidebar</option>
+    </select>
+       
+    <div id="viewSection">
+      <h3>What view would you like to open?</h3>
+      <select id="view">
+        <option value="tab">Tab View</option>
+        <option value="sidebar">Sidebar View</option>
+        <option value="dialog">Dialog View</option>
       </select>
+    </div>
        
-       <div id="viewSection">
-         <h3>What view would you like to open?</h3>
-         <select id="view">
-           <option value="tab">Tab View</option>
-           <option value="sidebar">Sidebar View</option>
-           <option value="dialog">Dialog View</option>
-         </select>
-       </div>
-       
-       <div id="urlSection" style="display: none;">
-         <h3>URL To Open</h3>
-         <input type="text" id="url" value="http://opensocial.org"></input>
-       </div>
+    <div id="urlSection" style="display: none;">
+      <h3>URL To Open</h3>
+      <input type="text" id="url" value="http://opensocial.org"></input>
+    </div>
         
-       <div id="eeSection" style="display: none;">
-         <h3>Embedded Experience Data Model</h3>
-         <textarea id="dataModel" rows="10" cols="70"></textarea>
-       </div>
+    <div id="eeSection" style="display: none;">
+      <h3>Embedded Experience Data Model</h3>
+      <textarea id="dataModel" rows="10" cols="70"></textarea>
+    </div>
       
-      <br/>
-      <div>
-        <button id="open">Open</button>
-      </div>
+    <br/>
+    <div>
+      <button id="open">Open</button>
+    </div>
+  </body>
+</html>
