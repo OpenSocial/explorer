@@ -26,7 +26,7 @@
  *  <li>selection</li>
  * </ul>
  *
- * @module explorer/widgets/ExplorerContainer
+ * @module explorer/ExplorerContainer
  * @augments dijit/_WidgetBase
  * @augments dijit/_TemplatedMixin
  * @augments dojo/Evented
@@ -55,7 +55,7 @@ define(['dojo/_base/declare', 'dojo/_base/array', 'dojo/dom-construct', './opens
                  * Creates a new ExplorerContainer.
                  * @constructor
                  * 
-                 * @memberof module:explorer/widgets/ExplorerContainer#
+                 * @memberof module:explorer/ExplorerContainer#
                  */
                 constructor : function() {
                   var config = {},
@@ -116,7 +116,7 @@ define(['dojo/_base/declare', 'dojo/_base/array', 'dojo/dom-construct', './opens
                  * This classes topic subscriptions.  Subclasses may override this method to
                  * add their own.
                  * 
-                 * @memberof module:explorer/widgets/ExplorerContainer#
+                 * @memberof module:explorer/ExplorerContainer#
                  */
                 subscribe : function() {
                   var self = this;
@@ -128,7 +128,7 @@ define(['dojo/_base/declare', 'dojo/_base/array', 'dojo/dom-construct', './opens
                 /**
                  * Gets the common container.
                  * 
-                 * @memberof module:explorer/widgets/ExplorerContainer#
+                 * @memberof module:explorer/ExplorerContainer#
                  * @return {osapi.container.Container} The common container.
                  * @see {@link http://opensocial.github.io/spec/2.5/Core-Container.xml#osapi.container.Container|OpenSocial Spec}
                  */
@@ -139,7 +139,7 @@ define(['dojo/_base/declare', 'dojo/_base/array', 'dojo/dom-construct', './opens
                 /**
                  * Renders a gadget.
                  * 
-                 * @memberof module:explorer/widgets/ExplorerContainer#
+                 * @memberof module:explorer/ExplorerContainer#
                  * @param {String} url - The URL of the gadget to render.
                  * @param {osapi.container.GadgetSite} site - The {@link http://opensocial.github.io/spec/2.5/Core-Container.xml#osapi.container.GadgetSite|site}
                  * to render the gadget in.
@@ -178,7 +178,7 @@ define(['dojo/_base/declare', 'dojo/_base/array', 'dojo/dom-construct', './opens
                 /**
                  * Renders an embedded experience gadget.
                  * 
-                 * @memberof module:explorer/widgets/ExplorerContainer#
+                 * @memberof module:explorer/ExplorerContainer#
                  * @param {Object} dataModel - A JSON object representing the 
                  * {@link http://opensocial.github.io/spec/2.5/Core-Gadget.xml#Embedded-Experiences|embedded experiences data model}.
                  * @param {Element} siteNode - The element to be used for the site.
@@ -232,7 +232,7 @@ define(['dojo/_base/declare', 'dojo/_base/array', 'dojo/dom-construct', './opens
                 /**
                  * Called when a gadget is rendered which has actions.
                  * 
-                 * @memberof module:explorer/widgets/ExplorerContainer#
+                 * @memberof module:explorer/ExplorerContainer#
                  * @param {Object[]} actionObjArray - The array of actions from the gadget.
                  * @param {osapi.container.Container} container - The OpenSocial container object.
                  * @param {Function} runAction - Function which will run an action in the OpeSocial container.
@@ -265,7 +265,7 @@ define(['dojo/_base/declare', 'dojo/_base/array', 'dojo/dom-construct', './opens
                     /**
                      * addaction event.
                      * 
-                     * @event module:explorer/widgets/ExplorerContainer#addaction
+                     * @event module:explorer/ExplorerContainer#addaction
                      * @param {Object} action - The action that was added.
                      * @see {@link http://opensocial.github.io/spec/trunk/Core-Gadget.xml#gadgets.actions.actionobjects|Action Object}
                      */
@@ -276,7 +276,7 @@ define(['dojo/_base/declare', 'dojo/_base/array', 'dojo/dom-construct', './opens
                 /**
                  * Called when actions from a gadget should be hidden.
                  * 
-                 * @memberof module:explorer/widgets/ExplorerContainer#
+                 * @memberof module:explorer/ExplorerContainer#
                  * @param {Object[]} actionObjArray - The actions that should be hidden.
                  */
                 hideActions : function(actionObjArray) {
@@ -285,7 +285,7 @@ define(['dojo/_base/declare', 'dojo/_base/array', 'dojo/dom-construct', './opens
                     /**
                      * removeaction event.
                      * 
-                     * @event module:explorer/widgets/ExplorerContainer#removeaction
+                     * @event module:explorer/ExplorerContainer#removeaction
                      * @param {Object} action - The action that was removed.
                      * @see {@link http://opensocial.github.io/spec/trunk/Core-Gadget.xml#gadgets.actions.actionobjects|Action Object}
                      */
@@ -296,7 +296,7 @@ define(['dojo/_base/declare', 'dojo/_base/array', 'dojo/dom-construct', './opens
                 /**
                  * Emits an event letting listeners know to navigate to a gadget for an action.
                  * 
-                 * @memberof module:explorer/widgets/ExplorerContainer#
+                 * @memberof module:explorer/ExplorerContainer#
                  * @param {String} gadgetUrl - The URL to the gadget to render.
                  * @param {Object=} opt_params - Optional parameter used by the container, see the
                  * {@link http://opensocial.github.io/spec/2.5/Core-Container.xml#RenderConfiguration|OpenSocial spec} 
@@ -306,7 +306,7 @@ define(['dojo/_base/declare', 'dojo/_base/array', 'dojo/dom-construct', './opens
                   /**
                    * navigateforactions event.
                    * 
-                   * @event module:explorer/widgets/ExplorerContainer#navigateforactions
+                   * @event module:explorer/ExplorerContainer#navigateforactions
                    * @param {String} gadgetUrl - The URL of the gadget that is being navigated to.
                    * @param {Object=} opt_params - Optional parameter used by the container, see the
                    * {@link http://opensocial.github.io/spec/2.5/Core-Container.xml#RenderConfiguration|OpenSocial spec} 
@@ -318,7 +318,7 @@ define(['dojo/_base/declare', 'dojo/_base/array', 'dojo/dom-construct', './opens
                 /**
                  * Returns a closure to handle navigate URL calls from gadgets.
                  * 
-                 * @memberof module:explorer/widgets/ExplorerContainer#
+                 * @memberof module:explorer/ExplorerContainer#
                  * @return {Function} A closure that handles navigate URL calls for gadgets.
                  * 
                  */
@@ -328,7 +328,7 @@ define(['dojo/_base/declare', 'dojo/_base/array', 'dojo/dom-construct', './opens
                     /**
                      * navigateurl event.
                      * 
-                     * @event module:explorer/widgets/ExplorerContainer#navigateurl
+                     * @event module:explorer/ExplorerContainer#navigateurl
                      * @param {Element} rel - The element containing the gadget requesting to open the URL.
                      * @param {String=} opt_viewTarget - The 
                      * {@link http://opensocial.github.io/spec/2.5/Core-Gadget.xml#gadgets.views.ViewType.ViewTarget|view target}
@@ -347,7 +347,7 @@ define(['dojo/_base/declare', 'dojo/_base/array', 'dojo/dom-construct', './opens
                 /**
                  * Returns a closure to handle navigate gadget calls from gadgets.
                  * 
-                 * @memberof module:explorer/widgets/ExplorerContainer#
+                 * @memberof module:explorer/ExplorerContainer#
                  * @returns {Function} A closure that handles navigate gadget calls for gadgets.
                  */
                 handleNavigateGadget : function() {
@@ -356,7 +356,7 @@ define(['dojo/_base/declare', 'dojo/_base/array', 'dojo/dom-construct', './opens
                     /**
                      * navigategadget event.
                      * 
-                     * @event module:explorer/widgets/ExplorerContainer#navigategadget
+                     * @event module:explorer/ExplorerContainer#navigategadget
                      * @param {Object} metadata - The gadget metadata for the gadget being opened.
                      * @param {Element} rel - The element containing the gadget requesting to open the URL.
                      * @param {String=} opt_view - The view of the gadget to open.
@@ -377,7 +377,7 @@ define(['dojo/_base/declare', 'dojo/_base/array', 'dojo/dom-construct', './opens
                 /**
                  * Returns a closure to handle navigate embedded experience calls from gadgets.
                  * 
-                 * @memberof module:explorer/widgets/ExplorerContainer#
+                 * @memberof module:explorer/ExplorerContainer#
                  * @returns {Function} A closure that handles navigate embedded experience calls for gadgets.
                  */
                 handleNavigateEE : function() {
@@ -386,7 +386,7 @@ define(['dojo/_base/declare', 'dojo/_base/array', 'dojo/dom-construct', './opens
                     /**
                      * navigateee event.
                      * 
-                     * @event module:explorer/widgets/ExplorerContainer#navigateee
+                     * @event module:explorer/ExplorerContainer#navigateee
                      * @param {Element} rel - The element containing the gadget requesting to open the URL.
                      * @param {Object=} opt_gadgetInfo - The metadata of the embedded experience gadget being opened.
                      * @param {String=} opt_viewTarget - The 
@@ -406,7 +406,7 @@ define(['dojo/_base/declare', 'dojo/_base/array', 'dojo/dom-construct', './opens
                 /**
                  * Returns a closure to handle destroy element calls from gadgets closing other gadgets they have opened.
                  * 
-                 *  @memberof module:explorer/widgets/ExplorerContainer#
+                 *  @memberof module:explorer/ExplorerContainer#
                  *  @returns {Function} A closure to handle destroy element calls from gadgets closing other gadgets they have opened.
                  */
                 handleDestroyElement : function() {
@@ -415,7 +415,7 @@ define(['dojo/_base/declare', 'dojo/_base/array', 'dojo/dom-construct', './opens
                     /**
                      * destroyelement event.
                      * 
-                     * @event module:explorer/widgets/ExplorerContainer#destroyelement
+                     * @event module:explorer/ExplorerContainer#destroyelement
                      * @param {osapi.container.GadgetSite} site - The
                      * {@link http://opensocial.github.io/spec/2.5/Core-Container.xml#osapi.container.GadgetSite|osapi.container.GadgetSite|gadget site}
                      * to destroy.
@@ -428,7 +428,7 @@ define(['dojo/_base/declare', 'dojo/_base/array', 'dojo/dom-construct', './opens
                  * Updates the container security token and forces a refresh of all of the gadget
                  * security tokens to ensure owner/viewer information is up-to-date.
                  * 
-                 * @memberof module:explorer/widgets/ExplorerContainer#
+                 * @memberof module:explorer/ExplorerContainer#
                  * @param {String} token - The security token.
                  * @param {Number} ttl - The time to live for the security token.
                  */
@@ -448,7 +448,7 @@ define(['dojo/_base/declare', 'dojo/_base/array', 'dojo/dom-construct', './opens
                  * Will get called when Shindig needs to get a new container security token.
                  * @param {module:explorer/widgets/ExplorerContainer~containerTokenCallback} result - The callback that gets called with the container token.
                  * 
-                 * @memberof module:explorer/widgets/ExplorerContainer#
+                 * @memberof module:explorer/ExplorerContainer#
                  */
                 getContainerToken : function(result) {
                   // TODO: Do work to get a new container token
@@ -457,7 +457,7 @@ define(['dojo/_base/declare', 'dojo/_base/array', 'dojo/dom-construct', './opens
                 
                 /**
                  * Callback to get the container security token.
-                 * @callback module:explorer/widgets/ExplorerContainer~containerTokenCallback
+                 * @callback module:explorer/ExplorerContainer~containerTokenCallback
                  * @param {String} containerToken - Container security token.
                  * @param {Number} ttl - Container security token time to live.
                  */
