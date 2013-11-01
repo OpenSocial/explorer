@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['explorer/widgets/SidebarNav'], function(SidebarNav){
+define(['explorer/widgets/SidebarNav', 'dojo/topic', 'dojo/Deferred', 'dojo/on'], function(SidebarNav, topic, Deferred, on) {
   describe('A SidebarNav widget', function() {
     beforeEach(function() {
       var div = document.createElement("div");
@@ -54,9 +54,37 @@ define(['explorer/widgets/SidebarNav'], function(SidebarNav){
       
       expect(sidebar.getGadgetSpecService).toHaveBeenCalled();
       expect(sidebar.specTree).not.toBe(null);
-      sidebar.destroy;
+      sidebar.destroy();
     }); 
     
+    it("shows the creation modal when the add button is toggled", function() {
+      var sidebar = new SidebarNav();
+      
+      spyOn(sidebar, 'getGadgetSpecService').andReturn({
+        getSpecTree : function(callbacks) {
+          var data = [
+            {"id":"109641752",
+              "hasChildren":true,
+              "isDefault":false,
+              "name":"Specs",
+              "parent":"root"},
+            {"id":"-1583082176",
+              "hasChildren":false,
+              "isDefault":true,
+              "name":"Welcome",
+              "parent":"109641752"}];
+          callbacks.success(data);
+        }
+      }); 
+      
+      document.getElementById('testDiv').appendChild(sidebar.domNode);
+      sidebar.startup();
+      expect(sidebar.creationModal.domNode.getAttribute('class')).toBe('modal hide fade');
+      sidebar.addGadgetBtn.click();
+      expect(sidebar.creationModal.domNode.getAttribute('class')).toBe('modal fade in');
+      sidebar.destroy();
+    });
+
     it("can add a new spec", function() {
       var sidebar = new SidebarNav();
       
@@ -80,11 +108,27 @@ define(['explorer/widgets/SidebarNav'], function(SidebarNav){
       document.getElementById('testDiv').appendChild(sidebar.domNode);
       sidebar.startup();
       expect(sidebar.specStore.data.length).toBe(3);
-      sidebar.addSpec("Sample Gadget", "123");
-      expect(sidebar.specStore.data.length).toBe(5);
-      expect(sidebar.specStore.query({name: "My Specs"}).length).toBe(1);
-      expect(sidebar.specStore.query({name: "Sample Gadget"}).length).toBe(1);
-      sidebar.destroy();
+      
+      var node;
+      on(sidebar, 'show', function(newNode) {
+        node = newNode;
+      });
+      runs(function() {
+        var def = new Deferred();
+        def.resolve('foo');
+        spyOn(sidebar.specTree, 'set').andReturn(def);
+        sidebar.addSpec("Sample Gadget", "123");
+      });        
+      waitsFor(function() {
+        return node;
+      }, "The node was not selected.", 750);        
+      runs(function() {
+        expect(node).toEqual({hasChildren : false, id : "123", isDefault : false, name : "Sample Gadget", parent : "myspecs"});
+        expect(sidebar.specStore.data.length).toBe(5);
+        expect(sidebar.specStore.query({name: "My Specs"}).length).toBe(1);
+        expect(sidebar.specStore.query({name: "Sample Gadget"}).length).toBe(1);
+        sidebar.destroy();
+      });
     });
   });
 });

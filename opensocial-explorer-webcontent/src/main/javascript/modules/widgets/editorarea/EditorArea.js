@@ -80,7 +80,7 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
         });
       });
       
-      topic.subscribe("refreshEditors", function() {
+      this.refreshEditorsHandle = topic.subscribe("refreshEditors", function() {
         self.getEditorTabs().refreshEditors();
       });
     },
@@ -253,13 +253,13 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
     },
 
     /**
-     * Destroys this instance of EditorArea. For testing purposes.
+     * Destroys this instance of EditorArea.
      *
      * @memberof module:explorer/widgets/editorarea/EditorArea#
      */
     destroy : function() {
       this.inherited(arguments);
-      instance = undefined;
+      this.refreshEditorsHandle.remove();
     }
   });
 });

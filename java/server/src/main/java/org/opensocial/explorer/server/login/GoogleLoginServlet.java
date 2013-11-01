@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.opensocial.explorer.server.login;
 
 import java.io.IOException;
@@ -9,6 +27,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.shindig.auth.SecurityTokenException;
+import org.apache.shindig.common.servlet.Authority;
 import org.apache.shindig.common.uri.UriBuilder;
 import org.apache.shindig.gadgets.GadgetException;
 import org.apache.shindig.gadgets.http.HttpRequest;
@@ -32,11 +51,11 @@ import javax.servlet.http.HttpServletResponse;
  * including handling login callbacks from the Google Authorization server.
  * 
  * <pre>
- * GET /googleLogin/popup
+ * GET googleLogin/popup
  * - This endpoint is reached from the client-side popup when the user clicks login. 
  * - This servlet sends back a redirect to Google's login and authorization page.
  * 
- * GET /googleLogin/token
+ * GET googleLogin/token
  * - The callback URL from Google after the user has accepted or declined authorization.
  * 
  * - If the user has declined, Google returns an error parameter in the callback URL.
@@ -57,11 +76,13 @@ public class GoogleLoginServlet extends LoginServlet {
   @Inject
   public void injectDependencies(@Named("explorer.googlelogin.clientid") String clientId,
                                  @Named("explorer.googlelogin.clientsecret") String clientSecret,
-                                 @Named("explorer.googlelogin.redirecturi") String redirectUri) {
+                                 @Named("explorer.googlelogin.redirecturi") String redirectUri,
+                                 Authority authority) {
     
     this.clientId = clientId;
     this.clientSecret = clientSecret;
-    this.redirectUri = redirectUri;
+    this.redirectUri = redirectUri.replaceAll("%origin%", authority.getOrigin())
+                                  .replaceAll("%contextRoot%", contextRoot);
   }
   
   @Override

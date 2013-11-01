@@ -29,9 +29,9 @@
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dojo/topic',
         'dojo/_base/array', 'dojo/text!./../../templates/GadgetArea.html', './GadgetToolbar',
         'dojo/dom-construct','../Loading', '../../opensocial-data', './GadgetModalDialog',
-        'dojo/_base/window', 'dojo/dom', 'dojo/json', '../ExplorerContainer', 'dojo/on'],
+        'dojo/_base/window', 'dojo/dom', 'dojo/json', '../ExplorerContainer', 'dojo/on', './LocationMenuItem'],
         function(declare, WidgetBase, TemplatedMixin, topic, arrayUtil, template, GadgetToolbar, 
-            domConstruct, Loading, osData, GadgetModalDialog, win, dom, JSON, ExplorerContainer, on) {
+            domConstruct, Loading, osData, GadgetModalDialog, win, dom, JSON, ExplorerContainer, on, LocationMenuItem) {
       return declare('GadgetAreaWidget', [ WidgetBase, TemplatedMixin ], {
                 templateString : template,
                 containerToken : null,
@@ -50,6 +50,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       this.gadgetToolbar = new GadgetToolbar();
       domConstruct.place(this.gadgetToolbar.domNode, this.domNode);
       this.gadgetToolbar.startup();
+      this.addMenuItems();
       var self = this;
       this.gadgetToolbar.getPrefDialog().addPrefsChangedListener(function(prefs) {
         var params = {};
@@ -71,8 +72,14 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
     setupSubscriptions : function() {
       var self = this;
       //Published when a gadget switches views via the menu
-      topic.subscribe('reRenderGadgetView', function(params) {
+      this.reRenderGadgetViewHandle = topic.subscribe('reRenderGadgetView', function(params) {
         self.reRenderGadget(params);
+      });
+      
+      
+      // When a user logs in and a security token is generated, we update it in this module.
+      this.updateTokenHandle = topic.subscribe("updateToken", function(token, ttl) {
+        self.updateContainerSecurityToken(token, ttl);
       });
     },
     
@@ -126,11 +133,6 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       on(this.getExplorerContainer(), 'navigateforactions', function(gadgetUrl, opt_params) {
         // We can effectively ignore gadgetUrl, because we'll get it from the site's holder in reRenderGadget
         self.reRenderGadget(opt_params);
-      });
-      
-      // When a user logs in and a security token is generated, we update it in this module.
-      topic.subscribe("updateToken", function(token, ttl) {
-        self.updateContainerSecurityToken(token, ttl);
       });
     },
     
@@ -230,6 +232,12 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       if(this.gadgetDialog) {
         this.gadgetDialog.destroy();
       }
+      if(this.reRenderGadgetViewHandle) {
+        this.reRenderGadgetViewHandle.remove();
+      }
+      if(this.updateTokenHandle) {
+        this.updateTokenHandle.remove();
+      }
     },
     
     /**
@@ -289,6 +297,18 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
         this.getExplorerContainer().getContainer().closeGadget(this.site);
         domConstruct.destroy("gadgetSite" + this.siteCounter.toString());
       }
+    },
+    
+    /**
+     * Adds menu items to the gadget menu.  Sub-classes can override this method to
+     * add additional menus.
+     * 
+     * @memberof module:explorer/widgets/gadgetarea/GadgetArea#
+     */
+    addMenuItems: function() {
+      var locationMenuItem = new LocationMenuItem();
+      this.gadgetToolbar.addMenuItem(locationMenuItem);
+      locationMenuItem.startup();
     }
   });
 });

@@ -16,8 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['explorer/widgets/ExplorerContainer', 'dojo/on', 'dojo/json', 'dojo/dom-construct'],
-        function(ExplorerContainer, on, JSON, domConstruct) {
+define(['explorer/widgets/ExplorerContainer', 'dojo/on', 'dojo/json', 'dojo/dom-construct', 'dojo/topic'],
+        function(ExplorerContainer, on, JSON, domConstruct, topic) {
   describe('An OpenSocial container', function() {
     var container;
     var actions;
@@ -534,6 +534,12 @@ define(['explorer/widgets/ExplorerContainer', 'dojo/on', 'dojo/json', 'dojo/dom-
       var callback = jasmine.createSpy('token')
       expContainer.getContainerToken(callback);
       expect(callback).toHaveBeenCalledWith('123', 320);
+    });
+    
+    it("handles the setSelection event", function() {
+      var expContainer = new ExplorerContainer();
+      topic.publish('setSelection', '123');
+      expect(container.selection.setSelection).toHaveBeenCalledWith('123');
     });
   });
 });

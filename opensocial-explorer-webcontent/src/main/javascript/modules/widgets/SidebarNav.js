@@ -18,7 +18,7 @@
  */
 
 /**
- * Contains the Dojo Tree Control for specs.
+ * Contains the Dojo Tree Control for specs and the CreationModalDialog Module.
  *
  * @module explorer/widgets/SidebarNav
  * @requires module:explorer/widgets/creation/CreationSpecModal
@@ -33,13 +33,13 @@
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dojo/Evented.html|Evented Documentation}
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 
-        'dijit/_WidgetsInTemplateMixin', 'dojo/text!./../templates/SidebarNav.html', 
+        'dijit/_WidgetsInTemplateMixin', 'dojo/text!./../templates/SidebarNav.html',
         'dojo/dom-construct', 'dojo/Evented', 'explorer/widgets/creation/CreationSpecModal',
         'explorer/gadget-spec-service', 'dojo/store/Memory', 'dojo/store/Observable', 'dojo/on', 'dojo/topic',
         'dijit/tree/ObjectStoreModel', 'dijit/Tree', 'dojo/dom', 'dojo/dom-class', 'dojo/query', 'dojo/domReady!'],
         function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, template, domConstruct, Evented,
             CreationSpecModal, gadgetSpecService, Memory, Observable, on, topic, ObjectStoreModel, Tree, dom, domClass, query) {
-  return declare('SidebarNav', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, Evented ], {
+  return declare('SidebarNavWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, Evented ], {
     templateString : template,
     specStore : null,
     specModel : null,
@@ -93,12 +93,12 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         }
       });
       
-      on(this.creationSpecModal, 'newSpec', function(title, data) {
+      on(this.creationModal, 'newSpec', function(title, data) {
         self.addSpec(title, data.id);
       });
       
-      topic.subscribe('toggleCreationSpecModal', function() {
-        self.toggleModal();
+      topic.subscribe('toggleCreationSpecModal', function() {   
+        self.toggleModal();    
       });
     },
     
@@ -118,8 +118,12 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
       
       var path = this.getPath([], specId);
       var newNode = this.specStore.query({id: specId})[0];
-      this.specTree.set("path", path);
-      this.emit('show', newNode);
+      var self = this;
+      this.specTree.set('path', path).then(function() {
+        self.emit('show', newNode);
+      }, function(e) {
+        console.error('There was en error selecting the node with the id ' + specId);
+      });
     },
     
     /**

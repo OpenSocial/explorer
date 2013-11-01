@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.opensocial.explorer.server.login;
 
 import java.io.IOException;
@@ -9,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shindig.auth.SecurityTokenException;
+import org.apache.shindig.common.servlet.Authority;
 import org.apache.shindig.common.uri.UriBuilder;
 import org.apache.shindig.gadgets.GadgetException;
 import org.apache.shindig.gadgets.http.HttpRequest;
@@ -25,11 +44,11 @@ import com.google.inject.name.Named;
  * including handling login callbacks from the Facebook Authorization server.
  * 
  * <pre>
- * GET /facebookLogin/popup
+ * GET facebookLogin/popup
  * - This endpoint is reached from the client-side popup when the user clicks login. 
  * - This servlet sends back a redirect to Facebook's login and authorization page.
  * 
- * GET /googleLogin/token
+ * GET facebookLogin/token
  * - The callback URL from Facebook after the user has accepted or declined authorization.
  * 
  * - If the user has declined, Facebook returns an error parameter in the callback URL.
@@ -53,11 +72,13 @@ public class FacebookLoginServlet extends LoginServlet {
   @Inject
   public void injectDependencies(@Named("explorer.facebooklogin.clientid") String clientId,
                                  @Named("explorer.facebooklogin.clientsecret") String clientSecret,
-                                 @Named("explorer.facebooklogin.redirecturi") String redirectUri) {
-
+                                 @Named("explorer.facebooklogin.redirecturi") String redirectUri,
+                                 Authority authority) {
+    
     this.clientId = clientId;
     this.clientSecret = clientSecret;
-    this.redirectUri = redirectUri;
+    this.redirectUri = redirectUri.replaceAll("%origin%", authority.getOrigin())
+                                  .replaceAll("%contextRoot%", contextRoot);
   }
   
   @Override
