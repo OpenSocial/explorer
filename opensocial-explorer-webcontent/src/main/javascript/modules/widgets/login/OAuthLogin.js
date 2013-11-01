@@ -47,6 +47,10 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       on(this.loginLink, 'click', function() {
         self.togglePopup();
       });
+      
+      topic.subscribe('tokenRequest', function() {
+        topic.publish('tokenResponse', self.securityToken);
+      });
     },
     
     /**

@@ -25,12 +25,15 @@
  * @augments dijit/_WidgetsInTemplateMixin
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetsInTemplateMixin.html|WidgetsInTemplateMixin Documentation}
  */
-define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInTemplateMixin', 'dojo/text!./../../templates/CreationServiceModal.html',
-        'dojo/query', 'dojo/dom', 'dojo/on', 'dojo/dom-construct', 'dojo/dom-class', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom', 'dojo/domReady!'],
-        function(declare, ModalDialog, WidgetsInTemplateMixin, template, query, dom, on, domConstruct, domClass) {
+define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInTemplateMixin', 
+        'dojo/text!./../../templates/CreationServiceModal.html', 'dojo/query', 'dojo/dom', 
+        'dojo/on', 'dojo/dom-construct', 'dojo/dom-class', 'explorer/services-service', 'dojo/topic',
+        'dojo/NodeList-manipulate', 'dojo/NodeList-dom', 'dojo/domReady!'],
+        function(declare, ModalDialog, WidgetsInTemplateMixin, template, query, 
+            dom, on, domConstruct, domClass, servicesService, topic) {
   return declare('CreationServiceModalWidget', [ModalDialog, WidgetsInTemplateMixin], {
     templateString: template,
-    dropdownValue: "OAuth",
+    dropdownValue: 'OAuth',
     /**
      * Called right before widget is added to the dom. See link for more information.
      *
@@ -38,48 +41,139 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     postCreate: function() {
+      
+      
       var self = this;
+      
+      
+      
+      // Tabs Listener
       query('.tab', this.domNode).on('click', function(e) {
-        if(!domClass.contains(this, "active")) {
-          domClass.toggle(self.newServiceTab, 'active');
-          domClass.toggle(self.servicesTab, 'active');
-          
-          domClass.toggle(self.newServiceContent, 'active');
-          domClass.toggle(self.servicesContent, 'active');
+        if(!domClass.contains(this, 'active')) {
+          self.toggleTab();
         }
       });
       
+      // Pill Listener
       query('.pill', this.domNode).on('click', function(e) {
-        if(!domClass.contains(this, "active")) {
+        if(!domClass.contains(this, 'active')) {
+          var value = self.serviceSelection.value;
+          if(value == 'OAuth') {
+            domClass.toggle(self.oAuthAdvancedContent, 'active');
+            domClass.toggle(self.oAuthGeneralContent, 'active');
+          }
+
+          if(value == 'OAuth2') {
+            domClass.toggle(self.oAuth2AdvancedContent, 'active');
+            domClass.toggle(self.oAuth2GeneralContent, 'active');
+          }
+          
           domClass.toggle(self.advancedPill, 'active');
           domClass.toggle(self.generalPill, 'active');
-          
-          domClass.toggle(self.oAuth2AdvancedContent, 'active');
-          domClass.toggle(self.oAuth2GeneralContent, 'active');
         }
       });
-      
+       
+      // Dropdown Listener
       query(this.serviceSelection, this.domNode).on('click', function(e) {
         var value = self.serviceSelection.value;
         if(value !== self.dropdownValue) {
-          if(value == "OAuth") {
-            query('.pill').addClass("hide");
-            query(self.oAuthContent).addClass("active");
-            query(self.oAuth2AdvancedContent).removeClass("active");
-            query(self.oAuth2GeneralContent).removeClass("active");
-          };
+          self.clearContent();
+          self.dropdownValue = value;
+          self.resetPill();
           
-          if(value == "OAuth2") {
-            query('.pill').removeClass("hide");
-            query(self.generalPill).addClass("active");
-            query(self.advancedPill).removeClass("active");
-            query(self.oAuth2GeneralContent).addClass("active");
-            query(self.oAuthContent).removeClass("active");
+          if(value == 'OAuth') {
+            query(self.oAuthGeneralContent).addClass('active');
           }
           
-          self.dropdownValue = value;
+          if(value == 'OAuth2') {
+            query(self.oAuth2GeneralContent).addClass('active');
+          }
         };
       });
+      
+      // Submit Listener
+      query(this.serviceSubmit, this.domNode).on('click', function(e) {
+        var value = self.serviceSelection.value;
+        var securityToken = self.getToken();
+        alert(securityToken);
+        if(value == 'OAuth') {
+          var oAuth = {
+              version: value,
+              st: securityToken,
+              name: self.oAuthName.value,
+              key: self.oAuthKey.value,
+              secret: self.oAuthSecret.value,
+              keyType: self.oAuthKeyType.value
+          }
+        }
+        
+        if(value == 'OAuth2') {
+          var oAuth = {
+              version: value,
+              st: securityToken,
+              name: self.oAuth2Name.value,
+              key: self.oAuth2Key.value,
+              secret: self.oAuth2Secret.value,
+              authUrl: self.oAuth2Authorization.value,
+              tokenUrl: self.oAuth2Token.value,
+              type: self.oAuth2Type.value,
+              grantType: self.oAuth2GrantType.value,
+              authentication: self.oAuth2Authentication.value,
+              override: self.oAuth2Override.checked ? 'true' : 'false',
+              authHeader: self.oAuth2Header.checked ? 'true' : 'false',
+              urlParam: self.oAuth2Parameter.checked ? 'true' : 'false'    
+          }
+        }
+        
+        self.submitOAuthService(oAuth);
+      });
+    },
+    
+    getToken: function() {
+      topic.subscribe('tokenResponse', function(securityToken) {
+        return securityToken;
+      });
+      
+      topic.publish('tokenRequest');
+    }
+    
+    toggleTab: function() {
+      domClass.toggle(this.newServiceTab, 'active');
+      domClass.toggle(this.servicesTab, 'active');
+      
+      domClass.toggle(this.newServiceContent, 'active');
+      domClass.toggle(this.servicesContent, 'active');
+    },
+    
+    clearContent: function() {
+      query('.pill-pane').removeClass('active');
+    },
+    
+    resetPill: function() {
+      query(this.generalPill).addClass('active');
+      query(this.advancedPill).removeClass('active');
+    },
+    
+    submitOAuthService: function(oAuth) {
+      this.getServicesService().createNewService(oAuth, {
+        success: function(data) {
+          console.log(JSON.stringify(data));
+        },
+        error: function(data) {
+          console.error("There was an error");
+        }
+      }); 
+    },
+    
+    
+    /**
+     * Getter method for the servicesService module for testing purposes.
+     *
+     * @memberof module:explorer/widgets/creation/CreationServiceModal#
+     * @returns {servicesService} The servicesService object.
+     */
+    getServicesService : function() {
+      return servicesService;
     }
   });
 });

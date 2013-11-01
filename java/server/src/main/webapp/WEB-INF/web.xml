@@ -302,6 +302,19 @@
     </servlet-class>
   </servlet>
   
+  <!-- Services -->
+  <servlet>
+    <servlet-name>services</servlet-name>
+    <servlet-class>
+      org.opensocial.explorer.server.services.ServicesServlet
+    </servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>services</servlet-name>
+    <url-pattern>/services/*</url-pattern>
+  </servlet-mapping>
+  
   <servlet-mapping>
     <servlet-name>googleLogin</servlet-name>
     <url-pattern>/googleLogin/*</url-pattern>
