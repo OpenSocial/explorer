@@ -20,7 +20,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.opensocial.explorer</groupId>
   <artifactId>opensocial-explorer</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>0.0.2</version>
   <packaging>pom</packaging>
   <name>OpenSocial Explorer</name>
   <description>The OpenSocial Explorer is a tool to help developers learn how to build OpenSocial gadgets. The goal of the OpenSocial Explorer is to demonstrate how to use all the features and APIs that are part of the OpenSocial specification. Besides the samples, the OpenSocial Explorer has an editor which allows developers to tweak the gadget to learn more about the specific features and APIs the sample is demonstrating. After modifying the sample the OpenSocial Explorer allows developers to re-render the gadget to see how the changes effect the sample.</description>
@@ -534,7 +534,7 @@
     <url>git@github.com:OpenSocial/explorer.git</url>
     <connection>scm:git:git@github.com:OpenSocial/explorer.git</connection>
     <developerConnection>scm:git:git@github.com:OpenSocial/explorer.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>opensocial-explorer-0.0.2</tag>
   </scm>
 
   <!-- ====================================================================== -->
