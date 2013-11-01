@@ -116,7 +116,8 @@ define(['dojo/_base/declare',  'explorer/widgets/ModalDialog', 'dijit/_WidgetsIn
     /**
      * Destroys this widget.
      * 
-     * @memberof module:explorer/widgets/login/LoginDialog# 
+     * @memberof module:explorer/widgets/login/LoginDialog#
+     * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     destroy: function() {
       this.inherited(arguments);

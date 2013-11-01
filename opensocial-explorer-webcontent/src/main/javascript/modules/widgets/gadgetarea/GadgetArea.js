@@ -29,9 +29,11 @@
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dojo/topic',
         'dojo/_base/array', 'dojo/text!./../../templates/GadgetArea.html', './GadgetToolbar',
         'dojo/dom-construct','../Loading', '../../opensocial-data', './GadgetModalDialog',
-        'dojo/_base/window', 'dojo/dom', 'dojo/json', '../../ExplorerContainer', 'dojo/on', './LocationMenuItem'],
+        'dojo/_base/window', 'dojo/dom', 'dojo/json', '../../ExplorerContainer', 'dojo/on', 'dojo/Deferred', 
+        './LocationMenuItem'],
         function(declare, WidgetBase, TemplatedMixin, topic, arrayUtil, template, GadgetToolbar, 
-            domConstruct, Loading, osData, GadgetModalDialog, win, dom, JSON, ExplorerContainer, on, LocationMenuItem) {
+            domConstruct, Loading, osData, GadgetModalDialog, win, dom, JSON, ExplorerContainer, on, Deferred,
+            LocationMenuItem) {
       return declare('GadgetAreaWidget', [ WidgetBase, TemplatedMixin ], {
                 templateString : template,
                 containerToken : null,
@@ -52,11 +54,6 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       this.gadgetToolbar.startup();
       this.addMenuItems();
       var self = this;
-      this.gadgetToolbar.getPrefDialog().addPrefsChangedListener(function(prefs) {
-        var params = {};
-        params[osapi.container.RenderParam.USER_PREFS] = prefs;
-        self.reRenderGadget(params);
-      });
       this.loadingWidget = new Loading();
       domConstruct.place(this.loadingWidget.domNode, this.domNode);
       this.loadingWidget.startup();
@@ -92,10 +89,6 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       var self = this;
       on(this.getExplorerContainer(), 'gadgetrendered', function(gadgetUrl, siteId) {
         self.loadingWidget.hide();
-      });
-      
-      on(this.getExplorerContainer(), 'setpreferences', function(site, url, prefs) {
-        self.gadgetToolbar.getPrefDialog().setPrefs(prefs);
       });
       
       on(this.getExplorerContainer(), 'addaction', function(action) {
@@ -152,17 +145,23 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
      * @param {Object=} opt_renderParams - Optional parameter used by the container, see the
      * {@link http://opensocial.github.io/spec/2.5/Core-Container.xml#RenderConfiguration|OpenSocial spec} 
      * for more details about how this object should be constructed.
+     * @returns {module:dojo/promise/Promise} Returns a 
+     * {@link http://dojotoolkit.org/reference-guide/1.8/dojo/promise/Promise.html#dojo-promise-promise|Dojo Promise}.
+     * Call the then method of this Promise with a function that takes in one parameter, the gadget metadata.
      */
     renderGadget : function(url, opt_renderParams) {
       this.closeOpenSite();
       this.loadingWidget.show();
       this.site = this.createSite();
       var self = this;
+      var deferred = new Deferred();
       this.getExplorerContainer().renderGadget(url, this.site, opt_renderParams).then(function(metadata) {
         if(metadata && metadata[url]) {
           self.gadgetToolbar.setGadgetMetadata(metadata[url]);
         }
+        deferred.resolve(metadata);
       });
+      return deferred;
     },
 
     /**
@@ -173,6 +172,10 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
      * @param {String} dataModel - A stringified JSON object containing just the context property
      * from the {@link http://opensocial.github.io/spec/2.5/Core-Gadget.xml#Embedded-Experiences|embedded experiences data model}.
      * The gadget property of the embedded experiences data model will be the URL parameter.
+     * @returns {module:dojo/promise/Promise} Returns a 
+     * {@link http://dojotoolkit.org/reference-guide/1.8/dojo/promise/Promise.html#dojo-promise-promise|Dojo Promise}.
+     * Call the then method of this Promise with a function that takes in one parameter, the gadget metadata and the
+     * {@link http://opensocial.github.io/spec/2.5/Core-Container.xml#osapi.container.GadgetSite|osapi.container.GadgetSite|gadget site}.
      */
     renderEmbeddedExperience : function(url, dataModel) {
       var oDataModel = JSON.parse(dataModel);
@@ -180,12 +183,15 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       this.closeOpenSite();
       this.loadingWidget.show();
       var self = this;
+      var deferred = new Deferred();
       this.getExplorerContainer().renderEmbeddedExperience(oDataModel, this.createNodeForSite()).then(function(results) {
         self.site = results.site;
         if(results.metadata && results.metadata[oDataModel.gadget]) {
           self.gadgetToolbar.setGadgetMetadata(results.metadata[oDataModel.gadget]);
         }
+        deferred.resolve(results);
       });
+      return deferred;
     },
     
     /**
