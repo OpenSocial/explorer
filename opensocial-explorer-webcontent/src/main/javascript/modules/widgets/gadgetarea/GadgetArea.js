@@ -29,9 +29,11 @@
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dojo/topic',
         'dojo/_base/array', 'dojo/text!./../../templates/GadgetArea.html', './GadgetToolbar',
         'dojo/dom-construct','../Loading', '../../opensocial-data', './GadgetModalDialog',
-        'dojo/_base/window', 'dojo/dom', 'dojo/json', '../../ExplorerContainer', 'dojo/on', 'dojo/Deferred'],
+        'dojo/_base/window', 'dojo/dom', 'dojo/json', '../../ExplorerContainer', 'dojo/on', 'dojo/Deferred', 
+        './LocationMenuItem'],
         function(declare, WidgetBase, TemplatedMixin, topic, arrayUtil, template, GadgetToolbar, 
-            domConstruct, Loading, osData, GadgetModalDialog, win, dom, JSON, ExplorerContainer, on, Deferred) {
+            domConstruct, Loading, osData, GadgetModalDialog, win, dom, JSON, ExplorerContainer, on, Deferred,
+            LocationMenuItem) {
       return declare('GadgetAreaWidget', [ WidgetBase, TemplatedMixin ], {
                 templateString : template,
                 containerToken : null,
@@ -50,6 +52,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       this.gadgetToolbar = new GadgetToolbar();
       domConstruct.place(this.gadgetToolbar.domNode, this.domNode);
       this.gadgetToolbar.startup();
+      this.addMenuItems();
       var self = this;
       this.loadingWidget = new Loading();
       domConstruct.place(this.loadingWidget.domNode, this.domNode);
@@ -300,6 +303,18 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
         this.getExplorerContainer().getContainer().closeGadget(this.site);
         domConstruct.destroy("gadgetSite" + this.siteCounter.toString());
       }
+    },
+    
+    /**
+     * Adds menu items to the gadget menu.  Sub-classes can override this method to
+     * add additional menus.
+     * 
+     * @memberof module:explorer/widgets/gadgetarea/GadgetArea#
+     */
+    addMenuItems: function() {
+      var locationMenuItem = new LocationMenuItem();
+      this.gadgetToolbar.addMenuItem(locationMenuItem);
+      locationMenuItem.startup();
     }
   });
 });
