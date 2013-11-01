@@ -31,8 +31,9 @@
 define(['dojo/_base/lang', 'dojo/_base/declare', '../DropDownMenu', 'dojo/Evented', 'dojo/topic',
         'dojo/query', 'dojo/dom-class', '../MenuItemWidget', '../../opensocial-data',
         'dojo/text!./../../templates/GadgetDropDownMenu.html', 'dijit/_WidgetsInTemplateMixin',
-        'dojo/on', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
-        function(lang, declare, DropDownMenu, Evented, topic, query, domClass, MenuItemWidget, osData, template, WidgetsInTemplateMixin, on) {
+        'dojo/on', 'dojo/dom-construct', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
+        function(lang, declare, DropDownMenu, Evented, topic, query, domClass, MenuItemWidget, osData, template, 
+                WidgetsInTemplateMixin, on, domConstruct) {
   return declare('GadgetDropDownMenuWidget', [ DropDownMenu, WidgetsInTemplateMixin, Evented ], {
     templateString : template,
 
@@ -52,18 +53,6 @@ define(['dojo/_base/lang', 'dojo/_base/declare', '../DropDownMenu', 'dojo/Evente
       });
       on(this.messageMenuOption.domNode,'click', function(e) {
         self.publishSelection('opensocial.Message');
-      });
-      on(this.sideMenuOption.domNode,'click', function(e) {
-        query('div.editor').removeClass('topBottom');
-        query('div.result').removeClass('topBottom');
-        query('.CodeMirror-scroll').removeClass('topBottom');
-        topic.publish("refreshEditors");
-      });
-      on(this.bottomMenuOption.domNode,'click', function(e) {
-        query('div.editor').addClass('topBottom');
-        query('div.result').addClass('topBottom');
-        query('.CodeMirror-scroll').addClass('topBottom');
-        topic.publish("refreshEditors");
       });
       on(this.preferencesMenuItem.domNode, 'click', function(e) {
         topic.publish('org.opensocial.explorer.prefdialog.show');
@@ -145,6 +134,16 @@ define(['dojo/_base/lang', 'dojo/_base/declare', '../DropDownMenu', 'dojo/Evente
       if(selection) {
         topic.publish("setSelection", selection);
       }
+    },
+    
+    /**
+     * Adds a menu item to the drop down menu.
+     * 
+     * @memberof module:explorer/widgets/gadgetarea/GadgetDropDownMenu#
+     * @param {module:explorer/widgets/MenuItemWidget} menuItem - The menu item to add.
+     */
+    addMenuItem : function(menuItem) {
+      domConstruct.place(menuItem.domNode, this.domNode, 'last');
     }
   });
 });
