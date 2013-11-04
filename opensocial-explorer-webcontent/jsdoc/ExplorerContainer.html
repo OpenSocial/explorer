@@ -1,0 +1,3351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Module: explorer/ExplorerContainer</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Module: explorer/ExplorerContainer</h1>
+    
+    
+
+
+
+<section>
+    
+<header>
+    <h2>
+    explorer/ExplorerContainer
+    </h2>
+    
+</header>  
+
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+            <div class="description">An AMD module that can be used to manage an OpenSocial container.  This module depends on the container Javascript
+to already be loaded.  This module requires the following container features to be loaded as well.
+<ul>
+ <li>embedded-experiences</li>
+ <li>open-views</li>
+ <li>actions</li>
+ <li>selection</li>
+</ul></div>
+        
+        
+        
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExplorerContainer.js.html">ExplorerContainer.js</a>, <a href="ExplorerContainer.js.html#line2">line 2</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html">WidgetBase Documentation</a></li>
+        
+            <li><a href="http://dojotoolkit.org/reference-guide/1.8/dijit/_TemplatedMixin.html">TemplatedMixin Documentation</a></li>
+        
+            <li><a href="http://dojotoolkit.org/reference-guide/1.8/dojo/Evented.html">Evented Documentation</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+        
+        
+    
+    </div>
+    
+    
+        <h3 class="subsection-title">Extends</h3>
+        
+        <ul>
+            <li>dijit/_WidgetBase</li>
+        
+            <li>dijit/_TemplatedMixin</li>
+        
+            <li>dojo/Evented</li>
+        </ul>
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Classes</h3>
+        
+        <dl>
+            <dt><a href="constructor.html">constructor</a></dt>
+            <dd></dd>
+        </dl>
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="getContainer"><span class="type-signature"></span>getContainer<span class="signature">()</span><span class="type-signature"> &rarr; {osapi.container.Container}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Gets the common container.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExplorerContainer.js.html">ExplorerContainer.js</a>, <a href="ExplorerContainer.js.html#line135">line 135</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="http://opensocial.github.io/spec/2.5/Core-Container.xml#osapi.container.Container">OpenSocial Spec</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The common container.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">osapi.container.Container</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getContainerToken"><span class="type-signature"></span>getContainerToken<span class="signature">(result)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Will get called when Shindig needs to get a new container security token.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>result</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">module:explorer/widgets/ExplorerContainer~containerTokenCallback</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The callback that gets called with the container token.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExplorerContainer.js.html">ExplorerContainer.js</a>, <a href="ExplorerContainer.js.html#line453">line 453</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="handleDestroyElement"><span class="type-signature"></span>handleDestroyElement<span class="signature">()</span><span class="type-signature"> &rarr; {Function}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns a closure to handle destroy element calls from gadgets closing other gadgets they have opened.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExplorerContainer.js.html">ExplorerContainer.js</a>, <a href="ExplorerContainer.js.html#line412">line 412</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A closure to handle destroy element calls from gadgets closing other gadgets they have opened.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Function</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="handleNavigateEE"><span class="type-signature"></span>handleNavigateEE<span class="signature">()</span><span class="type-signature"> &rarr; {Function}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns a closure to handle navigate embedded experience calls from gadgets.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExplorerContainer.js.html">ExplorerContainer.js</a>, <a href="ExplorerContainer.js.html#line383">line 383</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A closure that handles navigate embedded experience calls for gadgets.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Function</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="handleNavigateGadget"><span class="type-signature"></span>handleNavigateGadget<span class="signature">()</span><span class="type-signature"> &rarr; {Function}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns a closure to handle navigate gadget calls from gadgets.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExplorerContainer.js.html">ExplorerContainer.js</a>, <a href="ExplorerContainer.js.html#line353">line 353</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A closure that handles navigate gadget calls for gadgets.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Function</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="handleNavigateUrl"><span class="type-signature"></span>handleNavigateUrl<span class="signature">()</span><span class="type-signature"> &rarr; {Function}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns a closure to handle navigate URL calls from gadgets.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExplorerContainer.js.html">ExplorerContainer.js</a>, <a href="ExplorerContainer.js.html#line325">line 325</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A closure that handles navigate URL calls for gadgets.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Function</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="hideActions"><span class="type-signature"></span>hideActions<span class="signature">(actionObjArray)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Called when actions from a gadget should be hidden.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>actionObjArray</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object[]</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The actions that should be hidden.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExplorerContainer.js.html">ExplorerContainer.js</a>, <a href="ExplorerContainer.js.html#line282">line 282</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="navigateForActions"><span class="type-signature"></span>navigateForActions<span class="signature">(gadgetUrl, <span class="optional">opt_params</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Emits an event letting listeners know to navigate to a gadget for an action.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>gadgetUrl</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The URL to the gadget to render.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>opt_params</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Optional parameter used by the container, see the
+<a href="http://opensocial.github.io/spec/2.5/Core-Container.xml#RenderConfiguration">OpenSocial spec</a> 
+for more details about how this object should be constructed.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExplorerContainer.js.html">ExplorerContainer.js</a>, <a href="ExplorerContainer.js.html#line305">line 305</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="renderEmbeddedExperience"><span class="type-signature"></span>renderEmbeddedExperience<span class="signature">(dataModel, siteNode)</span><span class="type-signature"> &rarr; {module:dojo/promise/Promise}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Renders an embedded experience gadget.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>dataModel</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">A JSON object representing the 
+<a href="http://opensocial.github.io/spec/2.5/Core-Gadget.xml#Embedded-Experiences">embedded experiences data model</a>.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>siteNode</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Element</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The element to be used for the site.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExplorerContainer.js.html">ExplorerContainer.js</a>, <a href="ExplorerContainer.js.html#line198">line 198</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Returns a 
+<a href="http://dojotoolkit.org/reference-guide/1.8/dojo/promise/Promise.html#dojo-promise-promise">Dojo Promise</a>.
+Call the then method of this Promise with a function that takes in one parameter, the gadget metadata and the
+<a href="http://opensocial.github.io/spec/2.5/Core-Container.xml#osapi.container.GadgetSite">osapi.container.GadgetSite|gadget site</a>.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">module:dojo/promise/Promise</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>var container = new ExplorerContainer();
+container.renderEmbeddedExperience(....).then(function(metadata, site) {
+  if(metadata && metadata[gadgetUrl]) {
+    //Do something with the metadata
+  }
+});</code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="renderGadget"><span class="type-signature"></span>renderGadget<span class="signature">(url, site, <span class="optional">opt_renderParams</span>)</span><span class="type-signature"> &rarr; {module:dojo/promise/Promise}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Renders a gadget.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The URL of the gadget to render.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>site</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">osapi.container.GadgetSite</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The <a href="http://opensocial.github.io/spec/2.5/Core-Container.xml#osapi.container.GadgetSite">site</a>
+to render the gadget in.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>opt_renderParams</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Optional parameter used by the container, see the
+<a href="http://opensocial.github.io/spec/2.5/Core-Container.xml#RenderConfiguration">OpenSocial spec</a> 
+for more details about how this object should be constructed.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExplorerContainer.js.html">ExplorerContainer.js</a>, <a href="ExplorerContainer.js.html#line161">line 161</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Returns a 
+<a href="http://dojotoolkit.org/reference-guide/1.8/dojo/promise/Promise.html#dojo-promise-promise">Dojo Promise</a>.
+Call the then method of this Promise with a function that takes in one parameter, the gadget metadata.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">module:dojo/promise/Promise</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>var container = new ExplorerContainer();
+container.renderGadget(....).then(function(metadata) {
+  if(metadata && metadata[gadgetUrl]) {
+    //Do something with the metadata
+  }
+});</code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="showActions"><span class="type-signature"></span>showActions<span class="signature">(actionObjArray, container, runAction)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Called when a gadget is rendered which has actions.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>actionObjArray</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object[]</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The array of actions from the gadget.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>container</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">osapi.container.Container</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The OpenSocial container object.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>runAction</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Function</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Function which will run an action in the OpeSocial container.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExplorerContainer.js.html">ExplorerContainer.js</a>, <a href="ExplorerContainer.js.html#line240">line 240</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="subscribe"><span class="type-signature"></span>subscribe<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        This classes topic subscriptions.  Subclasses may override this method to
+add their own.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExplorerContainer.js.html">ExplorerContainer.js</a>, <a href="ExplorerContainer.js.html#line121">line 121</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="updateContainerSecurityToken"><span class="type-signature"></span>updateContainerSecurityToken<span class="signature">(token, ttl)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Updates the container security token and forces a refresh of all of the gadget
+security tokens to ensure owner/viewer information is up-to-date.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>token</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The security token.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>ttl</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The time to live for the security token.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExplorerContainer.js.html">ExplorerContainer.js</a>, <a href="ExplorerContainer.js.html#line435">line 435</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+        <h3 class="subsection-title">Type Definitions</h3>
+        
+        <dl>
+                
+<dt>
+    <h4 class="name" id="containerTokenCallback"><span class="type-signature"></span>containerTokenCallback<span class="signature">(containerToken, ttl)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Callback to get the container security token.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>containerToken</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Container security token.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>ttl</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Container security token time to live.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExplorerContainer.js.html">ExplorerContainer.js</a>, <a href="ExplorerContainer.js.html#line458">line 458</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+            </dl>
+    
+    
+    
+        <h3 class="subsection-title">Events</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="event:addaction">addaction</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        addaction event.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>action</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The action that was added.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExplorerContainer.js.html">ExplorerContainer.js</a>, <a href="ExplorerContainer.js.html#line265">line 265</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="http://opensocial.github.io/spec/trunk/Core-Gadget.xml#gadgets.actions.actionobjects">Action Object</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="event:destroyelement">destroyelement</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        destroyelement event.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>site</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">osapi.container.GadgetSite</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The
+<a href="http://opensocial.github.io/spec/2.5/Core-Container.xml#osapi.container.GadgetSite">osapi.container.GadgetSite|gadget site</a>
+to destroy.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExplorerContainer.js.html">ExplorerContainer.js</a>, <a href="ExplorerContainer.js.html#line415">line 415</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="event:navigateee">navigateee</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        navigateee event.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>rel</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Element</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The element containing the gadget requesting to open the URL.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>opt_gadgetInfo</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The metadata of the embedded experience gadget being opened.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>opt_viewTarget</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The 
+<a href="http://opensocial.github.io/spec/2.5/Core-Gadget.xml#gadgets.views.ViewType.ViewTarget">view target</a>
+to open.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>opt_coordinates</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The coordinates of where to open the URL.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code></code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">osapi.container.GadgetSite</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The
+<a href="http://opensocial.github.io/spec/2.5/Core-Container.xml#osapi.container.GadgetSite">osapi.container.GadgetSite|gadget site</a>
+of the gadget requesting to open the URL.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>opt_callback</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Function</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">A function to call once the DOM element to be used for the URL site
+has been created.  You should call this function and pass the DOM element.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExplorerContainer.js.html">ExplorerContainer.js</a>, <a href="ExplorerContainer.js.html#line386">line 386</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="event:navigateforactions">navigateforactions</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        navigateforactions event.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>gadgetUrl</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The URL of the gadget that is being navigated to.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>opt_params</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Optional parameter used by the container, see the
+<a href="http://opensocial.github.io/spec/2.5/Core-Container.xml#RenderConfiguration">OpenSocial spec</a> 
+for more details about how this object should be constructed.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExplorerContainer.js.html">ExplorerContainer.js</a>, <a href="ExplorerContainer.js.html#line306">line 306</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="event:navigategadget">navigategadget</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        navigategadget event.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>metadata</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The gadget metadata for the gadget being opened.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>rel</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Element</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The element containing the gadget requesting to open the URL.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>opt_view</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The view of the gadget to open.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>opt_viewTarget</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The 
+<a href="http://opensocial.github.io/spec/2.5/Core-Gadget.xml#gadgets.views.ViewType.ViewTarget">view target</a>
+to open.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>opt_coordinates</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The coordinates of where to open the URL.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code></code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">osapi.container.GadgetSite</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The
+<a href="http://opensocial.github.io/spec/2.5/Core-Container.xml#osapi.container.GadgetSite">osapi.container.GadgetSite|gadget site</a>
+of the gadget requesting to open the URL.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>opt_callback</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Function</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">A function to call once the DOM element to be used for the URL site
+has been created.  You should call this function and pass the DOM element.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExplorerContainer.js.html">ExplorerContainer.js</a>, <a href="ExplorerContainer.js.html#line356">line 356</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="event:navigateurl">navigateurl</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        navigateurl event.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>rel</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Element</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The element containing the gadget requesting to open the URL.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>opt_viewTarget</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The 
+<a href="http://opensocial.github.io/spec/2.5/Core-Gadget.xml#gadgets.views.ViewType.ViewTarget">view target</a>
+to open.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>opt_coordinates</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The coordinates of where to open the URL.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code></code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">osapi.container.GadgetSite</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The
+<a href="http://opensocial.github.io/spec/2.5/Core-Container.xml#osapi.container.GadgetSite">osapi.container.GadgetSite|gadget site</a>
+of the gadget requesting to open the URL.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>opt_callback</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Function</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">A function to call once the DOM element to be used for the URL site
+has been created.  You should call this function and pass the DOM element.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExplorerContainer.js.html">ExplorerContainer.js</a>, <a href="ExplorerContainer.js.html#line328">line 328</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="event:removeaction">removeaction</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        removeaction event.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>action</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The action that was removed.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExplorerContainer.js.html">ExplorerContainer.js</a>, <a href="ExplorerContainer.js.html#line285">line 285</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="http://opensocial.github.io/spec/trunk/Core-Gadget.xml#gadgets.actions.actionobjects">Action Object</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        </dl>
+    
+</article>
+
+</section>  
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="ExplorerContainer.html">explorer/ExplorerContainer</a></li><li><a href="gadget-spec-service.html">explorer/gadget-spec-service</a></li><li><a href="openid-service.html">explorer/openid-service</a></li><li><a href="opensocial-data.html">explorer/opensocial-data</a></li><li><a href="url-util.html">explorer/url-util</a></li><li><a href="BooleanControlGroup.html">explorer/widgets/controlgroups/BooleanControlGroup</a></li><li><a href="ControlGroup.html">explorer/widgets/controlgroups/ControlGroup</a></li><li><a href="EnumControlGroup.html">explorer/widgets/controlgroups/EnumControlGroup</a></li><li><a href="ListControlGroup.html">explorer/widgets/controlgroups/ListControlGroup</a></li><li><a href="StringControlGroup.html">explorer/widgets/controlgroups/StringControlGroup</a></li><li><a href="DropDownMenu.html">explorer/widgets/DropDownMenu</a></li><li><a href="CssEditor.html">explorer/widgets/editorarea/CssEditor</a></li><li><a href="Editor.html">explorer/widgets/editorarea/Editor</a></li><li><a href="EditorArea.html">explorer/widgets/editorarea/EditorArea</a></li><li><a href="EditorTab.html">explorer/widgets/editorarea/EditorTab</a></li><li><a href="EditorTabs.html">explorer/widgets/editorarea/EditorTabs</a></li><li><a href="EditorToolbar.html">explorer/widgets/editorarea/EditorToolbar</a></li><li><a href="GadgetEditor.html">explorer/widgets/editorarea/GadgetEditor</a></li><li><a href="HtmlEditor.html">explorer/widgets/editorarea/HtmlEditor</a></li><li><a href="JSEditor.html">explorer/widgets/editorarea/JSEditor</a></li><li><a href="JSONEditor.html">explorer/widgets/editorarea/JSONEditor</a></li><li><a href="GadgetArea.html">explorer/widgets/gadgetarea/GadgetArea</a></li><li><a href="GadgetDropDownMenu.html">explorer/widgets/gadgetarea/GadgetDropDownMenu</a></li><li><a href="GadgetMenuButton.html">explorer/widgets/gadgetarea/GadgetMenuButton</a></li><li><a href="GadgetModalDialog.html">explorer/widgets/gadgetarea/GadgetModalDialog</a></li><li><a href="GadgetToolbar.html">explorer/widgets/gadgetarea/GadgetToolbar</a></li><li><a href="LocationMenuItem.html">explorer/widgets/gadgetarea/LocationMenuItem</a></li><li><a href="PreferencesDialog.html">explorer/widgets/gadgetarea/PreferencesDialog</a></li><li><a href="Loading.html">explorer/widgets/Loading</a></li><li><a href="LoginDialog.html">explorer/widgets/login/LoginDialog</a></li><li><a href="OAuthLogin.html">explorer/widgets/login/OAuthLogin</a></li><li><a href="MainContainer.html">explorer/widgets/MainContainer</a></li><li><a href="MenuItemWidget.html">explorer/widgets/MenuItemWidget</a></li><li><a href="ModalDialog.html">explorer/widgets/ModalDialog</a></li><li><a href="CreationModalDialog.html">explorer/widgets/sidebar/CreationModalDialog</a></li><li><a href="SidebarNav.html">explorer/widgets/sidebar/SidebarNav</a></li></ul><h3>Classes</h3><ul><li><a href="constructor.html">constructor</a></li></ul><h3>Events</h3><ul><li><a href="ExplorerContainer.html#event:addaction">addaction</a></li><li><a href="ExplorerContainer.html#event:destroyelement">destroyelement</a></li><li><a href="ExplorerContainer.html#event:navigateee">navigateee</a></li><li><a href="ExplorerContainer.html#event:navigateforactions">navigateforactions</a></li><li><a href="ExplorerContainer.html#event:navigategadget">navigategadget</a></li><li><a href="ExplorerContainer.html#event:navigateurl">navigateurl</a></li><li><a href="ExplorerContainer.html#event:removeaction">removeaction</a></li><li><a href="ExplorerContainer_.html#event:gadgetrendered">gadgetrendered</a></li><li><a href="ExplorerContainer_.html#event:setpreferences">setpreferences</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Mon Nov 04 2013 15:19:23 GMT-0500 (EST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

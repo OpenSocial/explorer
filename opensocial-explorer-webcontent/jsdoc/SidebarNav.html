@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Module: explorer/widgets/sidebar/SidebarNav</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Module: explorer/widgets/sidebar/SidebarNav</h1>
+    
+    
+
+
+
+<section>
+    
+<header>
+    <h2>
+    explorer/widgets/sidebar/SidebarNav
+    </h2>
+    
+</header>  
+
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+            <div class="description">Contains the Dojo Tree Control for specs and the CreationModalDialog Module.</div>
+        
+        
+        
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="SidebarNav.js.html">widgets/sidebar/SidebarNav.js</a>, <a href="SidebarNav.js.html#line3">line 3</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html">WidgetBase Documentation</a></li>
+        
+            <li><a href="http://dojotoolkit.org/reference-guide/1.8/dijit/_TemplatedMixin.html">TemplatedMixin Documentation</a></li>
+        
+            <li><a href="http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetsInTemplateMixin.html">WidgetsInTemplateMixin Documentation</a></li>
+        
+            <li><a href="http://dojotoolkit.org/reference-guide/1.8/dojo/Evented.html">Evented Documentation</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+        
+        
+    
+    </div>
+    
+    
+        <h3 class="subsection-title">Extends</h3>
+        
+        <ul>
+            <li>dijit/_WidgetBase</li>
+        
+            <li>dijit/_TemplatedMixin</li>
+        
+            <li>dijit/_WidgetsInTemplateMixin</li>
+        
+            <li>dojo/Evented</li>
+        </ul>
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Requires</h3>
+        
+        <ul>
+            <li><a href="CreationModalDialog.html">module:explorer/widgets/sidebar/CreationModalDialog</a></li>
+        
+            <li><a href="gadget-spec-service.html">module:explorer/gadget-spec-service</a></li>
+        </ul>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="addSpec"><span class="type-signature"></span>addSpec<span class="signature">(title, specId)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Adds a new spec to the Tree Control. If a user-created spec doesn't exist yet, a folder called "My Specs" is also added.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>title</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Title of the spec to be added.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>specId</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Id of the spec to be added.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="SidebarNav.js.html">widgets/sidebar/SidebarNav.js</a>, <a href="SidebarNav.js.html#line113">line 113</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getDefaultId"><span class="type-signature"></span>getDefaultId<span class="signature">()</span><span class="type-signature"> &rarr; {String}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Gets the ID of the default spec in the specTree (The spec that is initally displayed).
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="SidebarNav.js.html">widgets/sidebar/SidebarNav.js</a>, <a href="SidebarNav.js.html#line157">line 157</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The default spec's ID.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">String</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getDefaultName"><span class="type-signature"></span>getDefaultName<span class="signature">()</span><span class="type-signature"> &rarr; {String}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Gets the name of the default spec in the specTree (The spec that is initally displayed).
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="SidebarNav.js.html">widgets/sidebar/SidebarNav.js</a>, <a href="SidebarNav.js.html#line169">line 169</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The default spec's name.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">String</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getGadgetSpecService"><span class="type-signature"></span>getGadgetSpecService<span class="signature">()</span><span class="type-signature"> &rarr; {gadgetSpecService}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Getter method for the GadgetSpecService module for testing purposes.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="SidebarNav.js.html">widgets/sidebar/SidebarNav.js</a>, <a href="SidebarNav.js.html#line205">line 205</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The gadgetSpecService object.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">gadgetSpecService</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getPath"><span class="type-signature"></span>getPath<span class="signature">(path, startId)</span><span class="type-signature"> &rarr; {String}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Gets the ID path of the spec in the tree control. Used to set the specTree focus to the particular spec.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>path</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Accumulator parameter, starts as an empty array and is built up and eventually returned.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>startId</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Id of the current object in the path.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="SidebarNav.js.html">widgets/sidebar/SidebarNav.js</a>, <a href="SidebarNav.js.html#line139">line 139</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The path of the spec.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">String</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setNewId"><span class="type-signature"></span>setNewId<span class="signature">(The)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Sets the ID of the focused spec in the specTree to the ID provided by the xhr POST. 
+When a spec is added or rerendered, the servlet assigns a new ID to the updated spec. 
+We use this method so that the spec's ID in the Dojo Tree is representative of its updated counterpart server-side.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>The</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">default spec's ID.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="SidebarNav.js.html">widgets/sidebar/SidebarNav.js</a>, <a href="SidebarNav.js.html#line183">line 183</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="startup"><span class="type-signature"></span>startup<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Called right after widget is added to the dom. See link for more information.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="SidebarNav.js.html">widgets/sidebar/SidebarNav.js</a>, <a href="SidebarNav.js.html#line54">line 54</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html">Dojo Documentation</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="toggleModal"><span class="type-signature"></span>toggleModal<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Opens the CreationModalDialog modal for adding a new spec.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="SidebarNav.js.html">widgets/sidebar/SidebarNav.js</a>, <a href="SidebarNav.js.html#line193">line 193</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+    
+    
+</article>
+
+</section>  
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="ExplorerContainer.html">explorer/ExplorerContainer</a></li><li><a href="gadget-spec-service.html">explorer/gadget-spec-service</a></li><li><a href="openid-service.html">explorer/openid-service</a></li><li><a href="opensocial-data.html">explorer/opensocial-data</a></li><li><a href="url-util.html">explorer/url-util</a></li><li><a href="BooleanControlGroup.html">explorer/widgets/controlgroups/BooleanControlGroup</a></li><li><a href="ControlGroup.html">explorer/widgets/controlgroups/ControlGroup</a></li><li><a href="EnumControlGroup.html">explorer/widgets/controlgroups/EnumControlGroup</a></li><li><a href="ListControlGroup.html">explorer/widgets/controlgroups/ListControlGroup</a></li><li><a href="StringControlGroup.html">explorer/widgets/controlgroups/StringControlGroup</a></li><li><a href="DropDownMenu.html">explorer/widgets/DropDownMenu</a></li><li><a href="CssEditor.html">explorer/widgets/editorarea/CssEditor</a></li><li><a href="Editor.html">explorer/widgets/editorarea/Editor</a></li><li><a href="EditorArea.html">explorer/widgets/editorarea/EditorArea</a></li><li><a href="EditorTab.html">explorer/widgets/editorarea/EditorTab</a></li><li><a href="EditorTabs.html">explorer/widgets/editorarea/EditorTabs</a></li><li><a href="EditorToolbar.html">explorer/widgets/editorarea/EditorToolbar</a></li><li><a href="GadgetEditor.html">explorer/widgets/editorarea/GadgetEditor</a></li><li><a href="HtmlEditor.html">explorer/widgets/editorarea/HtmlEditor</a></li><li><a href="JSEditor.html">explorer/widgets/editorarea/JSEditor</a></li><li><a href="JSONEditor.html">explorer/widgets/editorarea/JSONEditor</a></li><li><a href="GadgetArea.html">explorer/widgets/gadgetarea/GadgetArea</a></li><li><a href="GadgetDropDownMenu.html">explorer/widgets/gadgetarea/GadgetDropDownMenu</a></li><li><a href="GadgetMenuButton.html">explorer/widgets/gadgetarea/GadgetMenuButton</a></li><li><a href="GadgetModalDialog.html">explorer/widgets/gadgetarea/GadgetModalDialog</a></li><li><a href="GadgetToolbar.html">explorer/widgets/gadgetarea/GadgetToolbar</a></li><li><a href="LocationMenuItem.html">explorer/widgets/gadgetarea/LocationMenuItem</a></li><li><a href="PreferencesDialog.html">explorer/widgets/gadgetarea/PreferencesDialog</a></li><li><a href="Loading.html">explorer/widgets/Loading</a></li><li><a href="LoginDialog.html">explorer/widgets/login/LoginDialog</a></li><li><a href="OAuthLogin.html">explorer/widgets/login/OAuthLogin</a></li><li><a href="MainContainer.html">explorer/widgets/MainContainer</a></li><li><a href="MenuItemWidget.html">explorer/widgets/MenuItemWidget</a></li><li><a href="ModalDialog.html">explorer/widgets/ModalDialog</a></li><li><a href="CreationModalDialog.html">explorer/widgets/sidebar/CreationModalDialog</a></li><li><a href="SidebarNav.html">explorer/widgets/sidebar/SidebarNav</a></li></ul><h3>Classes</h3><ul><li><a href="constructor.html">constructor</a></li></ul><h3>Events</h3><ul><li><a href="ExplorerContainer.html#event:addaction">addaction</a></li><li><a href="ExplorerContainer.html#event:destroyelement">destroyelement</a></li><li><a href="ExplorerContainer.html#event:navigateee">navigateee</a></li><li><a href="ExplorerContainer.html#event:navigateforactions">navigateforactions</a></li><li><a href="ExplorerContainer.html#event:navigategadget">navigategadget</a></li><li><a href="ExplorerContainer.html#event:navigateurl">navigateurl</a></li><li><a href="ExplorerContainer.html#event:removeaction">removeaction</a></li><li><a href="ExplorerContainer_.html#event:gadgetrendered">gadgetrendered</a></li><li><a href="ExplorerContainer_.html#event:setpreferences">setpreferences</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Mon Nov 04 2013 15:19:25 GMT-0500 (EST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

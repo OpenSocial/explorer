@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: widgets/editorarea/GadgetEditor.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: widgets/editorarea/GadgetEditor.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+/**
+ * Editor for the gadget tab of a spec. Inherits from Editor.
+ *
+ * @module explorer/widgets/editorarea/GadgetEditor
+ * @requires module:explorer/widgets/editorarea/Editor
+ */
+define(['dojo/_base/declare', './Editor'],
+    function(declare, Editor, template) {
+  return declare('GadgetEditorWidget', [ Editor ], {
+    mode : 'application/xml'
+  });
+});</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="ExplorerContainer.html">explorer/ExplorerContainer</a></li><li><a href="gadget-spec-service.html">explorer/gadget-spec-service</a></li><li><a href="openid-service.html">explorer/openid-service</a></li><li><a href="opensocial-data.html">explorer/opensocial-data</a></li><li><a href="url-util.html">explorer/url-util</a></li><li><a href="BooleanControlGroup.html">explorer/widgets/controlgroups/BooleanControlGroup</a></li><li><a href="ControlGroup.html">explorer/widgets/controlgroups/ControlGroup</a></li><li><a href="EnumControlGroup.html">explorer/widgets/controlgroups/EnumControlGroup</a></li><li><a href="ListControlGroup.html">explorer/widgets/controlgroups/ListControlGroup</a></li><li><a href="StringControlGroup.html">explorer/widgets/controlgroups/StringControlGroup</a></li><li><a href="DropDownMenu.html">explorer/widgets/DropDownMenu</a></li><li><a href="CssEditor.html">explorer/widgets/editorarea/CssEditor</a></li><li><a href="Editor.html">explorer/widgets/editorarea/Editor</a></li><li><a href="EditorArea.html">explorer/widgets/editorarea/EditorArea</a></li><li><a href="EditorTab.html">explorer/widgets/editorarea/EditorTab</a></li><li><a href="EditorTabs.html">explorer/widgets/editorarea/EditorTabs</a></li><li><a href="EditorToolbar.html">explorer/widgets/editorarea/EditorToolbar</a></li><li><a href="GadgetEditor.html">explorer/widgets/editorarea/GadgetEditor</a></li><li><a href="HtmlEditor.html">explorer/widgets/editorarea/HtmlEditor</a></li><li><a href="JSEditor.html">explorer/widgets/editorarea/JSEditor</a></li><li><a href="JSONEditor.html">explorer/widgets/editorarea/JSONEditor</a></li><li><a href="GadgetArea.html">explorer/widgets/gadgetarea/GadgetArea</a></li><li><a href="GadgetDropDownMenu.html">explorer/widgets/gadgetarea/GadgetDropDownMenu</a></li><li><a href="GadgetMenuButton.html">explorer/widgets/gadgetarea/GadgetMenuButton</a></li><li><a href="GadgetModalDialog.html">explorer/widgets/gadgetarea/GadgetModalDialog</a></li><li><a href="GadgetToolbar.html">explorer/widgets/gadgetarea/GadgetToolbar</a></li><li><a href="LocationMenuItem.html">explorer/widgets/gadgetarea/LocationMenuItem</a></li><li><a href="PreferencesDialog.html">explorer/widgets/gadgetarea/PreferencesDialog</a></li><li><a href="Loading.html">explorer/widgets/Loading</a></li><li><a href="LoginDialog.html">explorer/widgets/login/LoginDialog</a></li><li><a href="OAuthLogin.html">explorer/widgets/login/OAuthLogin</a></li><li><a href="MainContainer.html">explorer/widgets/MainContainer</a></li><li><a href="MenuItemWidget.html">explorer/widgets/MenuItemWidget</a></li><li><a href="ModalDialog.html">explorer/widgets/ModalDialog</a></li><li><a href="CreationModalDialog.html">explorer/widgets/sidebar/CreationModalDialog</a></li><li><a href="SidebarNav.html">explorer/widgets/sidebar/SidebarNav</a></li></ul><h3>Classes</h3><ul><li><a href="constructor.html">constructor</a></li></ul><h3>Events</h3><ul><li><a href="ExplorerContainer.html#event:addaction">addaction</a></li><li><a href="ExplorerContainer.html#event:destroyelement">destroyelement</a></li><li><a href="ExplorerContainer.html#event:navigateee">navigateee</a></li><li><a href="ExplorerContainer.html#event:navigateforactions">navigateforactions</a></li><li><a href="ExplorerContainer.html#event:navigategadget">navigategadget</a></li><li><a href="ExplorerContainer.html#event:navigateurl">navigateurl</a></li><li><a href="ExplorerContainer.html#event:removeaction">removeaction</a></li><li><a href="ExplorerContainer_.html#event:gadgetrendered">gadgetrendered</a></li><li><a href="ExplorerContainer_.html#event:setpreferences">setpreferences</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Mon Nov 04 2013 15:19:23 GMT-0500 (EST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Module: explorer/widgets/gadgetarea/GadgetArea</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Module: explorer/widgets/gadgetarea/GadgetArea</h1>
+    
+    
+
+
+
+<section>
+    
+<header>
+    <h2>
+    explorer/widgets/gadgetarea/GadgetArea
+    </h2>
+    
+</header>  
+
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+            <div class="description">Contains the space where the gadget renders.</div>
+        
+        
+        
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GadgetArea.js.html">widgets/gadgetarea/GadgetArea.js</a>, <a href="GadgetArea.js.html#line3">line 3</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html">WidgetBase Documentation</a></li>
+        
+            <li><a href="http://dojotoolkit.org/reference-guide/1.8/dijit/_TemplatedMixin.html">TemplatedMixin Documentation</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+        
+        
+    
+    </div>
+    
+    
+        <h3 class="subsection-title">Extends</h3>
+        
+        <ul>
+            <li>dijit/_WidgetBase</li>
+        
+            <li>dijit/_TemplatedMixin</li>
+        </ul>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="addMenuItems"><span class="type-signature"></span>addMenuItems<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Adds menu items to the gadget menu.  Sub-classes can override this method to
+add additional menus.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GadgetArea.js.html">widgets/gadgetarea/GadgetArea.js</a>, <a href="GadgetArea.js.html#line314">line 314</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="closeOpenSite"><span class="type-signature"></span>closeOpenSite<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Closes the currently open gadget site.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GadgetArea.js.html">widgets/gadgetarea/GadgetArea.js</a>, <a href="GadgetArea.js.html#line295">line 295</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="createDialog"><span class="type-signature"></span>createDialog<span class="signature">(title, viewTarget)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Creates a modal dialog.  Typically used when handling open-views requests from the gadget.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>title</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The title to give the dialog.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>viewTarget</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Should be one of the 
+<a href="http://opensocial.github.io/spec/2.5/Core-Gadget.xml#gadgets.views.ViewType.ViewTarget">view targets</a> 
+defined in the OpenSocial spec.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GadgetArea.js.html">widgets/gadgetarea/GadgetArea.js</a>, <a href="GadgetArea.js.html#line218">line 218</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="createNodeForSite"><span class="type-signature"></span>createNodeForSite<span class="signature">()</span><span class="type-signature"> &rarr; {Element}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Creates a DOM node to use for the gadget site.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GadgetArea.js.html">widgets/gadgetarea/GadgetArea.js</a>, <a href="GadgetArea.js.html#line279">line 279</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A DOM node.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Element</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="createSite"><span class="type-signature"></span>createSite<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Creates an gadget site.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GadgetArea.js.html">widgets/gadgetarea/GadgetArea.js</a>, <a href="GadgetArea.js.html#line268">line 268</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="http://opensocial.github.io/spec/2.5/Core-Container.xml#osapi.container.GadgetSite">osapi.container.GadgetSite|OpenSocial Spec</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Returns a new gadget site.
+</div>
+
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="destroy"><span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Destroys this widget.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GadgetArea.js.html">widgets/gadgetarea/GadgetArea.js</a>, <a href="GadgetArea.js.html#line236">line 236</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html">Dojo Documentation</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getExplorerContainer"><span class="type-signature"></span>getExplorerContainer<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Gets the <a href="ExplorerContainer_.html">module:explorer/widgets/ExplorerContainer</a>.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GadgetArea.js.html">widgets/gadgetarea/GadgetArea.js</a>, <a href="GadgetArea.js.html#line136">line 136</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="renderEmbeddedExperience"><span class="type-signature"></span>renderEmbeddedExperience<span class="signature">(url, dataModel)</span><span class="type-signature"> &rarr; {module:dojo/promise/Promise}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Renders an embedded experience.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The URL where the embedded experience is located.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>dataModel</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">A stringified JSON object containing just the context property
+from the <a href="http://opensocial.github.io/spec/2.5/Core-Gadget.xml#Embedded-Experiences">embedded experiences data model</a>.
+The gadget property of the embedded experiences data model will be the URL parameter.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GadgetArea.js.html">widgets/gadgetarea/GadgetArea.js</a>, <a href="GadgetArea.js.html#line180">line 180</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Returns a 
+<a href="http://dojotoolkit.org/reference-guide/1.8/dojo/promise/Promise.html#dojo-promise-promise">Dojo Promise</a>.
+Call the then method of this Promise with a function that takes in one parameter, the gadget metadata and the
+<a href="http://opensocial.github.io/spec/2.5/Core-Container.xml#osapi.container.GadgetSite">osapi.container.GadgetSite|gadget site</a>.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">module:dojo/promise/Promise</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="renderGadget"><span class="type-signature"></span>renderGadget<span class="signature">(url, <span class="optional">opt_renderParams</span>)</span><span class="type-signature"> &rarr; {module:dojo/promise/Promise}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Renders the gadget given its URL.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The URL where the gadget is located.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>opt_renderParams</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Optional parameter used by the container, see the
+<a href="http://opensocial.github.io/spec/2.5/Core-Container.xml#RenderConfiguration">OpenSocial spec</a> 
+for more details about how this object should be constructed.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GadgetArea.js.html">widgets/gadgetarea/GadgetArea.js</a>, <a href="GadgetArea.js.html#line152">line 152</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Returns a 
+<a href="http://dojotoolkit.org/reference-guide/1.8/dojo/promise/Promise.html#dojo-promise-promise">Dojo Promise</a>.
+Call the then method of this Promise with a function that takes in one parameter, the gadget metadata.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">module:dojo/promise/Promise</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="reRenderGadget"><span class="type-signature"></span>reRenderGadget<span class="signature">(<span class="optional">opt_renderParams</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Rerenders the currently rendered gadget.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>opt_renderParams</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Optional render params. See
+<a href="http://opensocial.github.io/spec/2.5/Core-Container.xml#RenderConfiguration">OpenSocial spec</a> 
+for more details about how this object should be constructed.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GadgetArea.js.html">widgets/gadgetarea/GadgetArea.js</a>, <a href="GadgetArea.js.html#line205">line 205</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setupEventListeners"><span class="type-signature"></span>setupEventListeners<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Sets up event listeners for this class.  Override this method to add additional event listeners.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GadgetArea.js.html">widgets/gadgetarea/GadgetArea.js</a>, <a href="GadgetArea.js.html#line88">line 88</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setupSubscriptions"><span class="type-signature"></span>setupSubscriptions<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Setups topic subscriptions for this class.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GadgetArea.js.html">widgets/gadgetarea/GadgetArea.js</a>, <a href="GadgetArea.js.html#line69">line 69</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="startup"><span class="type-signature"></span>startup<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Called right after this widget has been added to the DOM.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GadgetArea.js.html">widgets/gadgetarea/GadgetArea.js</a>, <a href="GadgetArea.js.html#line48">line 48</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html">Dojo Documentation</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="updateContainerSecurityToken"><span class="type-signature"></span>updateContainerSecurityToken<span class="signature">(token, ttl)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Updates the container security token and forces a refresh of all of the gadget
+security tokens to ensure owner/viewer information is up-to-date.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>token</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The security token.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>ttl</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The time to live for the security token.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GadgetArea.js.html">widgets/gadgetarea/GadgetArea.js</a>, <a href="GadgetArea.js.html#line257">line 257</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+    
+    
+</article>
+
+</section>  
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="ExplorerContainer.html">explorer/ExplorerContainer</a></li><li><a href="gadget-spec-service.html">explorer/gadget-spec-service</a></li><li><a href="openid-service.html">explorer/openid-service</a></li><li><a href="opensocial-data.html">explorer/opensocial-data</a></li><li><a href="url-util.html">explorer/url-util</a></li><li><a href="BooleanControlGroup.html">explorer/widgets/controlgroups/BooleanControlGroup</a></li><li><a href="ControlGroup.html">explorer/widgets/controlgroups/ControlGroup</a></li><li><a href="EnumControlGroup.html">explorer/widgets/controlgroups/EnumControlGroup</a></li><li><a href="ListControlGroup.html">explorer/widgets/controlgroups/ListControlGroup</a></li><li><a href="StringControlGroup.html">explorer/widgets/controlgroups/StringControlGroup</a></li><li><a href="DropDownMenu.html">explorer/widgets/DropDownMenu</a></li><li><a href="CssEditor.html">explorer/widgets/editorarea/CssEditor</a></li><li><a href="Editor.html">explorer/widgets/editorarea/Editor</a></li><li><a href="EditorArea.html">explorer/widgets/editorarea/EditorArea</a></li><li><a href="EditorTab.html">explorer/widgets/editorarea/EditorTab</a></li><li><a href="EditorTabs.html">explorer/widgets/editorarea/EditorTabs</a></li><li><a href="EditorToolbar.html">explorer/widgets/editorarea/EditorToolbar</a></li><li><a href="GadgetEditor.html">explorer/widgets/editorarea/GadgetEditor</a></li><li><a href="HtmlEditor.html">explorer/widgets/editorarea/HtmlEditor</a></li><li><a href="JSEditor.html">explorer/widgets/editorarea/JSEditor</a></li><li><a href="JSONEditor.html">explorer/widgets/editorarea/JSONEditor</a></li><li><a href="GadgetArea.html">explorer/widgets/gadgetarea/GadgetArea</a></li><li><a href="GadgetDropDownMenu.html">explorer/widgets/gadgetarea/GadgetDropDownMenu</a></li><li><a href="GadgetMenuButton.html">explorer/widgets/gadgetarea/GadgetMenuButton</a></li><li><a href="GadgetModalDialog.html">explorer/widgets/gadgetarea/GadgetModalDialog</a></li><li><a href="GadgetToolbar.html">explorer/widgets/gadgetarea/GadgetToolbar</a></li><li><a href="LocationMenuItem.html">explorer/widgets/gadgetarea/LocationMenuItem</a></li><li><a href="PreferencesDialog.html">explorer/widgets/gadgetarea/PreferencesDialog</a></li><li><a href="Loading.html">explorer/widgets/Loading</a></li><li><a href="LoginDialog.html">explorer/widgets/login/LoginDialog</a></li><li><a href="OAuthLogin.html">explorer/widgets/login/OAuthLogin</a></li><li><a href="MainContainer.html">explorer/widgets/MainContainer</a></li><li><a href="MenuItemWidget.html">explorer/widgets/MenuItemWidget</a></li><li><a href="ModalDialog.html">explorer/widgets/ModalDialog</a></li><li><a href="CreationModalDialog.html">explorer/widgets/sidebar/CreationModalDialog</a></li><li><a href="SidebarNav.html">explorer/widgets/sidebar/SidebarNav</a></li></ul><h3>Classes</h3><ul><li><a href="constructor.html">constructor</a></li></ul><h3>Events</h3><ul><li><a href="ExplorerContainer.html#event:addaction">addaction</a></li><li><a href="ExplorerContainer.html#event:destroyelement">destroyelement</a></li><li><a href="ExplorerContainer.html#event:navigateee">navigateee</a></li><li><a href="ExplorerContainer.html#event:navigateforactions">navigateforactions</a></li><li><a href="ExplorerContainer.html#event:navigategadget">navigategadget</a></li><li><a href="ExplorerContainer.html#event:navigateurl">navigateurl</a></li><li><a href="ExplorerContainer.html#event:removeaction">removeaction</a></li><li><a href="ExplorerContainer_.html#event:gadgetrendered">gadgetrendered</a></li><li><a href="ExplorerContainer_.html#event:setpreferences">setpreferences</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Mon Nov 04 2013 15:19:24 GMT-0500 (EST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
