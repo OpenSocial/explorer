@@ -31,7 +31,9 @@ If you don't already have a JDK installed you will need one.  The OpenSocial Exp
 You will need to do is install [Git](http://git-scm.com/) if you don't already have it installed.  If you are new to Git, GitHub provides some good getting started documentation in their [help section](https://help.github.com/).  Atlassian also provides a good [tutorial](http://atlassian.com/git/) on getting started with Git, especially if you are familiar with SVN.
 
 ### Installing Maven
-The OpenSocial Explorer uses [Maven](http://maven.apache.org/) to build and run tests on the code.  You will need to [download](http://maven.apache.org/download.cgi) and install Maven.  You might find it useful to add Maven's bin directory to your PATH so you can run Maven from anywhere.  The [Maven Users Centre](http://maven.apache.org/users/index.html) provides some good getting started documentation if you are not familiar with Maven.
+The OpenSocial Explorer uses [Maven](http://maven.apache.org/) to build and run tests on the code.  You will need to [download](http://maven.apache.org/download.cgi) and install Maven 3.0.x.  You might find it useful to add Maven's bin directory to your PATH so you can run Maven from anywhere.  The [Maven Users Centre](http://maven.apache.org/users/index.html) provides some good getting started documentation if you are not familiar with Maven.
+
+Note that you must install Maven 3.0.x because the copy-maven-plugin we use is not compatible with the Maven 3.1.x.  Once the copy-maven-plugin is updated we should be able to support Maven 3.1.x.
 
 Getting And Running The Code
 ---------------------
