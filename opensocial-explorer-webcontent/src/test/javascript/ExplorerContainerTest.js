@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['explorer/widgets/ExplorerContainer', 'dojo/on', 'dojo/json', 'dojo/dom-construct', 'dojo/topic'],
+define(['explorer/ExplorerContainer', 'dojo/on', 'dojo/json', 'dojo/dom-construct', 'dojo/topic'],
         function(ExplorerContainer, on, JSON, domConstruct, topic) {
   describe('An OpenSocial container', function() {
     var container;
@@ -170,28 +170,30 @@ define(['explorer/widgets/ExplorerContainer', 'dojo/on', 'dojo/json', 'dojo/dom-
     afterEach(function() {
       document.body.removeChild(document.getElementById('testDiv'));
     });
-  
+    
     it("can be created", function() {
-      var expContainer = new ExplorerContainer();
+      var expContainer = ExplorerContainer.getInstance();
    
       expect(container.addGadgetLifecycleCallback.calls.length).toEqual(1);
       expect(container.actions.registerShowActionsHandler.calls.length).toEqual(1);
       expect(container.actions.registerHideActionsHandler.calls.length).toEqual(1);
       expect(container.actions.registerNavigateGadgetHandler.calls.length).toEqual(1);
+      expContainer.destroy();
     });
   
     
     it("can load a gadget", function() {
-      var expContainer = new ExplorerContainer();
+      var expContainer = ExplorerContainer.getInstance();
       expContainer.renderGadget('http://example.com/gadget.xml', createSiteSpy());
       //The first argument is a spy object for the site
       expect(container.navigateGadget).toHaveBeenCalledWith(jasmine.any(Object), 'http://example.com/gadget.xml', 
               {"gadgetUrl" : "http://example.com/gadget.xml"}, 
               {"height" : "100%", "width" : "100%"});
+      expContainer.destroy();
     });
   
     it("can handle an error when loading a gadget", function() {
-      var expContainer = new ExplorerContainer();
+      var expContainer = ExplorerContainer.getInstance();
       container.preloadGadget.andCallFake(function(url, callback) {
         var metadata = {};
         callback(metadata);
@@ -207,10 +209,11 @@ define(['explorer/widgets/ExplorerContainer', 'dojo/on', 'dojo/json', 'dojo/dom-
             });
       
       expect(container.ee.navigate).not.toHaveBeenCalled();
+      expContainer.destroy();
     });
   
     it("can load consecutive gadgets", function() {
-      var expContainer = new ExplorerContainer();
+      var expContainer = ExplorerContainer.getInstance();
       expContainer.renderGadget('http://example.com/gadget.xml', createSiteSpy());
       //The first argument is a spy object for the site
       expect(container.navigateGadget).toHaveBeenCalledWith(jasmine.any(Object), 'http://example.com/gadget.xml', 
@@ -223,11 +226,12 @@ define(['explorer/widgets/ExplorerContainer', 'dojo/on', 'dojo/json', 'dojo/dom-
       expect(container.navigateGadget).toHaveBeenCalledWith(jasmine.any(Object), 'http://example.com/gadget.xml', 
               {"gadgetUrl" : "http://example.com/gadget.xml"}, 
               {"height" : "100%", "width" : "100%"});
+      expContainer.destroy();
     });
     
     it("can render embedded experience gadgets", function() {
       var siteNode = document.createElement("div");
-      var expContainer = new ExplorerContainer();
+      var expContainer = ExplorerContainer.getInstance();
       var callback = jasmine.createSpy('eecallback');
       expContainer.renderEmbeddedExperience({
         "gadget" : "http://example.com/gadget.xml",
@@ -268,10 +272,11 @@ define(['explorer/widgets/ExplorerContainer', 'dojo/on', 'dojo/json', 'dojo/dom-
       expect(container.ee.navigate).toHaveBeenCalledWith(jasmine.any(Element), {
         "url" : "http://example.com"
       }, renderParams, jasmine.any(Function));
+      expContainer.destroy();
     }); 
     
     it("emits a set preferences event", function() {
-      var expContainer = new ExplorerContainer(),
+      var expContainer = ExplorerContainer.getInstance(),
         testSite, testUrl, testPrefs;
       runs(function() {
         on(expContainer, 'setpreferences', function(site, url, prefs) {
@@ -290,11 +295,12 @@ define(['explorer/widgets/ExplorerContainer', 'dojo/on', 'dojo/json', 'dojo/dom-
         expect(testSite).not.toBeUndefined();
         expect(testUrl).toEqual('http://example.com/gadget.xml');
         expect(testPrefs).toEqual({"set_pref" : "value"});
+        expContainer.destroy();
       });
     });
     
     it("emits a rendered event", function() {
-      var expContainer = new ExplorerContainer(),
+      var expContainer = ExplorerContainer.getInstance(),
       testGadgetUrl, testSiteId;
       runs(function() {
         on(expContainer, 'gadgetrendered', function(gadgetUrl, siteId) {
@@ -311,11 +317,12 @@ define(['explorer/widgets/ExplorerContainer', 'dojo/on', 'dojo/json', 'dojo/dom-
       runs(function() {
         expect(testGadgetUrl).toEqual('http://example.com/gadget.xml');
         expect(testSiteId).toEqual('123');
+        expContainer.destroy();
       });
     });
     
     it("shows actions for gadgets with action contributions", function() {
-      var expContainer = new ExplorerContainer();
+      var expContainer = ExplorerContainer.getInstance();
       var actions = [{
         "dataType" : "opensocial.Person",
         "id" : "org-opensocial-explorer-person",
@@ -337,10 +344,11 @@ define(['explorer/widgets/ExplorerContainer', 'dojo/on', 'dojo/json', 'dojo/dom-
       expect(container.actions.runAction).toHaveBeenCalledWith('org-opensocial-explorer-person');
       actions[1].runAction(actions[1].id);
       expect(container.actions.runAction).toHaveBeenCalledWith('org-opensocial-explorer-red');
+      expContainer.destroy();
     });
     
     it("emits an addaction event", function() {
-      var expContainer = new ExplorerContainer(),
+      var expContainer = ExplorerContainer.getInstance(),
       testAction;
       var actions = [{
         "dataType" : "opensocial.Person",
@@ -361,11 +369,12 @@ define(['explorer/widgets/ExplorerContainer', 'dojo/on', 'dojo/json', 'dojo/dom-
       
       runs(function() {
         expect(testAction).toEqual(actions[0]);
+        expContainer.destroy();
       });
     });
     
     it("emits a removeaction event", function() {
-      var expContainer = new ExplorerContainer(),
+      var expContainer = ExplorerContainer.getInstance(),
       testAction;
       var actions = [{
         "dataType" : "opensocial.Person",
@@ -386,11 +395,12 @@ define(['explorer/widgets/ExplorerContainer', 'dojo/on', 'dojo/json', 'dojo/dom-
       
       runs(function() {
         expect(testAction).toEqual(actions[0]);
+        expContainer.destroy();
       });
     });
     
     it("emits a navigateforactions event", function() {
-      var expContainer = new ExplorerContainer(),
+      var expContainer = ExplorerContainer.getInstance(),
       testGadgetUrl, testParams;
       runs(function() {
         on(expContainer, 'navigateforactions', function(gadgetUrl, opt_params) {
@@ -407,11 +417,12 @@ define(['explorer/widgets/ExplorerContainer', 'dojo/on', 'dojo/json', 'dojo/dom-
       runs(function() {
         expect(testGadgetUrl).toEqual('http://example.com/gadget.xml');
         expect(testParams).toEqual({"view" : "redView"});
+        expContainer.destroy();
       });
     });
     
     it("emits a navigateurl event", function() {
-      var expContainer = new ExplorerContainer(),
+      var expContainer = ExplorerContainer.getInstance(),
       divRel = domConstruct.toDom('<div id="test"></div>'),
       site = createSiteSpy(),
       testRel, testViewTarget, testCoordinates, testParentSite, testCallback;
@@ -435,11 +446,12 @@ define(['explorer/widgets/ExplorerContainer', 'dojo/on', 'dojo/json', 'dojo/dom-
         expect(testViewTarget).toEqual('sidebar');
         expect(testCoordinates).toEqual({"top" : "12px"});
         expect(testParentSite).toEqual(site);
+        expContainer.destroy();
       });
     });
     
     it("emits a navigategadget event", function() {
-      var expContainer = new ExplorerContainer(),
+      var expContainer = ExplorerContainer.getInstance(),
       divRel = domConstruct.toDom('<div id="test"></div>'),
       site = createSiteSpy(),
       testMetadata, testRel, testView, testViewTarget, testCoordinates, testParentSite, testCallback;
@@ -467,11 +479,12 @@ define(['explorer/widgets/ExplorerContainer', 'dojo/on', 'dojo/json', 'dojo/dom-
         expect(testViewTarget).toEqual('sidebar');
         expect(testCoordinates).toEqual({"top" : "12px"});
         expect(testParentSite).toEqual(site);
+        expContainer.destroy();
       });
     });
     
     it("emits a navigateee event", function() {
-      var expContainer = new ExplorerContainer(),
+      var expContainer = ExplorerContainer.getInstance(),
       divRel = domConstruct.toDom('<div id="test"></div>'),
       site = createSiteSpy(),
       testRel, testGadgetInfo, testViewTarget, testCoordinates, testParentSite, testCallback;
@@ -498,11 +511,12 @@ define(['explorer/widgets/ExplorerContainer', 'dojo/on', 'dojo/json', 'dojo/dom-
         expect(testViewTarget).toEqual('sidebar');
         expect(testCoordinates).toEqual({"top" : "12px"});
         expect(testParentSite).toEqual(site);
+        expContainer.destroy();
       });
     });
     
     it("emits a destroyelement event", function() {
-      var expContainer = new ExplorerContainer(),
+      var expContainer = ExplorerContainer.getInstance(),
       site = createSiteSpy(), testSite;
       runs(function() {
         on(expContainer, 'destroyelement', function(site) {
@@ -517,29 +531,33 @@ define(['explorer/widgets/ExplorerContainer', 'dojo/on', 'dojo/json', 'dojo/dom-
       
       runs(function() {
         expect(testSite).toEqual(site);
+        expContainer.destroy();
       });
     });
     
     it("updates security tokens", function() {
-      var expContainer = new ExplorerContainer();
+      var expContainer = ExplorerContainer.getInstance();
       expContainer.updateContainerSecurityToken('123', 320);
       expect(shindig.auth.updateSecurityToken).toHaveBeenCalledWith('123');
       expect(container.forceRefreshAllTokens).toHaveBeenCalled();
+      expContainer.destroy();
     });
     
     it("can get a container token", function() {
-      var expContainer = new ExplorerContainer();
+      var expContainer = ExplorerContainer.getInstance();
       expContainer.containerToken = '123';
       expContainer.containerTokenTTL = 320;
       var callback = jasmine.createSpy('token')
       expContainer.getContainerToken(callback);
       expect(callback).toHaveBeenCalledWith('123', 320);
+      expContainer.destroy();
     });
     
     it("handles the setSelection event", function() {
-      var expContainer = new ExplorerContainer();
+      var expContainer = ExplorerContainer.getInstance();
       topic.publish('setSelection', '123');
       expect(container.selection.setSelection).toHaveBeenCalledWith('123');
+      expContainer.destroy();
     });
   });
 });

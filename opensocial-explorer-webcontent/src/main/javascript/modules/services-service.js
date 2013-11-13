@@ -29,46 +29,48 @@ define(['dojo/request/xhr', 'dojo/json', './url-util'], function(xhr, json, urlU
      * Posts a new service to the servlet.
      *
      * @memberof module:explorer/services-service
-     * @param {Object} specData - Data of the new spec to be posted.
+     * @param {Object} authService - Data of the new service to be posted.
      * @param {Object} callbacks - Object with a success and an error function.
      * @param {Function} callbacks.success - Fired if xhr was successful.
      * @param {Function} callbacks.error - Fired if xhr was not successful.
      */
     createNewService : function(authService, callbacks) {
-      xhr(urlUtil.getContextRoot() + '/services', {
-        handleAs: "json",
+      xhr(urlUtil.getContextRoot() + '/services?' + urlUtil.serialize(authService), {
         method: "POST",
-        data: JSON.stringify(authService),
-        headers : {
-          "Content-Type": "application/json"
-        } 
+        handleAs: "json"
       }).then(callbacks.success, callbacks.error);
     },
     
-    
-    
-    
     /**
-     * Gets the OpenID providers.
+     * Gets a user's existing services from the servlet.
      *
-     * @memberof module:explorer/openid-service
+     * @memberof module:explorer/services-service
+     * @param {String} st - User's security token as a string, also serves as the identifier.
      * @param {Object} callbacks - Object with a success and an error function.
      * @param {Function} callbacks.success - Fired if xhr was successful.
      * @param {Function} callbacks.error - Fired if xhr was not successful.
      */
-    getProviders : function(callbacks) {
-      xhr('openid/providers', {
-        handleAs : "json"
-      }).then(function(data) {
-        if(callbacks.success) {
-          callbacks.success(data);
-        }
-      },
-      function(error){
-        if(callbacks.error) {
-          callbacks.error(error);
-        }
-      });
+    getServices : function(st, callbacks) {
+      xhr(urlUtil.getContextRoot() + '/services?st=' + st, {
+        method: "GET",
+        handleAs: "json"
+      }).then(callbacks.success, callbacks.error);
+    },
+    
+    /**
+     * Deletes a particular service from the servlet.
+     *
+     * @memberof module:explorer/services-service
+     * @param {Object} queryJson - Data of the service to be deleted. Includes service name and user security token.
+     * @param {Object} callbacks - Object with a success and an error function.
+     * @param {Function} callbacks.success - Fired if xhr was successful.
+     * @param {Function} callbacks.error - Fired if xhr was not successful.
+     */
+    deleteService : function(queryJson, callbacks) {
+      xhr(urlUtil.getContextRoot() + '/services?' + urlUtil.serialize(queryJson), {
+        method: "DELETE",
+        handleAs: "json"
+      }).then(callbacks.success, callbacks.error);
     }
   };
 });

@@ -10,8 +10,9 @@
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetsInTemplateMixin.html|WidgetsInTemplateMixin Documentation}
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin', 
-        'explorer/widgets/creation/CreationServiceModal', 'dojo/text!./../../templates/CreationMenu.html', 'dojo/on', 'dojo/topic'],
-        function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, CreationServiceModal, template, on, topic) {
+        'explorer/widgets/creation/CreationServiceModal', 'dojo/text!./../../templates/CreationMenu.html', 
+        'dojo/dom-class', 'dojo/dom-style', 'dojo/on', 'dojo/topic'],
+        function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, CreationServiceModal, template, domClass, domStyle, on, topic) {
   return declare('CreationMenuWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin], {
     templateString : template,
     
@@ -23,12 +24,17 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
      */
     postCreate : function() {
       var self = this;
+      domStyle.set(this.domNode, "display", "none");
       on(this.addGadgetButton, 'click', function() {
         topic.publish("toggleCreationSpecModal");
       });
       
       on(this.addServiceButton, 'click', function() {
         self.serviceModal.show();
+      });
+
+      topic.subscribe("updateToken", function() {
+        domStyle.set(self.domNode, "display", "");
       });
     }
   });

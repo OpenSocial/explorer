@@ -16,14 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.opensocial.explorer.server.openid;
+package org.opensocial.explorer.server.login;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.EnumSet;
 import java.util.Map;
 
 import org.apache.shindig.auth.AbstractSecurityToken;
 import org.apache.shindig.auth.AuthenticationMode;
 import org.apache.shindig.auth.SecurityToken;
+import org.apache.shindig.common.uri.Uri;
 import org.openid4java.discovery.Identifier;
 
 import com.google.caja.util.Maps;
@@ -32,34 +35,35 @@ import com.google.caja.util.Maps;
  * A container {@link SecurityToken} whose owner and viewer IDs are derived from an OpenID
  * {@link Identifier}.
  */
-public final class OpenIDSecurityToken extends AbstractSecurityToken {
+public final class LoginSecurityToken extends AbstractSecurityToken {
 
   private EnumSet<Keys> mapKeys;
 
-  public OpenIDSecurityToken(Identifier identifier, String container) {
-    String id = identifier.getIdentifier();
-    Map<String, String> values = Maps.newHashMap();
-    values.put(Keys.VIEWER.getKey(), id);
-    values.put(Keys.OWNER.getKey(), id);
+  public LoginSecurityToken(Identifier identifier, String container) {
+      String id = identifier.getIdentifier().split("=")[1];
+      Map<String, String> values = Maps.newHashMap();
+      values.put(Keys.VIEWER.getKey(), id);
+      values.put(Keys.OWNER.getKey(), id);
 
-    // CONSIDER: Should these be differentiated for any reason?
-    values.put(Keys.APP_ID.getKey(), container);
-    values.put(Keys.APP_URL.getKey(), container);
-    values.put(Keys.CONTAINER.getKey(), container);
-    values.put(Keys.DOMAIN.getKey(), container);
+      // CONSIDER: Should these be differentiated for any reason?
+      values.put(Keys.APP_ID.getKey(), container);
+      values.put(Keys.APP_URL.getKey(), container);
+      values.put(Keys.CONTAINER.getKey(), container);
+      values.put(Keys.DOMAIN.getKey(), container);
 
-    this.mapKeys = EnumSet.allOf(Keys.class);
-    this.mapKeys.add(Keys.VIEWER);
-    this.mapKeys.add(Keys.OWNER);
-    this.mapKeys.add(Keys.APP_ID);
-    this.mapKeys.add(Keys.APP_URL);
-    this.mapKeys.add(Keys.CONTAINER);
-    this.mapKeys.add(Keys.DOMAIN);
+      this.mapKeys = EnumSet.allOf(Keys.class);
+      this.mapKeys.add(Keys.VIEWER);
+      this.mapKeys.add(Keys.OWNER);
+      this.mapKeys.add(Keys.APP_ID);
+      this.mapKeys.add(Keys.APP_URL);
+      this.mapKeys.add(Keys.CONTAINER);
+      this.mapKeys.add(Keys.DOMAIN);
+      
+      loadFromMap(values);
     
-    loadFromMap(values);
   }
   
-  public OpenIDSecurityToken(String id, String container) {
+  public LoginSecurityToken(String id, String container) {
     Map<String, String> values = Maps.newHashMap();
     values.put(Keys.VIEWER.getKey(), id);
     values.put(Keys.OWNER.getKey(), id);

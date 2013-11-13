@@ -32,7 +32,6 @@ import org.apache.shindig.auth.SecurityTokenException;
 import org.apache.shindig.gadgets.http.HttpFetcher;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
-import org.opensocial.explorer.server.openid.OpenIDSecurityToken;
 import org.opensocial.explorer.specserver.servlet.ExplorerInjectedServlet;
 
 import com.google.inject.Inject;
@@ -79,7 +78,7 @@ public abstract class LoginServlet extends ExplorerInjectedServlet {
   protected void returnSecurityToken(String id, HttpServletResponse resp) throws IOException, JSONException, SecurityTokenException {
       resp.setContentType(HTML_CONTENT_TYPE);
       JSONObject obj = new JSONObject();
-      obj.put("securityToken", this.codec.encodeToken(new OpenIDSecurityToken(id, CONTAINER)));
+      obj.put("securityToken", this.codec.encodeToken(new LoginSecurityToken(id, CONTAINER)));
       obj.put("securityTokenTTL", this.codec.getTokenTimeToLive(CONTAINER));
       String content = obj.toString();
       PrintWriter writer = resp.getWriter();

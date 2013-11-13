@@ -47,10 +47,6 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       on(this.loginLink, 'click', function() {
         self.togglePopup();
       });
-      
-      topic.subscribe('tokenRequest', function() {
-        topic.publish('tokenResponse', self.securityToken);
-      });
     },
     
     /**
@@ -76,11 +72,9 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
      */
     onSecurityTokenListener : function() {
       var responseObj = this.popup.win_.document.responseObj;
-      this.securityToken = responseObj.securityToken;
-      this.securityTokenTTL = responseObj.securityTokenTTL;
-      this.popup.win_.close();
-      topic.publish("updateToken", this.securityToken, this.securityTokenTTL);
+      topic.publish("updateToken", responseObj.securityToken, responseObj.securityTokenTTL);
       query('#login')[0].innerHTML = "Welcome!";
+      this.popup.win_.close();
     },
     
     /**

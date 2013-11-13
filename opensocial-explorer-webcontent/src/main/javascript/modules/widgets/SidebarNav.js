@@ -33,12 +33,12 @@
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dojo/Evented.html|Evented Documentation}
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 
-        'dijit/_WidgetsInTemplateMixin', 'dojo/text!./../templates/SidebarNav.html',
+        'dijit/_WidgetsInTemplateMixin', 'dojo/text!./../templates/SidebarNav.html', 'dojo/on', 
         'dojo/dom-construct', 'dojo/Evented', 'explorer/widgets/creation/CreationSpecModal',
-        'explorer/gadget-spec-service', 'dojo/store/Memory', 'dojo/store/Observable', 'dojo/on', 'dojo/topic',
+        'explorer/gadget-spec-service', 'dojo/store/Memory', 'dojo/store/Observable', 'dojo/topic',
         'dijit/tree/ObjectStoreModel', 'dijit/Tree', 'dojo/dom', 'dojo/dom-class', 'dojo/query', 'dojo/domReady!'],
-        function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, template, domConstruct, Evented,
-            CreationSpecModal, gadgetSpecService, Memory, Observable, on, topic, ObjectStoreModel, Tree, dom, domClass, query) {
+        function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, template, on, domConstruct, Evented,
+            CreationSpecModal, gadgetSpecService, Memory, Observable, topic, ObjectStoreModel, Tree, dom, domClass, query) {
   return declare('SidebarNavWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, Evented ], {
     templateString : template,
     specStore : null,
@@ -93,7 +93,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         }
       });
       
-      on(this.creationModal, 'newSpec', function(title, data) {
+      on(this.creationSpecModal, 'newSpec', function(title, data) {
         self.addSpec(title, data.id);
       });
       

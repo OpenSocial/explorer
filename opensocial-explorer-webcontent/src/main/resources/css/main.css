@@ -16,6 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+ 
+.clear-both {
+	clear: both;
+} 
+.itemTitle {
+	font-weight: bold;
+	line-height: 25px;
+}
+.creationServiceItem {
+	margin-bottom: 10px;
+	background-color: #f2f4fb;
+} 
+.right {
+	float: right;
+}
 
 .block {
 	display: block;
@@ -38,7 +53,7 @@
 }
 
 .creationMenu {
-	margin-bottom: 30px;
+	margin-bottom: 20px;
 }
 
 .center {

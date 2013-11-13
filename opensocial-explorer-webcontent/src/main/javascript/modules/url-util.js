@@ -38,6 +38,13 @@ define([], function() {
       pathArray.pop();
       pathArray.pop();
       return pathArray.join('/');
+    },
+    
+    serialize: function(json) {
+      var str = [];
+      for(var ele in json)
+         str.push(encodeURIComponent(ele) + "=" + encodeURIComponent(json[ele]));
+      return str.join("&");
     }
   };
 });

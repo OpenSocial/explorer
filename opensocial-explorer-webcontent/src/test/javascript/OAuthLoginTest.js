@@ -82,8 +82,8 @@ define(['explorer/widgets/login/OAuthLogin', 'dojo/query', 'dojo/topic',
       evt.initEvent('returnSecurityToken', true, true);
       window.document.dispatchEvent(evt);
       
-      expect(oAuthLogin.securityToken).toBe("abc123");
-      expect(oAuthLogin.securityTokenTTL).toBe(456);
+      expect(popup.win_.document.responseObj.securityToken).toBe("abc123");
+      expect(popup.win_.document.responseObj.securityTokenTTL).toBe(456);
       expect(popup.win_.close).toHaveBeenCalled();
       expect(document.getElementById('login').innerHTML).toBe("Welcome!");
       

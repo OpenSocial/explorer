@@ -29,7 +29,7 @@
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dojo/topic',
         'dojo/_base/array', 'dojo/text!./../../templates/GadgetArea.html', './GadgetToolbar',
         'dojo/dom-construct','../Loading', '../../opensocial-data', './GadgetModalDialog',
-        'dojo/_base/window', 'dojo/dom', 'dojo/json', '../ExplorerContainer', 'dojo/on', './LocationMenuItem'],
+        'dojo/_base/window', 'dojo/dom', 'dojo/json', '../../ExplorerContainer', 'dojo/on', './LocationMenuItem'],
         function(declare, WidgetBase, TemplatedMixin, topic, arrayUtil, template, GadgetToolbar, 
             domConstruct, Loading, osData, GadgetModalDialog, win, dom, JSON, ExplorerContainer, on, LocationMenuItem) {
       return declare('GadgetAreaWidget', [ WidgetBase, TemplatedMixin ], {
@@ -44,7 +44,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     startup : function() {
-      this.expContainer = new ExplorerContainer();
+      this.expContainer = ExplorerContainer.getInstance();
       this.siteCounter = 0;
       this.siteParent = this.domNode;
       this.gadgetToolbar = new GadgetToolbar();
@@ -137,7 +137,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
     },
     
     /**
-     * Gets the {@link module:explorer/widgets/ExplorerContainer}.
+     * Gets the {@link module:explorer/ExplorerContainer}.
      * @memberof module:explorer/widgets/gadgetarea/GadgetArea#
      */
     getExplorerContainer : function() {

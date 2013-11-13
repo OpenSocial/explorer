@@ -27,11 +27,13 @@ import org.apache.shindig.common.util.ResourceLoader;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 /**
  * OAuth store provider.
  */
+@Singleton
 public class OSEOAuthStoreProvider implements Provider<OSEOAuthStore> {
   
   private static final String CLAZZ = OSEOAuthStoreProvider.class.getName();
@@ -43,9 +45,11 @@ public class OSEOAuthStoreProvider implements Provider<OSEOAuthStore> {
   
   @Inject
   public OSEOAuthStoreProvider(@Named(OAUTH_CALLBACK_URL) String defaultCallbackUrl,
-          Authority authority, @Named("explorer.oauth.config") String oauthConfig) {
+          Authority authority, @Named("explorer.oauth.config") String oauthConfig, 
+          @Named("shindig.contextroot") String contextRoot) {
     this.store = new OSEOAuthStore();
     this.store.setAuthority(authority);
+    this.store.setContextRoot(contextRoot);
     this.store.setDefaultCallbackUrl(defaultCallbackUrl);
     this.oauthConfig = oauthConfig;
     loadServices();

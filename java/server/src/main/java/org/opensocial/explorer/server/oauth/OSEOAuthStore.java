@@ -29,9 +29,11 @@ import net.oauth.OAuthServiceProvider;
 import net.oauth.signature.RSA_SHA1;
 
 import org.apache.shindig.auth.SecurityToken;
+import org.apache.shindig.auth.SecurityTokenCodec;
 import org.apache.shindig.common.servlet.Authority;
 import org.apache.shindig.gadgets.GadgetException;
 import org.apache.shindig.gadgets.GadgetException.Code;
+import org.apache.shindig.gadgets.http.HttpFetcher;
 import org.apache.shindig.gadgets.oauth.BasicOAuthStore;
 import org.apache.shindig.gadgets.oauth.BasicOAuthStoreConsumerKeyAndSecret;
 import org.apache.shindig.gadgets.oauth.BasicOAuthStoreConsumerKeyAndSecret.KeyType;
@@ -41,6 +43,8 @@ import org.apache.wink.json4j.JSONObject;
 
 import com.google.caja.util.Maps;
 import com.google.common.base.Objects;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 /**
  * Basic OAuth store for OAuth 1.0a keys and secrets and tokens.
@@ -60,9 +64,11 @@ public class OSEOAuthStore implements OAuthStore {
   private Logger LOG = Logger.getLogger(CLAZZ);
   
   private Map<String, BasicOAuthStoreConsumerKeyAndSecret> keyAndSecretStore;
+  private Map<String, Map<String, BasicOAuthStoreConsumerKeyAndSecret>> userStore;
   private Map<TokenInfoIndex, TokenInfo> tokenStore;
   private String defaultCallbackUrl;
   private Authority authority;
+  private String contextRoot;
   
   /**
    * Token index for the token store.
@@ -112,9 +118,11 @@ public class OSEOAuthStore implements OAuthStore {
   /**
    * Token store for the OpenSocial Explorer.
    */
+  @Inject
   public OSEOAuthStore() {
     this.keyAndSecretStore = Maps.newHashMap();
     this.tokenStore = Maps.newHashMap();
+    this.userStore = Maps.newHashMap();
   }
   
   /**
@@ -142,7 +150,9 @@ public class OSEOAuthStore implements OAuthStore {
         JSONObject consumerInfo = configJson.getJSONObject(key);
         
         //BEGIN code from org.apache.shindig.gadgets.oauth.BasicOAuthStore.realStoreConsumerInfo
-        String callbackUrl = consumerInfo.optString(CALLBACK_URL, null);
+        String callbackUrl = consumerInfo.optString(CALLBACK_URL, null)
+          .replaceAll("%origin%", authority.getOrigin())
+          .replaceAll("%contextRoot%", this.contextRoot);
         String consumerSecret = consumerInfo.getString(CONSUMER_SECRET_KEY);
         String consumerKey = consumerInfo.getString(CONSUMER_KEY_KEY);
         String keyTypeStr = consumerInfo.getString(KEY_TYPE_KEY);
@@ -173,8 +183,17 @@ public class OSEOAuthStore implements OAuthStore {
 
   public ConsumerInfo getConsumerKeyAndSecret(SecurityToken securityToken, String serviceName,
           OAuthServiceProvider provider) throws GadgetException {
-    BasicOAuthStoreConsumerKeyAndSecret cks = keyAndSecretStore.get(serviceName);
-    if(cks == null) {
+    
+    BasicOAuthStoreConsumerKeyAndSecret cks;
+    String ownerId = securityToken.getOwnerId();
+    
+    // Check user store if security token matches any keys
+    if(this.userStore.containsKey(ownerId)) {
+      cks = userStore.get(ownerId).get(serviceName);
+    // Check anon store
+    } else if (this.keyAndSecretStore.containsKey(serviceName)) {
+      cks = keyAndSecretStore.get(serviceName);
+    } else {
       throw new GadgetException(Code.OAUTH_STORAGE_ERROR, "No OAuth key and secret defined for the service " + serviceName);
     }
     
@@ -237,6 +256,22 @@ public class OSEOAuthStore implements OAuthStore {
    */
   public void setAuthority(Authority authority) {
     this.authority = authority;
+  }
+  
+  /**
+   * Sets the contest root to use for OAuth services.
+   * @param contextRoot The contextRoot.
+   */
+  public void setContextRoot(String contextRoot) {
+    this.contextRoot = contextRoot;
+  }
+
+  public Map<String, Map<String, BasicOAuthStoreConsumerKeyAndSecret>> getUserStore() {
+    return this.userStore;
+  }
+
+  public Map<String, BasicOAuthStoreConsumerKeyAndSecret> getNameStore(String id) {
+    return this.userStore.get(id);
   }
 
 }
