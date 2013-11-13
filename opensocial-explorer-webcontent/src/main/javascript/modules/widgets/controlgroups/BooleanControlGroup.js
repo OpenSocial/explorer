@@ -18,7 +18,7 @@
  */
 
 /**
- * A ControlGroup for the boolean option of the PreferencesDialog.
+ * A ControlGroup for the boolean option of the PreferencesModal.
  *
  * @module explorer/widgets/controlgroups/BooleanControlGroup
  * @augments module:explorer/widgets/controlgroups/ControlGroup

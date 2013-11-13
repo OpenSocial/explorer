@@ -93,9 +93,9 @@ define(['explorer/widgets/gadgetarea/GadgetArea', 'dojo/_base/declare', 'dojo/Ev
     });
     
     it("handles the setpreferences event", function() {
-      spyOn(gadgetArea.gadgetToolbar.getPrefDialog(), 'setPrefs').andCallThrough();
+      spyOn(gadgetArea.gadgetToolbar.getPrefModal(), 'setPrefs').andCallThrough();
       mockContainer.fireSetPreferences(jasmine.createSpy('site'), 'http://example.com/gadget.xml', {"set_pref" : "1234"});
-      expect(gadgetArea.gadgetToolbar.getPrefDialog().setPrefs).toHaveBeenCalledWith({"set_pref" : "1234"});
+      expect(gadgetArea.gadgetToolbar.getPrefModal().setPrefs).toHaveBeenCalledWith({"set_pref" : "1234"});
     });
     
     it("handles the addaction event", function() {
@@ -123,47 +123,47 @@ define(['explorer/widgets/gadgetarea/GadgetArea', 'dojo/_base/declare', 'dojo/Ev
     });
     
     it("handles the navigateurl event", function() {
-      spyOn(gadgetArea, 'createDialog').andCallThrough();
+      spyOn(gadgetArea, 'createModal').andCallThrough();
       var spyCallback = jasmine.createSpy('callbackSpy');
       mockContainer.fireNavigateUrl(undefined, 'sidebar', undefined, undefined, spyCallback);
-      expect(gadgetArea.createDialog).toHaveBeenCalledWith('URL', 'sidebar');
+      expect(gadgetArea.createModal).toHaveBeenCalledWith('URL', 'sidebar');
       expect(spyCallback).toHaveBeenCalledWith(jasmine.any(Element));
     });
     
     it("handles the navigategadget event", function() {
-      spyOn(gadgetArea, 'createDialog').andCallThrough();
+      spyOn(gadgetArea, 'createModal').andCallThrough();
       var spyCallback = jasmine.createSpy('callbackSpy');
       mockContainer.fireNavigateGadget({}, undefined, undefined, 'sidebar', undefined, undefined, spyCallback);
-      expect(gadgetArea.createDialog).toHaveBeenCalledWith('Gadget', 'sidebar');
+      expect(gadgetArea.createModal).toHaveBeenCalledWith('Gadget', 'sidebar');
       expect(spyCallback).toHaveBeenCalledWith(jasmine.any(Element));
       mockContainer.fireNavigateGadget({"modulePrefs" : {
         "title" : "test title"
       }}, undefined, undefined, 'sidebar', undefined, undefined, spyCallback);
-      expect(gadgetArea.createDialog).toHaveBeenCalledWith('test title', 'sidebar');
+      expect(gadgetArea.createModal).toHaveBeenCalledWith('test title', 'sidebar');
       expect(spyCallback).toHaveBeenCalledWith(jasmine.any(Element));
     });
     
     it("handles the navigateee event", function() {
-      spyOn(gadgetArea, 'createDialog').andCallThrough();
+      spyOn(gadgetArea, 'createModal').andCallThrough();
       var spyCallback = jasmine.createSpy('callbackSpy');
       mockContainer.fireNavigateEE(undefined, {}, 'sidebar', undefined, undefined, spyCallback);
-      expect(gadgetArea.createDialog).toHaveBeenCalledWith('Embedded Experiences', 'sidebar');
+      expect(gadgetArea.createModal).toHaveBeenCalledWith('Embedded Experiences', 'sidebar');
       expect(spyCallback).toHaveBeenCalledWith(jasmine.any(Element));
       mockContainer.fireNavigateEE(undefined, {"modulePrefs" : {
         "title" : "test title"
       }}, 'sidebar', undefined, undefined, spyCallback);
-      expect(gadgetArea.createDialog).toHaveBeenCalledWith('test title', 'sidebar');
+      expect(gadgetArea.createModal).toHaveBeenCalledWith('test title', 'sidebar');
       expect(spyCallback).toHaveBeenCalledWith(jasmine.any(Element));
     });
     
     it("handles the destroyelement event", function() {
-      spyOn(gadgetArea, 'createDialog').andCallThrough();
+      spyOn(gadgetArea, 'createModal').andCallThrough();
       var spyCallback = jasmine.createSpy('callbackSpy');
       mockContainer.fireNavigateEE(undefined, {}, 'sidebar', undefined, undefined, spyCallback);
-      spyOn(gadgetArea.gadgetDialog, 'hide').andReturn(undefined);
+      spyOn(gadgetArea.gadgetModal, 'hide').andReturn(undefined);
       var mockSite = jasmine.createSpy('mockSite');
       mockContainer.fireDestroyElement(mockSite);
-      expect(gadgetArea.gadgetDialog.hide).toHaveBeenCalledWith(mockSite)
+      expect(gadgetArea.gadgetModal.hide).toHaveBeenCalledWith(mockSite)
     });
     
     it("handles the navigateforactions event", function() {

@@ -19,7 +19,7 @@
 
 /**
  * Handles the OAuth login process via a popup. Multiple instances of this module are created
- * in the LoginDialog for each individual login option.
+ * in the LoginModal for each individual login option.
  *
  * @module explorer/widgets/login/OAuthLogin
  * @augments dijit/_WidgetBase

@@ -30,9 +30,9 @@
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dojo/query', 'dojo/text!./../../templates/GadgetToolbar.html',
-        './GadgetMenuButton', './PreferencesDialog', 
+        './GadgetMenuButton', './PreferencesModal', 
         'dojo/dom-construct', 'dijit/_WidgetsInTemplateMixin', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
-        function(declare, WidgetBase, TemplatedMixin, query, template, GadgetMenuButton, PreferencesDialog, domConstruct,
+        function(declare, WidgetBase, TemplatedMixin, query, template, GadgetMenuButton, PreferencesModal, domConstruct,
             WidgetsInTemplateMixin) {
   return declare('GadgetToolbarWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin ], {
     templateString : template,
@@ -55,7 +55,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
 
     /**
      * Takes the gadget's metadata and sets the GadgetToolbar's title, constructs the GadgetDropDownMenu, 
-     * and adds the gadget's preferences to the PreferencesDialog.
+     * and adds the gadget's preferences to the PreferencesModal.
      * 
      * @memberof module:explorer/widgets/gadgetarea/GadgetToolbar#
      * @param {Object} metadata - Object with the gadget's metadata.
@@ -63,17 +63,17 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     setGadgetMetadata : function(metadata) {
       query('.brand', this.domNode).innerHTML(this.getTitle(metadata));
       this.gadgetMenuButton.constructMenu(metadata);
-      this.prefDialog.addPrefsToUI(metadata.userPrefs);
+      this.prefModal.addPrefsToUI(metadata.userPrefs);
     },
 
     /**
-     * Getter method for the PreferencesDialog.
+     * Getter method for the PreferencesModal.
      * 
      * @memberof module:explorer/widgets/gadgetarea/GadgetToolbar#
-     * @returns {PreferencesDialog} - The PreferencesDialog object.
+     * @returns {PreferencesModal} - The PreferencesModal object.
      */
-    getPrefDialog : function() {
-      return this.prefDialog;
+    getPrefModal : function() {
+      return this.prefModal;
     },
 
     /**

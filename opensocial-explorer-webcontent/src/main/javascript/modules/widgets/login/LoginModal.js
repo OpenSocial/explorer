@@ -20,7 +20,7 @@
 /**
 * A modal window that allows users to login.
 *
-* @module explorer/widgets/login/LoginDialog
+* @module explorer/widgets/login/LoginModal
 * @augments module:explorer/widgets/ModalDialog
 * @requires module:explorer/openid-service
 * @requires module:explorer/widgets/login/OAuthLogin
@@ -30,12 +30,12 @@ define(['dojo/_base/declare',  'explorer/widgets/ModalDialog', 'dijit/_WidgetsIn
         '../../openid-service',  'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, ModalDialog, WidgetsInTemplateMixin, query, domConstruct,
             OAuthLogin, topic, openIdService) {
-  return declare('LoginDialogWidget', [ ModalDialog, WidgetsInTemplateMixin ], {
+  return declare('LoginModalWidget', [ ModalDialog, WidgetsInTemplateMixin ], {
     
     /**
      * Called right after widget is added to the dom. See link for more information.
      *
-     * @memberof module:explorer/widgets/login/LoginDialog#
+     * @memberof module:explorer/widgets/login/LoginModal#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     startup : function() {
@@ -49,9 +49,9 @@ define(['dojo/_base/declare',  'explorer/widgets/ModalDialog', 'dijit/_WidgetsIn
     },
 
     /**
-     * Shows the LoginDialog modal.
+     * Shows the LoginModal modal.
      *
-     * @memberof module:explorer/widgets/login/LoginDialog#
+     * @memberof module:explorer/widgets/login/LoginModal#
      */
     show : function() {
       var modalBodies = query('.modal-body', this.domNode);
@@ -106,7 +106,7 @@ define(['dojo/_base/declare',  'explorer/widgets/ModalDialog', 'dijit/_WidgetsIn
     /**
      * Getter method for the GadgetSpecService module for testing purposes.
      *
-     * @memberof module:explorer/widgets/login/LoginDialog#
+     * @memberof module:explorer/widgets/login/LoginModal#
      * @returns {openIdService} The openIdService object.
      */
     getOpenIdServiceProviders: function() {
@@ -116,7 +116,7 @@ define(['dojo/_base/declare',  'explorer/widgets/ModalDialog', 'dijit/_WidgetsIn
     /**
      * Destroys this widget.
      * 
-     * @memberof module:explorer/widgets/login/LoginDialog# 
+     * @memberof module:explorer/widgets/login/LoginModal# 
      */
     destroy: function() {
       this.inherited(arguments);

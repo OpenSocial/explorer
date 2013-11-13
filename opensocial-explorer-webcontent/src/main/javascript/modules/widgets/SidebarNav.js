@@ -18,7 +18,7 @@
  */
 
 /**
- * Contains the Dojo Tree Control for specs and the CreationModalDialog Module.
+ * Contains the Dojo Tree Control for specs and the CreationModal Module.
  *
  * @module explorer/widgets/SidebarNav
  * @requires module:explorer/widgets/creation/CreationSpecModal

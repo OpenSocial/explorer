@@ -18,7 +18,7 @@
  */
 
 /**
- * A ControlGroup for the string option of the PreferencesDialog.
+ * A ControlGroup for the string option of the PreferencesModal.
  *
  * @module explorer/widgets/controlgroups/StringControlGroup
  * @augments module:explorer/widgets/controlgroups/ControlGroup

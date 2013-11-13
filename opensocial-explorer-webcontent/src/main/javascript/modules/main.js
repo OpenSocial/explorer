@@ -21,9 +21,9 @@
  * Main JS file of the OpenSocial Explorer.
  */
 require(['explorer/widgets/editorarea/EditorArea', 'explorer/widgets/gadgetarea/GadgetArea', 'explorer/widgets/SidebarNav', 
-         'explorer/widgets/login/LoginDialog', 'dojo/query', 'dojo/dom-class', 'dojo/_base/event', 'dojo/ready',
+         'explorer/widgets/login/LoginModal', 'dojo/query', 'dojo/dom-class', 'dojo/_base/event', 'dojo/ready',
          'dojo/NodeList-manipulate', 'dojo/NodeList-dom', 'dojo/NodeList-traverse'], 
-         function(EditorArea, GadgetArea, SidebarNav, LoginDialog, query, domClass, event, ready) {
+         function(EditorArea, GadgetArea, SidebarNav, LoginModal, query, domClass, event, ready) {
   /*
    * The following code SHOULD handle showing and hiding all drop down menus on the page. 
    */
