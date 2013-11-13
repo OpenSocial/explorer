@@ -16,7 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
- 
+
+.center-image {
+	display : block;
+    margin : auto;
+}
+
 .clear-both {
 	clear: both;
 } 

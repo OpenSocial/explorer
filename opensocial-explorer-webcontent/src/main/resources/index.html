@@ -31,34 +31,24 @@
       body {
         padding-top: 60px;
       }
-      .sidebar-nav {
-        padding: 9px 0;
-      }
-	  .exploring {
-		background-color: #FFFFFF;
-		padding-bottom: 60px;
-	  }
-	      
-      .testing {
-		background-color: #EEEEEE;
-		padding-bottom: 20px;
-		padding-top: 60px;
-      }
-      .center {
-      	text-align: center;
+      
+      footer {
+		padding-top: 40px;
       }
       
       p {
-      	text-align: justify;
+		text-align: justify;
       }
       
+      .center {
+		text-align: center;
+      }
+
       .img-polaroid {
-      	padding: 0px;
+		padding: 0px;
       }
+
       
-      footer {
-      	padding-top: 40px;
-      }
     </style>
     <link href="libs/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 
@@ -86,7 +76,6 @@
             <ul class="nav">
               <li class="active"><a href="index.html">Home</a></li>
               <li><a href="explore.html">Explore</a></li>
-              <li><a href="test.html">Test</a></li>
               <li><a href="http://www.opensocial.org" target="_blank">OpenSocial</a></li>
             </ul>
           </div><!--/.nav-collapse -->
@@ -94,90 +83,39 @@
       </div>
     </div>
 
-	<div>
-		<div class="container">
-			<div class="hero-unit">
-					<h1>Be Adventurous!</h1>
-					<p>We know you have no fear so dive right in and explore the
-						world of OpenSocial!</p>
-					<p>
-						<a class="btn btn-primary btn-large" href="explore.html">Explore
-							&raquo;</a>
-					</p>
-			</div>
-			<div class="row exploring">
-				<div class="span3">
-					<h2>Learn</h2>
-					<p>If you are looking for information on how to use a feature
-						or API from the OpenSocial spec, chances are you can find an
-						example of it in the OpenSocial Explorer. The goal of the
-						OpenSocial Explorer is to enable developers to easily build
-						gadgets, and the various samples in the OpenSocial Explorer are
-						the key to doing that.</p>
-					<div class="center">
-						<img src="images/spec.png" class="img-polaroid" />
-					</div>
-				</div>
-				<div class="span3">
-					<h2>Try</h2>
-					<p>Not only can you view the source for all the samples but you
-						can edit the code and re-render the gadget. This allows you to
-						change the code of the samples to gain a deeper understanding of
-						how OpenSocial works.</p>
-					<div class="center">
-						<img src="images/editor.png" class="img-polaroid" />
-					</div>
-				</div>
-				<div class="span3">
-					<h2>Build</h2>
-					<p>The samples not only allow developers to learn how to use
-						OpenSocial but give developers a place to get started with their
-						own gadgets. We encourage developers to copy the code out of any
-						of the samples and modify it to be used within their own gadgets.</p>
-					<div class="center">
-						<img src="images/rendering.png" class="img-polaroid" />
-					</div>
-				</div>
-				<div class="span3">
-					<h2>Test</h2>
-					<p>The OpenSocial Explorer also allows you render your own
-						gadgets given the gadget url. This is a great way to easily test
-						the gadget in a production environment.</p>
-					<div class="center">
-						<img src="images/specs.png" class="img-polaroid" />
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="container">
 
-	<div class="testing">
-		<div class="container">
-			<div class="row">
-				<div class="span12">
-					<h1>Be Confident!</h1>
-					<p>Already have your own gadget? Come test it out!</p>
-					<p>
-						<a class="btn btn-primary btn-large" href="explore.html">Render
-							&raquo;</a>
-					</p>
-				</div>
-			</div>
-			<div class="row">
-				<div class="span4">
-					<h2>Test</h2>
-					<p>The OpenSocial Explorer also allows you render your own
-						gadgets given the gadget url. This is a great way to easily test
-						the gadget in a production environment.</p>
-					<div class="center">
-						<img src="images/specs.png" class="img-polaroid" />
-					</div>
-				</div>
-			</div>
-		</div>
-			<footer>
-			<p>&copy; OpenSocial Foundation 2013</p>
-		</footer>
-	</div>
-</body>
+      <div class="hero-unit">
+        <h1>Be Adventurous!</h1>
+        <p>We know you have no fear so dive right in and explore the world of OpenSocial!</p>
+        <p><a class="btn btn-primary btn-large" href="explore.html">Explore &raquo;</a></p>
+      </div>
+
+      <div class="row">
+        <div class="span4">
+          <h2>Learn</h2>
+          <p>If you are looking for information on how to use a feature or API from the OpenSocial spec, chances are you can find an example of it in the OpenSocial Explorer.  The goal of the OpenSocial Explorer is to enable developers to easily build gadgets, and the various samples in the OpenSocial Explorer are the key to doing that. </p>
+          <div class="center"><img class="img-polaroid" src="images/spec.png"/></div>
+        </div>
+        <div class="span4">
+          <h2>Try</h2>
+          <p>Not only can you view the source for all the samples but you can edit the code and re-render the gadget.  This allows you to change the code of the samples to gain a deeper understanding of how OpenSocial works.</p>
+          <div class="center"><img class="img-polaroid" src="images/editor.png"/></div>
+       </div>
+        <div class="span4">
+          <h2>Build</h2>
+          <p>The samples not only allow developers to learn how to use OpenSocial but give developers a place to get started with their own gadgets.  We encourage developers to copy the code out of any of the samples and modify it to be used within their own gadgets.</p>
+          <div class="center"><img class="img-polaroid" src="images/rendering.png"/></div>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; OpenSocial Foundation 2013</p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
 </html>
