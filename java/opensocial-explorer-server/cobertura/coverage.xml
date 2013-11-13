@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
 
-<coverage line-rate="0.6580547112462006" branch-rate="0.6144578313253012" lines-covered="433" lines-valid="658" branches-covered="102" branches-valid="166" complexity="2.4123711340206184" version="1.9.4.1" timestamp="1383596318739">
+<coverage line-rate="0.6580547112462006" branch-rate="0.6144578313253012" lines-covered="433" lines-valid="658" branches-covered="102" branches-valid="166" complexity="2.4123711340206184" version="1.9.4.1" timestamp="1384360341897">
 	<sources>
 		<source>--source</source>
 		<source>/Users/ryanjbaxter/git-repos/opensocial/explorer/java/server/src/main/java</source>
