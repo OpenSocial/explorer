@@ -1,3 +1,22 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 /**
  * A menu that has buttons for creating a new gadget or service.
  *
@@ -19,23 +38,42 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
     /**
      * Called right before widget is added to the dom. See link for more information.
      *
-     * @memberof module:explorer/widgets/creation/CreationSpecModal#
+     * @memberof module:explorer/widgets/creation/CreationSpecMenu#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     postCreate : function() {
       var self = this;
       domStyle.set(this.domNode, "display", "none");
       on(this.addGadgetButton, 'click', function() {
-        topic.publish("toggleCreationSpecModal");
+        self.publishToggleCreationSpecModal();
       });
       
       on(this.addServiceButton, 'click', function() {
         self.serviceModal.show();
       });
 
-      topic.subscribe("updateToken", function() {
-        domStyle.set(self.domNode, "display", "");
-      });
+      this.subscription = topic.subscribe("updateToken", function() {
+        domStyle.set(self.domNode, "display", "block");
+      }); 
+    },
+    
+    /**
+     * Sends a publish request for the CreationSpecModal to be opened. Used for testing purposes.
+     *
+     * @memberof module:explorer/widgets/creation/CreationSpecMenu#
+     */
+    publishToggleCreationSpecModal: function() {
+      topic.publish("toggleCreationSpecModal");
+    },
+    
+    /**
+     * Unsubscribes and deletes the Widget. Used for testing purposes.
+     *
+     * @memberof module:explorer/widgets/creation/CreationSpecMenu#
+     */
+    destroy: function() {
+      this.subscription.remove();
+      this.inherited(arguments);
     }
   });
 });

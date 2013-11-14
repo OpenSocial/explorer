@@ -266,13 +266,25 @@ public class OSEOAuthStore implements OAuthStore {
     this.contextRoot = contextRoot;
   }
 
+  /**
+   * Getter method for the userStore for OAuth services.
+   * @param contextRoot The contextRoot.
+   */
   public Map<String, Map<String, BasicOAuthStoreConsumerKeyAndSecret>> getUserStore() {
     return this.userStore;
   }
 
-  public Map<String, BasicOAuthStoreConsumerKeyAndSecret> getNameStore(String id) {
+  /**
+   * Gets the Map of all of a user's services via the user's ID.
+   * @param contextRoot The contextRoot.
+   * @throws NoSuchStoreException 
+   */
+  public Map<String, BasicOAuthStoreConsumerKeyAndSecret> getNameStore(String id) throws NoSuchStoreException {
+      Map<String, BasicOAuthStoreConsumerKeyAndSecret> nameStore = this.userStore.get(id);
+      if (nameStore == null) {
+        throw new NoSuchStoreException();
+      }
     return this.userStore.get(id);
   }
-
 }
 

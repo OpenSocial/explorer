@@ -37,6 +37,7 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
   return declare('CreationServiceModalWidget', [ModalDialog, WidgetsInTemplateMixin], {
     templateString: template,
     dropdownValue: 'OAuth',
+    
     /**
      * Called right before widget is added to the dom. See link for more information.
      *
@@ -78,21 +79,7 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
        
       // Dropdown Listener
       query(this.serviceSelection, this.domNode).on('click', function(e) {
-        var value = self.serviceSelection.value;
-        // Something happens only if a different dropdown option is selected.
-        if(value !== self.dropdownValue) {
-          self.clearContent();
-          self.dropdownValue = value;
-          self.resetPill();
-          
-          if(value == 'OAuth') {
-            query(self.oAuthGeneralContent).addClass('active');
-          }
-          
-          if(value == 'OAuth2') {
-            query(self.oAuth2GeneralContent).addClass('active');
-          }
-        };
+        lang.hitch(self, self.dropdownClickHandler());
       });
       
       // Submit Listener
@@ -136,6 +123,28 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
       topic.subscribe('itemDeleted', function(data) {
         self.populate(data);
       });
+    },
+    
+    /**
+     * Handles the logic after the dropdown is clicked and a selection is toggled.
+     *
+     * @memberof module:explorer/widgets/creation/CreationSpecModal#
+     */
+    dropdownClickHandler: function() {
+      var value = this.serviceSelection.value;
+      // Something happens only if a different dropdown option is selected.
+      if(value !== this.dropdownValue) {
+        this.clearContent();
+        this.dropdownValue = value;
+        this.resetPill();
+        if(value == 'OAuth') {
+          query(this.oAuthGeneralContent).addClass('active');
+        }
+        
+        if(value == 'OAuth2') {
+          query(this.oAuth2GeneralContent).addClass('active');
+        }
+      }
     },
     
     /**

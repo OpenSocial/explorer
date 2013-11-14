@@ -35,7 +35,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     templateString : template,
 
     /**
-     * Creates a new ExplorerContainer.
+     * Creates a new CreationServiceItem.
      * @constructor
      * 
      * @memberof module:explorer/widgets/MenuItemWidget#
@@ -74,7 +74,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
       
       this.getServicesService().deleteService(nameTokenPair, {
         success: function(data) {
-          topic.publish('itemDeleted', data);
+          self.publishUpdatedData(data);
         },
         error: function(data) {
           console.error("There was an error");
@@ -83,13 +83,33 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     },
     
     /**
-     * Getter method for the security token in the ExplorerContainer module.
+     * Publishes the updated data after the ServiceItem has been deleted.
+     * Used for testing purposes.
+     *
+     * @memberof module:explorer/widgets/creation/CreationServiceItem#
+     */
+    publishUpdatedData: function(data) {
+      topic.publish('itemDeleted', data);
+    },
+    
+    /**
+     * Gets the security token.
      *
      * @memberof module:explorer/widgets/creation/CreationServiceItem#
      * @returns {String} The security token as a string.
      */
     getToken: function() {
-      return ExplorerContainer.getInstance().containerToken;
+      return this.getExplorerContainer().getInstance().containerToken;
+    },
+    
+    /**
+     * Getter method for the ExplorerContainer module for testing purposes.
+     *
+     * @memberof module:explorer/widgets/creation/CreationServiceItem#
+     * @returns {ExplorerContainer} The ExplorerContainer object.
+     */
+    getExplorerContainer: function() {
+      return ExplorerContainer;
     },
     
     /**
