@@ -29,10 +29,9 @@
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetsInTemplateMixin.html|WidgetsInTemplateMixin Documentation}
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
-        'dojo/query', 'dojo/text!./../../templates/GadgetToolbar.html',
-        './GadgetMenuButton', './PreferencesModal', 
+        'dojo/query', 'dojo/text!./../../templates/GadgetToolbar.html', './GadgetMenuButton', 
         'dojo/dom-construct', 'dijit/_WidgetsInTemplateMixin', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
-        function(declare, WidgetBase, TemplatedMixin, query, template, GadgetMenuButton, PreferencesModal, domConstruct,
+        function(declare, WidgetBase, TemplatedMixin, query, template, GadgetMenuButton, domConstruct,
             WidgetsInTemplateMixin) {
   return declare('GadgetToolbarWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin ], {
     templateString : template,
@@ -54,8 +53,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     },
 
     /**
-     * Takes the gadget's metadata and sets the GadgetToolbar's title, constructs the GadgetDropDownMenu, 
-     * and adds the gadget's preferences to the PreferencesModal.
+     * Takes the gadget's metadata, sets the GadgetToolbar's title and constructs the GadgetDropDownMenu.
      * 
      * @memberof module:explorer/widgets/gadgetarea/GadgetToolbar#
      * @param {Object} metadata - Object with the gadget's metadata.
@@ -63,17 +61,6 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     setGadgetMetadata : function(metadata) {
       query('.brand', this.domNode).innerHTML(this.getTitle(metadata));
       this.gadgetMenuButton.constructMenu(metadata);
-      this.prefModal.addPrefsToUI(metadata.userPrefs);
-    },
-
-    /**
-     * Getter method for the PreferencesModal.
-     * 
-     * @memberof module:explorer/widgets/gadgetarea/GadgetToolbar#
-     * @returns {PreferencesModal} - The PreferencesModal object.
-     */
-    getPrefModal : function() {
-      return this.prefModal;
     },
 
     /**

@@ -35,7 +35,7 @@ define(['explorer/widgets/login/OAuthLogin', 'dojo/query', 'dojo/topic',
     it("can toggle a popup", function() {
       
       var oAuthLogin = new OAuthLogin({
-        imageUrl: "testImageUrl",
+        imageUrl: "",
         name: "testName",
         endpoint: "testEndpoint"
       }); 
@@ -59,7 +59,7 @@ define(['explorer/widgets/login/OAuthLogin', 'dojo/query', 'dojo/topic',
     
     it("listens for the security token from the server and updates the welcome text", function() {
       var oAuthLogin = new OAuthLogin({
-        imageUrl: "testImageUrl",
+        imageUrl: "",
         name: "testName",
         endpoint: "testEndpoint"
       });
@@ -87,7 +87,7 @@ define(['explorer/widgets/login/OAuthLogin', 'dojo/query', 'dojo/topic',
     
     it("closes removes the event listener if the user closes the window without logging in", function() {
       var oAuthLogin = new OAuthLogin({
-        imageUrl: "testImageUrl",
+        imageUrl: "",
         name: "testName",
         endpoint: "testEndpoint"
       });

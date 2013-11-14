@@ -19,7 +19,7 @@
 Downloads
 ====================
 
-The current release of the OpenSocial Explorer is 0.0.1 and was released on April 15th, 2013.
+The current release of the OpenSocial Explorer is 0.0.2 and was released on November 4th, 2013.
 All build artifacts can be downloaded from the [Sonatype repository](https://oss.sonatype.org/content/groups/public/org/opensocial/explorer/).
 
 <table class="table table-striped">
@@ -32,31 +32,39 @@ All build artifacts can be downloaded from the [Sonatype repository](https://oss
   <tbody>
     <tr>
       <td>OpenSocial Explorer War</td>
-      <td><a href="https://oss.sonatype.org/content/groups/public/org/opensocial/explorer/opensocial-explorer-server-war/0.0.1/opensocial-explorer-server-war-0.0.1.war">opensocial-explorer-server-war-0.0.1.war</a></td>
+      <td><a href="https://oss.sonatype.org/content/groups/public/org/opensocial/explorer/opensocial-explorer-server-war/0.0.2/opensocial-explorer-server-war-0.0.2.war">opensocial-explorer-server-war-0.0.2.war</a></td>
     </tr>
     <tr>
       <td>OpenSocial Explorer Source (zip)</td>
-      <td><a href="https://oss.sonatype.org/content/groups/public/org/opensocial/explorer/opensocial-explorer-assembly/0.0.1/opensocial-explorer-assembly-0.0.1-source.zip">opensocial-explorer-assembly-0.0.1-source.zip</a></td>
+      <td><a href="https://oss.sonatype.org/content/groups/public/org/opensocial/explorer/opensocial-explorer-assembly/0.0.2/opensocial-explorer-assembly-0.0.2-source.zip">opensocial-explorer-assembly-0.0.2-source.zip</a></td>
     </tr>
     <tr>
       <td>OpenSocial Explorer Source (tar.gz)</td>
-      <td><a href="https://oss.sonatype.org/content/groups/public/org/opensocial/explorer/opensocial-explorer-assembly/0.0.1/opensocial-explorer-assembly-0.0.1-source.tar.gz">opensocial-explorer-assembly-0.0.1-source.tar.gz</a></td>
+      <td><a href="https://oss.sonatype.org/content/groups/public/org/opensocial/explorer/opensocial-explorer-assembly/0.0.2/opensocial-explorer-assembly-0.0.2-source.tar.gz">opensocial-explorer-assembly-0.0.2-source.tar.gz</a></td>
+    </tr>
+    <tr>
+      <td>OpenSocial Explorer Binaries (zip)</td>
+      <td><a href="https://oss.sonatype.org/content/groups/public/org/opensocial/explorer/opensocial-explorer-assembly/0.0.2/opensocial-explorer-assembly-0.0.2-binaries.zip">opensocial-explorer-assembly-0.0.2-binaries.zip</a></td>
+    </tr>
+    <tr>
+      <td>OpenSocial Explorer Binaries (tar.gz)</td>
+      <td><a href="https://oss.sonatype.org/content/groups/public/org/opensocial/explorer/opensocial-explorer-assembly/0.0.2/opensocial-explorer-assembly-0.0.2-binaries.tar.gz">opensocial-explorer-assembly-0.0.2-binaries.tar.gz</a></td>
     </tr>
     <tr>
       <td>OpenSocial Explorer Gadget Specs</td>
-      <td><a href="https://oss.sonatype.org/content/groups/public/org/opensocial/explorer/opensocial-explorer-gadget-specs/0.0.1/opensocial-explorer-gadget-specs-0.0.1.jar">opensocial-explorer-gadget-specs-0.0.1.jar</a></td>
+      <td><a href="https://oss.sonatype.org/content/groups/public/org/opensocial/explorer/opensocial-explorer-gadget-specs/0.0.2/opensocial-explorer-gadget-specs-0.0.2.jar">opensocial-explorer-gadget-specs-0.0.2.jar</a></td>
     </tr>
     <tr>
       <td>OpenSocial Explorer Gadget Spec Server</td>
-      <td><a href="https://oss.sonatype.org/content/groups/public/org/opensocial/explorer/opensocial-explorer-gadget-spec-server/0.0.1/opensocial-explorer-gadget-spec-server-0.0.1-sources.jar">opensocial-explorer-gadget-spec-server-0.0.1-sources.jar</a></td>
+      <td><a href="https://oss.sonatype.org/content/groups/public/org/opensocial/explorer/opensocial-explorer-gadget-spec-server/0.0.2/opensocial-explorer-gadget-spec-server-0.0.2.jar">opensocial-explorer-gadget-spec-server-0.0.2.jar</a></td>
     </tr>
     <tr>
       <td>OpenSocial Explorer Gadget Server</td>
-      <td><a href="https://oss.sonatype.org/content/groups/public/org/opensocial/explorer/opensocial-explorer-server/0.0.1/opensocial-explorer-server-0.0.1-sources.jar">opensocial-explorer-server-0.0.1-sources.jar</a></td>
+      <td><a href="https://oss.sonatype.org/content/groups/public/org/opensocial/explorer/opensocial-explorer-server/0.0.2/opensocial-explorer-server-0.0.2.jar">opensocial-explorer-server-0.0.2.jar</a></td>
     </tr>
     <tr>
       <td>OpenSocial Explorer Web Content</td>
-      <td><a href="https://oss.sonatype.org/content/groups/public/org/opensocial/explorer/opensocial-explorer-webcontent/0.0.1/opensocial-explorer-webcontent-0.0.1.jar">opensocial-explorer-webcontent-0.0.1.jar</a></td>
+      <td><a href="https://oss.sonatype.org/content/groups/public/org/opensocial/explorer/opensocial-explorer-webcontent/0.0.2/opensocial-explorer-webcontent-0.0.2.jar">opensocial-explorer-webcontent-0.0.2.jar</a></td>
     </tr>
   </tbody>
 </table>

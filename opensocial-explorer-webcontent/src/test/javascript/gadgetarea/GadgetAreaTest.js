@@ -92,12 +92,6 @@ define(['explorer/widgets/gadgetarea/GadgetArea', 'dojo/_base/declare', 'dojo/Ev
       expect(domClass.contains(loading, 'hide')).toEqual(true);
     });
     
-    it("handles the setpreferences event", function() {
-      spyOn(gadgetArea.gadgetToolbar.getPrefModal(), 'setPrefs').andCallThrough();
-      mockContainer.fireSetPreferences(jasmine.createSpy('site'), 'http://example.com/gadget.xml', {"set_pref" : "1234"});
-      expect(gadgetArea.gadgetToolbar.getPrefModal().setPrefs).toHaveBeenCalledWith({"set_pref" : "1234"});
-    });
-    
     it("handles the addaction event", function() {
       spyOn(gadgetArea.gadgetToolbar, 'addAction').andCallThrough();
       var action = {

@@ -21,7 +21,7 @@
   <parent>
     <artifactId>opensocial-explorer</artifactId>
     <groupId>org.opensocial.explorer</groupId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
   <artifactId>opensocial-explorer-webcontent</artifactId>
