@@ -143,7 +143,7 @@ public class FacebookLoginServlet extends LoginServlet {
     } catch(UnsupportedEncodingException e) {
       resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error generating encoded url.");
     } catch(IllegalStateException e) {
-      resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error making token request.");
+      resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Invalid client id or secret! Please double check the credentials.");
     }
   }
   
@@ -158,13 +158,16 @@ public class FacebookLoginServlet extends LoginServlet {
       .addQueryParameter("code", authCode)
       .toUri());
     
-    HttpResponse response = fetcher.fetch(facebookTokenRequest);
-    Map<String, String> queryPairs = this.splitQuery(response);
+    String responseString = this.parseResponseToString(fetcher.fetch(facebookTokenRequest));
+    this.checkInvalidCredentials(responseString);
+    Map<String, String> queryPairs = this.splitQuery(responseString);
     
-    if(queryPairs.containsKey("error")) {
-      throw new IllegalStateException();
-    } else {
-      return queryPairs.get("access_token");
+    return queryPairs.get("access_token");
+  }
+  
+  private void checkInvalidCredentials(String responseString) {
+    if(responseString.startsWith("{")) {
+      throw new IllegalStateException("Invalid client id or secret! Please double check the credentials.");
     }
   }
   
@@ -178,14 +181,11 @@ public class FacebookLoginServlet extends LoginServlet {
     .addQueryParameter("grant_type", GRANT_TYPE)
     .toUri());
     
-    HttpResponse facebookResponse = fetcher.fetch(facebookAppRequest);
+    String responseString = this.parseResponseToString(fetcher.fetch(facebookAppRequest));
+    this.checkInvalidCredentials(responseString);
+    Map<String, String> queryPairs = this.splitQuery(responseString);
     
-    Map<String, String> queryPairs = this.splitQuery(facebookResponse);
-    if(queryPairs.containsKey("error")) {
-      throw new IllegalStateException();
-    } else {
-      return queryPairs.get("access_token");
-    }
+    return queryPairs.get("access_token");
   }
 
   private JSONObject inspectToken(String inputToken, String accessToken) throws IOException, GadgetException, JSONException {  
