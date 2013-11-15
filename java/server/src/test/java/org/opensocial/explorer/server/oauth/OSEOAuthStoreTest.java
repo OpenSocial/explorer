@@ -93,6 +93,7 @@ public class OSEOAuthStoreTest {
   private Authority createAuthorityMock() {
     Authority mockAuthority = createMock(Authority.class);
     expect(mockAuthority.getAuthority()).andReturn("http://example.com").anyTimes();
+    expect(mockAuthority.getOrigin()).andReturn("mockOrigin").anyTimes();
     replay(mockAuthority);
     return mockAuthority;
   }

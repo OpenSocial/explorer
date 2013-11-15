@@ -150,9 +150,11 @@ public class OSEOAuthStore implements OAuthStore {
         JSONObject consumerInfo = configJson.getJSONObject(key);
         
         //BEGIN code from org.apache.shindig.gadgets.oauth.BasicOAuthStore.realStoreConsumerInfo
-        String callbackUrl = consumerInfo.optString(CALLBACK_URL, null)
-          .replaceAll("%origin%", authority.getOrigin())
-          .replaceAll("%contextRoot%", this.contextRoot);
+        String callbackUrl = consumerInfo.optString(CALLBACK_URL, null);
+        if (!(callbackUrl == null)) {
+          callbackUrl = callbackUrl.replaceAll("%origin%", authority.getOrigin())
+                                   .replaceAll("%contextRoot%", this.contextRoot);
+        }
         String consumerSecret = consumerInfo.getString(CONSUMER_SECRET_KEY);
         String consumerKey = consumerInfo.getString(CONSUMER_KEY_KEY);
         String keyTypeStr = consumerInfo.getString(KEY_TYPE_KEY);
