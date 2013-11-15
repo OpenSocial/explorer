@@ -31,10 +31,10 @@
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetsInTemplateMixin.html|WidgetsInTemplateMixin Documentation}
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin', 'explorer/widgets/creation/CreationMenu',
-        'explorer/widgets/login/LoginDialog', 'dojo/query', 'dojo/on', 'dojo/text!./../templates/MainContainer.html', 
-        'explorer/widgets/sidebar/SidebarNav', 'explorer/widgets/gadgetarea/GadgetArea', 'explorer/widgets/editorarea/EditorArea',
-        'explorer/widgets/gadgetarea/PreferencesDialog', 'explorer/widgets/login/LoginDialog'], 
-         function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, CreationMenu, LoginDialog, query, on, template) {
+        'explorer/widgets/login/LoginModal', 'dojo/query', 'dojo/on', 'dojo/text!./../templates/MainContainer.html', 
+        'explorer/widgets/SidebarNav', 'explorer/widgets/gadgetarea/GadgetArea', 'explorer/widgets/editorarea/EditorArea',
+        'explorer/widgets/gadgetarea/PreferencesModal', 'explorer/widgets/login/LoginModal'], 
+         function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, CreationMenu, LoginModal, query, on, template) {
   return declare('MainContainerWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin ], {
     templateString : template,
     

@@ -92,16 +92,16 @@ define(['explorer/widgets/MainContainer', 'dojo/_base/declare', 'dojo/Evented', 
     });
     
     it("handle preferences changing", function() {
-      mainContainer.prefDialog.addPrefsToUI(prefs);
+      mainContainer.prefModal.addPrefsToUI(prefs);
       spyOn(mainContainer.gadgetArea, 'reRenderGadget').andReturn(undefined);
-      mainContainer.prefDialog.notifyPrefsChangedListeners();
+      mainContainer.prefModal.notifyPrefsChangedListeners();
       expect(mainContainer.gadgetArea.reRenderGadget.calls.length).toEqual(1);
     });
     
     it("handles the setpreferences event", function() {
-      spyOn(mainContainer.prefDialog, 'setPrefs').andCallThrough();
+      spyOn(mainContainer.prefModal, 'setPrefs').andCallThrough();
       mockContainer.fireSetPreferences(jasmine.createSpy('site'), 'http://example.com/gadget.xml', {"set_pref" : "1234"});
-      expect(mainContainer.prefDialog.setPrefs).toHaveBeenCalledWith({"set_pref" : "1234"});
+      expect(mainContainer.prefModal.setPrefs).toHaveBeenCalledWith({"set_pref" : "1234"});
     });
   });
 });
