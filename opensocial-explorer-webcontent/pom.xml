@@ -109,16 +109,6 @@
       </resource>
     </resources>
     <plugins>
-    <plugin> 
-	<groupId>org.apache.maven.plugins</groupId> 
-	<artifactId>maven-resources-plugin</artifactId>
-	<executions> 
-		<execution> 
-			<id>default-testResources</id>
-			<phase>none</phase> 
-		</execution> 
-	</executions> 
-</plugin> 
       <!-- Documentation: http://jslint4java.googlecode.com/svn/docs/2.0.0/maven.html -->
       <!-- I don't think we need this plugin right now since the plugin in the reporting section
            does the same thing.  Keeping this here until we make the final decision -->
