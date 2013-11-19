@@ -246,7 +246,7 @@ public class ServicesServletTest {
     expect(req.getParameter("secret")).andReturn("testSecret");
     expect(req.getParameter("name")).andReturn("testName");
     
-    resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "One or more parameters on POST request are empty.");
+    resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Name, Key and Secret parameters on POST request cannot be empty.");
     expectLastCall();
     
     replay(req);
@@ -274,7 +274,7 @@ public class ServicesServletTest {
   @Test
   public void testDoDeleteEmptyParameter() throws Exception {
     expect(req.getParameter("name")).andReturn("");
-    resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "One or more parameters on DELETE request are empty.");
+    resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Name parameter on DELETE request cannot be empty.");
     expectLastCall();
     
     replay(req);

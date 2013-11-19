@@ -43,7 +43,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
      */
     postCreate : function() {
       var self = this;
-      domStyle.set(this.domNode, "display", "none");
+      domClass.add(this.domNode, "hide");
       
       on(this.addGadgetButton, 'click', function() {
         topic.publish("toggleCreationSpecModal");
@@ -54,7 +54,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
       });
 
       this.subscription = topic.subscribe("updateToken", function() {
-        domStyle.set(self.domNode, "display", "block");
+        domClass.remove(self.domNode, "hide");
       }); 
     },
     

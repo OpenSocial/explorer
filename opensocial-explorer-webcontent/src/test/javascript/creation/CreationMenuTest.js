@@ -34,10 +34,10 @@ define(['explorer/widgets/creation/CreationMenu', 'dojo/dom-class', 'dojo/topic'
     it("is visible only when the user is logged in", function() {
       var creationMenu = new CreationMenu();
       document.getElementById('testDiv').appendChild(creationMenu.domNode);
-      expect(domStyle.get(creationMenu.domNode, "display")).toBe("none");
+      expect(domClass.contains(creationMenu.domNode, "hide")).toBe(true);
       
       topic.publish("updateToken");
-      expect(domStyle.get(creationMenu.domNode, "display")).toBe("block");
+      expect(domClass.contains(creationMenu.domNode, "hide")).toBe(false);
       
       creationMenu.destroy();
     }); 
