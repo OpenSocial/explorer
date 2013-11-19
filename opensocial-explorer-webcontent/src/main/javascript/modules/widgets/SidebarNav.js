@@ -53,8 +53,8 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
      */
     startup : function() {
       var self = this;
-      this.getGadgetSpecService().getSpecTree({
-        success : function(json) {
+      gadgetSpecService.getSpecTree().then(
+        function(json) {
           json.unshift({name: "Root", id: "root"});
           
           self.specStore = new Memory({
@@ -88,17 +88,17 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
           self.specTree.set("path", self.getPath([], self.getDefaultId()));
           self.specTree.placeAt(self.domNode);
         },
-        error : function(data) {
+        function(data) {
           console.error("There was an error");
         }
-      });
+      );
       
       on(this.creationSpecModal, 'newSpec', function(title, data) {
         self.addSpec(title, data.id);
       });
       
-      this.subscription = topic.subscribe('toggleCreationSpecModal', function() {   
-        self.toggleModal();    
+      self.subscription = topic.subscribe('toggleCreationSpecModal', function() {   
+        self.creationSpecModal.show();    
       });
     },
     
@@ -122,7 +122,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
       this.specTree.set('path', path).then(function() {
         self.emit('show', newNode);
       }, function(e) {
-        console.error('There was en error selecting the node with the id ' + specId);
+        console.error('There was an error selecting the node with the id ' + specId);
       });
     },
     
@@ -183,27 +183,6 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     setNewId: function(id) {
       var focusedNode = this.specTree.get('selectedItems')[0];
       focusedNode.id = id;
-    },
-    
-    /**
-     * Opens the CreationSpecModal for adding a new spec.
-     *
-     * @memberof module:explorer/widgets/SidebarNav#
-     */
-    toggleModal: function() {
-      domClass.remove(this.creationSpecModal.domNode, 'hide');
-      domClass.add(this.creationSpecModal.domNode, 'in');
-      query('body').append('<div class="modal-backdrop fade in"></div>');
-    },
-    
-    /**
-     * Getter method for the GadgetSpecService module for testing purposes.
-     *
-     * @memberof module:explorer/widgets/SidebarNav#
-     * @returns {gadgetSpecService} The gadgetSpecService object.
-     */
-    getGadgetSpecService : function() {
-      return gadgetSpecService;
     },
     
     /**
