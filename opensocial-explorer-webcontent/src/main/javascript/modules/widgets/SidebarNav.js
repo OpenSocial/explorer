@@ -97,7 +97,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         self.addSpec(title, data.id);
       });
       
-      topic.subscribe('toggleCreationSpecModal', function() {   
+      this.subscription = topic.subscribe('toggleCreationSpecModal', function() {   
         self.toggleModal();    
       });
     },
@@ -204,6 +204,16 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
      */
     getGadgetSpecService : function() {
       return gadgetSpecService;
+    },
+    
+    /**
+     * Unsubscribes and deletes the Widget. Used for testing purposes.
+     *
+     * @memberof module:explorer/widgets/SidebarNav#
+     */
+    destroy: function() {
+      this.subscription.remove();
+      this.inherited(arguments);
     }
   });
 });

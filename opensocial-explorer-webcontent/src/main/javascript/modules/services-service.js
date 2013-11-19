@@ -30,15 +30,12 @@ define(['dojo/request/xhr', 'dojo/json', './url-util'], function(xhr, json, urlU
      *
      * @memberof module:explorer/services-service
      * @param {Object} authService - Data of the new service to be posted.
-     * @param {Object} callbacks - Object with a success and an error function.
-     * @param {Function} callbacks.success - Fired if xhr was successful.
-     * @param {Function} callbacks.error - Fired if xhr was not successful.
      */
-    createNewService : function(authService, callbacks) {
-      xhr(urlUtil.getContextRoot() + '/services?' + urlUtil.serialize(authService), {
+    createNewService : function(authService) {
+      return xhr(urlUtil.getContextRoot() + '/services?' + urlUtil.serialize(authService), {
         method: "POST",
         handleAs: "json"
-      }).then(callbacks.success, callbacks.error);
+      });
     },
     
     /**
@@ -46,15 +43,12 @@ define(['dojo/request/xhr', 'dojo/json', './url-util'], function(xhr, json, urlU
      *
      * @memberof module:explorer/services-service
      * @param {String} st - User's security token as a string, also serves as the identifier.
-     * @param {Object} callbacks - Object with a success and an error function.
-     * @param {Function} callbacks.success - Fired if xhr was successful.
-     * @param {Function} callbacks.error - Fired if xhr was not successful.
      */
-    getServices : function(st, callbacks) {
-      xhr(urlUtil.getContextRoot() + '/services?st=' + st, {
+    getServices : function(st) {
+      return xhr(urlUtil.getContextRoot() + '/services?st=' + st, {
         method: "GET",
         handleAs: "json"
-      }).then(callbacks.success, callbacks.error);
+      });
     },
     
     /**
@@ -62,15 +56,12 @@ define(['dojo/request/xhr', 'dojo/json', './url-util'], function(xhr, json, urlU
      *
      * @memberof module:explorer/services-service
      * @param {Object} queryJson - Data of the service to be deleted. Includes service name and user security token.
-     * @param {Object} callbacks - Object with a success and an error function.
-     * @param {Function} callbacks.success - Fired if xhr was successful.
-     * @param {Function} callbacks.error - Fired if xhr was not successful.
      */
-    deleteService : function(queryJson, callbacks) {
-      xhr(urlUtil.getContextRoot() + '/services?' + urlUtil.serialize(queryJson), {
+    deleteService : function(queryJson) {
+      return xhr(urlUtil.getContextRoot() + '/services?' + urlUtil.serialize(queryJson), {
         method: "DELETE",
         handleAs: "json"
-      }).then(callbacks.success, callbacks.error);
+      });
     }
   };
 });

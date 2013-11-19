@@ -101,6 +101,6 @@ define(['explorer/widgets/SidebarNav', 'dojo/topic', 'dojo/Deferred', 'dojo/on']
         expect(sidebar.specStore.query({name: "Sample Gadget"}).length).toBe(1);
         sidebar.destroy();
       });
-    });
+    }); 
   });
 });

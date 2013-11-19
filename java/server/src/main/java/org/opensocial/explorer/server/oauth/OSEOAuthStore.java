@@ -18,6 +18,7 @@
  */
 package org.opensocial.explorer.server.oauth;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -38,6 +39,7 @@ import org.apache.shindig.gadgets.oauth.BasicOAuthStore;
 import org.apache.shindig.gadgets.oauth.BasicOAuthStoreConsumerKeyAndSecret;
 import org.apache.shindig.gadgets.oauth.BasicOAuthStoreConsumerKeyAndSecret.KeyType;
 import org.apache.shindig.gadgets.oauth.OAuthStore;
+import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
 
@@ -151,7 +153,7 @@ public class OSEOAuthStore implements OAuthStore {
         
         //BEGIN code from org.apache.shindig.gadgets.oauth.BasicOAuthStore.realStoreConsumerInfo
         String callbackUrl = consumerInfo.optString(CALLBACK_URL, null);
-        if (!(callbackUrl == null)) {
+        if (callbackUrl != null) {
           callbackUrl = callbackUrl.replaceAll("%origin%", authority.getOrigin())
                                    .replaceAll("%contextRoot%", this.contextRoot);
         }
@@ -245,6 +247,59 @@ public class OSEOAuthStore implements OAuthStore {
   }
   
   /**
+   * Adds a service with the given serviceName to the given userId.
+   * Overwrites the service if the service already exists.
+   * @param userId The user ID.
+   * @param serviceName The name of the service.
+   * @param kas The container class with all of the service's information.
+   */
+  public void addToUserStore(String userId, String serviceName, BasicOAuthStoreConsumerKeyAndSecret kas) {
+    if(this.userStore.containsKey(userId)) {
+      this.userStore.get(userId).put(serviceName, kas);
+    } else {
+      this.userStore.put(userId, new HashMap<String, BasicOAuthStoreConsumerKeyAndSecret>());
+      this.userStore.get(userId).put(serviceName, kas);
+    }
+  }
+  
+  /**
+   * Deletes a service with the given serviceName associated with the given userId.
+   * Throws an exception if the userId does not exist in the userStore.
+   * @param userId The user ID.
+   * @param serviceName The name of the service.
+   */
+  public void deleteFromUserStore(String userId, String serviceName) throws NoSuchStoreException {
+    if(this.userStore.containsKey(userId)) {
+      this.userStore.get(userId).remove(serviceName);
+    } else {
+      throw new NoSuchStoreException();
+    }
+  }
+  
+  /**
+   * Gets all the services associated with the given userId. Returns an empty JSONArray
+   * if user doesn't exist or user has no services. 
+   * @param userId The user ID.
+   */
+  public JSONArray getUserServices(String userId) throws JSONException {
+    JSONArray array = new JSONArray();
+    if(this.userStore.containsKey(userId)) {
+      Map<String, BasicOAuthStoreConsumerKeyAndSecret> userMap = this.userStore.get(userId);
+      for (String key : userMap.keySet()) {
+        BasicOAuthStoreConsumerKeyAndSecret kas = userMap.get(key);
+        JSONObject service = new JSONObject();
+        service.put("key", kas.getConsumerKey());
+        service.put("secret", kas.getConsumerSecret());
+        service.put("name", kas.getKeyName());
+        service.put("keyType", kas.getKeyType().toString());
+        service.put("callbackUrl", kas.getCallbackUrl());
+        array.add(service);
+      }
+    }
+    return array;
+  }
+  
+  /**
    * Sets the default callback URL to use for OAuth services.
    * @param url Default callback URL.
    */
@@ -267,26 +322,13 @@ public class OSEOAuthStore implements OAuthStore {
   public void setContextRoot(String contextRoot) {
     this.contextRoot = contextRoot;
   }
-
+  
   /**
    * Getter method for the userStore for OAuth services.
    * @param contextRoot The contextRoot.
    */
   public Map<String, Map<String, BasicOAuthStoreConsumerKeyAndSecret>> getUserStore() {
     return this.userStore;
-  }
-
-  /**
-   * Gets the Map of all of a user's services via the user's ID.
-   * @param contextRoot The contextRoot.
-   * @throws NoSuchStoreException 
-   */
-  public Map<String, BasicOAuthStoreConsumerKeyAndSecret> getNameStore(String id) throws NoSuchStoreException {
-      Map<String, BasicOAuthStoreConsumerKeyAndSecret> nameStore = this.userStore.get(id);
-      if (nameStore == null) {
-        throw new NoSuchStoreException();
-      }
-    return this.userStore.get(id);
   }
 }
 

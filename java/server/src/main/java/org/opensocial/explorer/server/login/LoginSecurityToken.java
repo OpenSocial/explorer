@@ -32,8 +32,7 @@ import org.openid4java.discovery.Identifier;
 import com.google.caja.util.Maps;
 
 /**
- * A container {@link SecurityToken} whose owner and viewer IDs are derived from an OpenID
- * {@link Identifier}.
+ * A container {@link SecurityToken} that contains information about the user and app.
  */
 public final class LoginSecurityToken extends AbstractSecurityToken {
 

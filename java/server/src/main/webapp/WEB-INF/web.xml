@@ -149,6 +149,7 @@
     <url-pattern>/gadgets/api/rest/*</url-pattern>
     <url-pattern>/rpc/*</url-pattern>
     <url-pattern>/rest/*</url-pattern>
+    <url-pattern>/services/*</url-pattern>
   </filter-mapping>
 
   <filter-mapping>
