@@ -39,29 +39,29 @@ public final class LoginSecurityToken extends AbstractSecurityToken {
   private EnumSet<Keys> mapKeys;
 
   public LoginSecurityToken(Identifier identifier, String container) {
-      String id = identifier.getIdentifier().split("=")[1];
-      Map<String, String> values = Maps.newHashMap();
-      values.put(Keys.VIEWER.getKey(), id);
-      values.put(Keys.OWNER.getKey(), id);
+    String id = identifier.getIdentifier().split("=")[1];
+    Map<String, String> values = Maps.newHashMap();
+    values.put(Keys.VIEWER.getKey(), id);
+    values.put(Keys.OWNER.getKey(), id);
 
-      // CONSIDER: Should these be differentiated for any reason?
-      values.put(Keys.APP_ID.getKey(), container);
-      values.put(Keys.APP_URL.getKey(), container);
-      values.put(Keys.CONTAINER.getKey(), container);
-      values.put(Keys.DOMAIN.getKey(), container);
+    // CONSIDER: Should these be differentiated for any reason?
+    values.put(Keys.APP_ID.getKey(), container);
+    values.put(Keys.APP_URL.getKey(), container);
+    values.put(Keys.CONTAINER.getKey(), container);
+    values.put(Keys.DOMAIN.getKey(), container);
 
-      this.mapKeys = EnumSet.allOf(Keys.class);
-      this.mapKeys.add(Keys.VIEWER);
-      this.mapKeys.add(Keys.OWNER);
-      this.mapKeys.add(Keys.APP_ID);
-      this.mapKeys.add(Keys.APP_URL);
-      this.mapKeys.add(Keys.CONTAINER);
-      this.mapKeys.add(Keys.DOMAIN);
-      
-      loadFromMap(values);
-    
+    this.mapKeys = EnumSet.allOf(Keys.class);
+    this.mapKeys.add(Keys.VIEWER);
+    this.mapKeys.add(Keys.OWNER);
+    this.mapKeys.add(Keys.APP_ID);
+    this.mapKeys.add(Keys.APP_URL);
+    this.mapKeys.add(Keys.CONTAINER);
+    this.mapKeys.add(Keys.DOMAIN);
+
+    loadFromMap(values);
+
   }
-  
+
   public LoginSecurityToken(String id, String container) {
     Map<String, String> values = Maps.newHashMap();
     values.put(Keys.VIEWER.getKey(), id);
@@ -80,7 +80,7 @@ public final class LoginSecurityToken extends AbstractSecurityToken {
     this.mapKeys.add(Keys.APP_URL);
     this.mapKeys.add(Keys.CONTAINER);
     this.mapKeys.add(Keys.DOMAIN);
-    
+
     loadFromMap(values);
   }
 

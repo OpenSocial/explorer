@@ -117,9 +117,7 @@ public class ServicesServletTest {
   @Test
   public void testDoGetExisting() throws Exception {
     BasicOAuthStoreConsumerKeyAndSecret kas = new BasicOAuthStoreConsumerKeyAndSecret("testKey", "testSecret", KeyType.HMAC_SYMMETRIC, "testName", "testCallbackUrl");
-    HashMap<String, BasicOAuthStoreConsumerKeyAndSecret> userEntry = new HashMap<String, BasicOAuthStoreConsumerKeyAndSecret>();
-    userEntry.put("testService", kas);
-    servlet.getServiceStore().getUserStore().put("testID", userEntry);
+    servlet.getServiceStore().addToUserStore("testID", "testName", kas);
 
     expect(resp.getWriter()).andReturn(writer);
     
@@ -174,9 +172,7 @@ public class ServicesServletTest {
   @Test
   public void testDoPostOverwrite() throws Exception {
     BasicOAuthStoreConsumerKeyAndSecret kas = new BasicOAuthStoreConsumerKeyAndSecret("testKey2", "testSecret2", KeyType.HMAC_SYMMETRIC, "testName2", "testCallbackUrl2");
-    HashMap<String, BasicOAuthStoreConsumerKeyAndSecret> userEntry = new HashMap<String, BasicOAuthStoreConsumerKeyAndSecret>();
-    userEntry.put("testName", kas);
-    servlet.getServiceStore().getUserStore().put("testID", userEntry);
+    servlet.getServiceStore().addToUserStore("testID", "testName", kas);
 
     expect(resp.getWriter()).andReturn(writer);
     expect(authority.getOrigin()).andReturn("testOrigin/");
@@ -208,9 +204,7 @@ public class ServicesServletTest {
   @Test
   public void testDoPostAdd() throws Exception {
     BasicOAuthStoreConsumerKeyAndSecret kas = new BasicOAuthStoreConsumerKeyAndSecret("testKey2", "testSecret2", KeyType.HMAC_SYMMETRIC, "testName2", "testCallbackUrl2");
-    HashMap<String, BasicOAuthStoreConsumerKeyAndSecret> userEntry = new HashMap<String, BasicOAuthStoreConsumerKeyAndSecret>();
-    userEntry.put("testName2", kas);
-    servlet.getServiceStore().getUserStore().put("testID", userEntry);
+    servlet.getServiceStore().addToUserStore("testID", "testName2", kas);
 
     expect(resp.getWriter()).andReturn(writer);
     expect(authority.getOrigin()).andReturn("testOrigin/");
@@ -294,9 +288,7 @@ public class ServicesServletTest {
   @Test
   public void testDoDelete() throws Exception {
     BasicOAuthStoreConsumerKeyAndSecret kas = new BasicOAuthStoreConsumerKeyAndSecret("testKey", "testSecret", KeyType.HMAC_SYMMETRIC, "testName", "testCallbackUrl");
-    HashMap<String, BasicOAuthStoreConsumerKeyAndSecret> userEntry = new HashMap<String, BasicOAuthStoreConsumerKeyAndSecret>();
-    userEntry.put("testName", kas);
-    servlet.getServiceStore().getUserStore().put("testID", userEntry);
+    servlet.getServiceStore().addToUserStore("testID", "testName", kas);
 
     expect(resp.getWriter()).andReturn(writer);
     expect(req.getParameter("name")).andReturn("testName");

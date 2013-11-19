@@ -322,13 +322,5 @@ public class OSEOAuthStore implements OAuthStore {
   public void setContextRoot(String contextRoot) {
     this.contextRoot = contextRoot;
   }
-  
-  /**
-   * Getter method for the userStore for OAuth services.
-   * @param contextRoot The contextRoot.
-   */
-  public Map<String, Map<String, BasicOAuthStoreConsumerKeyAndSecret>> getUserStore() {
-    return this.userStore;
-  }
 }
 
