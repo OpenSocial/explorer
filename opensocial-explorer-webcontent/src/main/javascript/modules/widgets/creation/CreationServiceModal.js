@@ -215,6 +215,7 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
         function(data) {
           self.toggleTab();
           self.populate(data);
+          self.resetFields();
         },
         function(data) {
           console.error("Error submitting service");
@@ -262,6 +263,18 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
      */
     clearContent: function() {
       query('.pill-pane').removeClass('active');
+    },
+    
+    /**
+     * Resets all the user inputted fields upon submission.
+     *
+     * @memberof module:explorer/widgets/creation/CreationServiceModal#
+     */
+    resetFields: function() {
+      this.oAuthName.value = "";
+      this.oAuthKey.value = "";
+      this.oAuthSecret.value = "";
+      this.oAuthKeyType.selectedIndex = 0;
     },
     
     /**

@@ -127,6 +127,48 @@ define(['explorer/widgets/creation/CreationServiceModal', 'explorer/widgets/crea
       creationServiceModal.destroy();
     });
     
+    it("resets user inputted fields after a successful submission", function() {
+      var testData = {
+          version: "OAuth",
+          st: "testSt",
+          name: "testName",
+          key: "testKey",
+          secret: "testSecret",
+          keyType: "PLAINTEXT",
+          callbackUrl : "%origin%%contextRoot%/gadgets/oauthcallback"
+      };
+      
+      var creationServiceModal = new CreationServiceModal();
+      document.getElementById('testDiv').appendChild(creationServiceModal.domNode);
+      
+      spyOn(creationServiceModal, "getToken").andReturn("testSt");
+      spyOn(creationServiceModal, "addServiceItem");
+      spyOn(servicesService, "createNewService").andCallFake(function() {
+        var dfd = new Deferred();
+        var data = [testData];
+        dfd.resolve(data);
+        return dfd;
+      });
+      
+      creationServiceModal.oAuthName.value = "testName";
+      creationServiceModal.oAuthKey.value = "testKey";
+      creationServiceModal.oAuthSecret.value = "testSecret";
+      creationServiceModal.oAuthKeyType.selectedIndex = 1;
+      creationServiceModal.toggleTab();
+      creationServiceModal.serviceSubmit.click();
+      
+      expect(creationServiceModal.oAuthName.value).toBe("");
+      expect(creationServiceModal.oAuthKey.value).toBe("");
+      expect(creationServiceModal.oAuthSecret.value).toBe("");
+      expect(creationServiceModal.oAuthKeyType.selectedIndex).toBe(0);
+      
+      expect(creationServiceModal.addServiceItem).toHaveBeenCalledWith(testData);
+      expect(domClass.contains(creationServiceModal.servicesTab, "active")).toBe(true);
+      expect(domClass.contains(creationServiceModal.oAuthFieldsValidation, "hide")).toBe(true);
+      
+      creationServiceModal.destroy();
+    });
+    
     it("will prompt the user to fill out all fields if any are left blank upon submission", function() {
       var testData = {
           version: "OAuth",
