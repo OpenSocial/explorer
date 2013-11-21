@@ -21,10 +21,10 @@ package org.opensocial.explorer.server.modules;
 import org.apache.shindig.gadgets.oauth.OAuthModule;
 import org.apache.shindig.gadgets.oauth.OAuthStore;
 import org.apache.shindig.gadgets.oauth2.OAuth2Module;
-import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Cache;
-import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Persister;
 import org.apache.shindig.gadgets.oauth2.persistence.sample.OAuth2PersistenceModule;
 import org.opensocial.explorer.server.oauth.OSEOAuthStoreProvider;
+import org.opensocial.explorer.server.oauth2.IOAuth2Cache;
+import org.opensocial.explorer.server.oauth2.IOAuth2Persister;
 import org.opensocial.explorer.server.oauth2.OSEInMemoryCache;
 import org.opensocial.explorer.server.oauth2.OSEOAuth2Persister;
 
@@ -57,8 +57,8 @@ public class ExplorerOAuthModule extends AbstractModule {
   private static class OAuth2PersistenceModuleOverride extends AbstractModule {
     @Override
     protected void configure() {
-      bind(OAuth2Cache.class).to(OSEInMemoryCache.class);
-      bind(OAuth2Persister.class).to(OSEOAuth2Persister.class);
+      bind(IOAuth2Cache.class).to(OSEInMemoryCache.class);
+      bind(IOAuth2Persister.class).to(OSEOAuth2Persister.class);
     }
   }
 }

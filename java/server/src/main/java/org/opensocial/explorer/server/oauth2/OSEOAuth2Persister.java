@@ -56,7 +56,7 @@ import com.google.inject.name.Named;
 /**
  * Persists OAuth 2.0 data from a JSON file.
  */
-public class OSEOAuth2Persister implements OAuth2Persister {
+public class OSEOAuth2Persister implements IOAuth2Persister {
   
   private static final String CLAZZ = OSEOAuth2Persister.class.getName();
   private static final Logger LOG = Logger.getLogger(CLAZZ);
@@ -105,7 +105,7 @@ public class OSEOAuth2Persister implements OAuth2Persister {
     }
   }
 
-  public OAuth2Client findClient(String gadgetUri, String serviceName)
+  public OAuth2Client findClient(String id, String gadgetUri, String serviceName)
           throws OAuth2PersistenceException {
     return null;
   }

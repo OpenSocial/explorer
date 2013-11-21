@@ -21,6 +21,7 @@ package org.opensocial.explorer.server.oauth2;
 import org.apache.shindig.gadgets.oauth2.OAuth2Accessor;
 import org.apache.shindig.gadgets.oauth2.OAuth2CallbackState;
 import org.apache.shindig.gadgets.oauth2.OAuth2Token.Type;
+import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Client;
 import org.apache.shindig.gadgets.oauth2.persistence.sample.InMemoryCache;
 
 /**
@@ -29,8 +30,18 @@ import org.apache.shindig.gadgets.oauth2.persistence.sample.InMemoryCache;
  * gadgets.  Not something you would want to do for production containers but is suitable for
  * development containers like the OpenSocial Explorer. 
  */
-public class OSEInMemoryCache extends InMemoryCache {
+public class OSEInMemoryCache extends InMemoryCache implements IOAuth2Cache{
+  
+  public OAuth2Client getClient(String userId, String gadgetUri, String serviceName) {
+    OAuth2Client ret = null;
+    final String clientKey = this.getClientKey(gadgetUri, serviceName);
+    if (clientKey != null) {
+      ret = this.getClientMap().get(clientKey);
+    }
 
+    return ret;
+  }
+  
   @Override
   protected String getClientKey(String gadgetUri, String serviceName) {
     //By default the key consists of the gadget URI and the service name
