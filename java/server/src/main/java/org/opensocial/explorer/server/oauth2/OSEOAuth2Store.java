@@ -53,7 +53,7 @@ import java.util.Set;
  * 1) {@link OAuth2Persister} 2) {@link OAuth2Cache} 3) {@link OAuth2Encrypter}
  *
  */
-public class OSEOAuth2Store implements OAuth2Store {
+public class OSEOAuth2Store implements IOAuth2Store {
   private static final String LOG_CLASS = OSEOAuth2Store.class.getName();
   private static final FilteredLogger LOG = FilteredLogger
           .getFilteredLogger(OSEOAuth2Store.LOG_CLASS);
@@ -127,7 +127,7 @@ public class OSEOAuth2Store implements OAuth2Store {
     return ret;
   }
 
-  public OAuth2Client getClient(final String gadgetUri, final String serviceName)
+  public OAuth2Client getClient(String userId, String gadgetUri, String serviceName)
           throws GadgetException {
     final boolean isLogging = OSEOAuth2Store.LOG.isLoggable();
     if (isLogging) {
@@ -195,7 +195,7 @@ public class OSEOAuth2Store implements OAuth2Store {
     OAuth2Accessor ret = this.cache.getOAuth2Accessor(state);
 
     if (ret == null || !ret.isValid()) {
-      final OAuth2Client client = this.getClient(gadgetUri, serviceName);
+      final OAuth2Client client = this.getClient(user, gadgetUri, serviceName);
 
       if (client != null) {
         final OAuth2Token accessToken = this.getToken(gadgetUri, serviceName, user, scope,
@@ -203,7 +203,7 @@ public class OSEOAuth2Store implements OAuth2Store {
         final OAuth2Token refreshToken = this.getToken(gadgetUri, serviceName, user, scope,
                 OAuth2Token.Type.REFRESH);
 
-        final BasicOAuth2Accessor newAccessor = new BasicOAuth2Accessor(gadgetUri, serviceName,
+        final OSEOAuth2Accessor newAccessor = new OSEOAuth2Accessor(gadgetUri, serviceName,
                 user, scope, client.isAllowModuleOverride(), this, this.globalRedirectUri,
                 this.authority, this.contextRoot);
         newAccessor.setAccessToken(accessToken);
@@ -241,7 +241,7 @@ public class OSEOAuth2Store implements OAuth2Store {
               gadgetUri, serviceName, user, scope, type });
     }
 
-    final String processedGadgetUri = this.getGadgetUri(gadgetUri, serviceName);
+    final String processedGadgetUri = this.getGadgetUri(user, gadgetUri, serviceName);
     OAuth2Token token = this.cache.getToken(processedGadgetUri, serviceName, user, scope, type);
     if (token == null) {
       try {
@@ -329,7 +329,7 @@ public class OSEOAuth2Store implements OAuth2Store {
     return ret;
   }
 
-  public OAuth2Token removeToken(final OAuth2Token token) throws GadgetException {
+  public OAuth2Token removeToken(String userId, OAuth2Token token) throws GadgetException {
     final boolean isLogging = OSEOAuth2Store.LOG.isLoggable();
     if (isLogging) {
       OSEOAuth2Store.LOG.entering(OSEOAuth2Store.LOG_CLASS, "removeToken", token);
@@ -343,7 +343,7 @@ public class OSEOAuth2Store implements OAuth2Store {
       try {
         synchronized (token) {
           final String origGadgetApi = token.getGadgetUri();
-          final String processedGadgetUri = this.getGadgetUri(token.getGadgetUri(), token.getServiceName());
+          final String processedGadgetUri = this.getGadgetUri(userId, token.getGadgetUri(), token.getServiceName());
           token.setGadgetUri(processedGadgetUri);
           try {
             // Remove token from the cache
@@ -372,7 +372,7 @@ public class OSEOAuth2Store implements OAuth2Store {
     return null;
   }
 
-  public static boolean runImport(final OAuth2Persister source, final OAuth2Persister target,
+  public static boolean runImport(final IOAuth2Persister source, final IOAuth2Persister target,
           final boolean clean) {
     if (OSEOAuth2Store.LOG.isLoggable()) {
       OSEOAuth2Store.LOG.entering(OSEOAuth2Store.LOG_CLASS, "runImport", new Object[] { source,
@@ -383,7 +383,7 @@ public class OSEOAuth2Store implements OAuth2Store {
     return false;
   }
 
-  public void setToken(final OAuth2Token token) throws GadgetException {
+  public void setToken(String userId, OAuth2Token token) throws GadgetException {
     final boolean isLogging = OSEOAuth2Store.LOG.isLoggable();
     if (isLogging) {
       OSEOAuth2Store.LOG.entering(OSEOAuth2Store.LOG_CLASS, "setToken", token);
@@ -393,7 +393,7 @@ public class OSEOAuth2Store implements OAuth2Store {
       final String gadgetUri = token.getGadgetUri();
       final String serviceName = token.getServiceName();
 
-      final String processedGadgetUri = this.getGadgetUri(gadgetUri, serviceName);
+      final String processedGadgetUri = this.getGadgetUri(userId, gadgetUri, serviceName);
       synchronized (token) {
         token.setGadgetUri(processedGadgetUri);
         try {
@@ -449,10 +449,10 @@ public class OSEOAuth2Store implements OAuth2Store {
     }
   }
 
-  protected String getGadgetUri(final String gadgetUri, final String serviceName)
+  protected String getGadgetUri(String userId, String gadgetUri, String serviceName)
           throws GadgetException {
     String ret = gadgetUri;
-    final OAuth2Client client = this.getClient(ret, serviceName);
+    final OAuth2Client client = this.getClient(userId, ret, serviceName);
     if (client != null) {
       if (client.isSharedToken()) {
         ret = client.getClientId() + ':' + client.getServiceName();
