@@ -143,7 +143,7 @@ public class FacebookLoginServlet extends LoginServlet {
     } catch(UnsupportedEncodingException e) {
       resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error generating encoded url.");
     } catch(IllegalStateException e) {
-      resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Invalid client id or secret! Please double check the credentials.");
+      resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error making token request due to an invalid client id or secret. Please double check the credentials.");
     }
   }
   

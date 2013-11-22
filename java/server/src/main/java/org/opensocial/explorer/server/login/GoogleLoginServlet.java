@@ -148,7 +148,7 @@ public class GoogleLoginServlet extends LoginServlet {
     } catch(NullPointerException e) {
       resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Missing app client metadata.");
     } catch(IllegalStateException e) {
-      resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error making token request.");
+      resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error making token request due to an invalid client id or secret. Please double check the credentials.");
     }
   }
   
