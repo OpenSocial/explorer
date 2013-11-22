@@ -90,9 +90,7 @@ public abstract class ExplorerInjectedServlet extends InjectedServlet {
     return builder.toString();
   }
   
-  protected Map<String, String> splitQuery(HttpResponse response) throws IOException, UnsupportedEncodingException {
-    String query = this.parseResponseToString(response);
-
+  protected Map<String, String> splitQuery(String query) throws IOException, UnsupportedEncodingException {
     Map<String, String> query_pairs = new LinkedHashMap<String, String>();
     String[] pairs = query.split("&");
     for (String pair : pairs) {
