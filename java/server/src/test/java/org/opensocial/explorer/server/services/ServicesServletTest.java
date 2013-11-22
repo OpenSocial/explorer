@@ -29,9 +29,11 @@ import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shindig.auth.AuthInfoUtil;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.auth.UrlParameterAuthenticationHandler;
 import org.apache.shindig.common.servlet.Authority;
+import org.apache.shindig.gadgets.http.HttpResponse;
 import org.apache.shindig.gadgets.oauth.BasicOAuthStoreConsumerKeyAndSecret;
 import org.apache.shindig.gadgets.oauth.BasicOAuthStoreConsumerKeyAndSecret.KeyType;
 import org.apache.wink.json4j.JSONArray;
@@ -41,16 +43,23 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.opensocial.explorer.server.oauth.NoSuchStoreException;
 import org.opensocial.explorer.server.oauth.OSEOAuthStore;
 import org.opensocial.explorer.server.oauth.OSEOAuthStoreProvider;
+import org.powermock.api.easymock.PowerMock;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+
+@PrepareForTest({AuthInfoUtil.class})
+@RunWith(PowerMockRunner.class)
 public class ServicesServletTest {
 
   private ServicesServlet servlet;
   private HttpServletRequest req;
   private HttpServletResponse resp;
-  private UrlParameterAuthenticationHandler handler;
   private Authority authority;
   private OSEOAuthStoreProvider storeProvider;
   private SecurityToken st;
@@ -65,16 +74,17 @@ public class ServicesServletTest {
     req = createMock(HttpServletRequest.class);
     resp = createNiceMock(HttpServletResponse.class);
     authority = createMock(Authority.class);
-    handler = createMock(UrlParameterAuthenticationHandler.class);
     storeProvider = createMock(OSEOAuthStoreProvider.class);
     st = createMock(SecurityToken.class);
+    PowerMock.mockStatic(GoogleIdToken.class);
     
-    expect(handler.getSecurityTokenFromRequest(req)).andReturn(st);
     expect(st.getOwnerId()).andReturn("testID");
-    
     expect(storeProvider.get()).andReturn(store);
+    expect(AuthInfoUtil.getSecurityTokenFromRequest(req)).andReturn(st);
+    
+    PowerMock.replay(AuthInfoUtil.class);
     replay(storeProvider);
-    servlet.injectDependencies(handler, storeProvider, authority, "testContextRoot/");
+    servlet.injectDependencies(storeProvider, authority, "testContextRoot/");
   }
 
   @After
@@ -83,10 +93,10 @@ public class ServicesServletTest {
     verify(req);
     verify(resp);
     verify(storeProvider);
-    verify(handler);
     verify(authority);
     verify(storeProvider);
     verify(st);
+    PowerMock.verify(AuthInfoUtil.class);
   }
   
   @Test
@@ -95,7 +105,6 @@ public class ServicesServletTest {
     
     replay(req);
     replay(resp);
-    replay(handler);
     replay(authority);
     replay(st);
     
@@ -108,15 +117,12 @@ public class ServicesServletTest {
   @Test
   public void testDoGetExisting() throws Exception {
     BasicOAuthStoreConsumerKeyAndSecret kas = new BasicOAuthStoreConsumerKeyAndSecret("testKey", "testSecret", KeyType.HMAC_SYMMETRIC, "testName", "testCallbackUrl");
-    HashMap<String, BasicOAuthStoreConsumerKeyAndSecret> userEntry = new HashMap<String, BasicOAuthStoreConsumerKeyAndSecret>();
-    userEntry.put("testService", kas);
-    servlet.getServiceStore().getUserStore().put("testID", userEntry);
+    servlet.getServiceStore().addToUserStore("testID", "testName", kas);
 
     expect(resp.getWriter()).andReturn(writer);
     
     replay(req);
     replay(resp);
-    replay(handler);
     replay(authority);
     replay(st);
     
@@ -146,7 +152,6 @@ public class ServicesServletTest {
     
     replay(req);
     replay(resp);
-    replay(handler);
     replay(authority);
     replay(st);
     
@@ -167,9 +172,7 @@ public class ServicesServletTest {
   @Test
   public void testDoPostOverwrite() throws Exception {
     BasicOAuthStoreConsumerKeyAndSecret kas = new BasicOAuthStoreConsumerKeyAndSecret("testKey2", "testSecret2", KeyType.HMAC_SYMMETRIC, "testName2", "testCallbackUrl2");
-    HashMap<String, BasicOAuthStoreConsumerKeyAndSecret> userEntry = new HashMap<String, BasicOAuthStoreConsumerKeyAndSecret>();
-    userEntry.put("testName", kas);
-    servlet.getServiceStore().getUserStore().put("testID", userEntry);
+    servlet.getServiceStore().addToUserStore("testID", "testName", kas);
 
     expect(resp.getWriter()).andReturn(writer);
     expect(authority.getOrigin()).andReturn("testOrigin/");
@@ -181,7 +184,6 @@ public class ServicesServletTest {
     
     replay(req);
     replay(resp);
-    replay(handler);
     replay(authority);
     replay(st);
     
@@ -202,9 +204,7 @@ public class ServicesServletTest {
   @Test
   public void testDoPostAdd() throws Exception {
     BasicOAuthStoreConsumerKeyAndSecret kas = new BasicOAuthStoreConsumerKeyAndSecret("testKey2", "testSecret2", KeyType.HMAC_SYMMETRIC, "testName2", "testCallbackUrl2");
-    HashMap<String, BasicOAuthStoreConsumerKeyAndSecret> userEntry = new HashMap<String, BasicOAuthStoreConsumerKeyAndSecret>();
-    userEntry.put("testName2", kas);
-    servlet.getServiceStore().getUserStore().put("testID", userEntry);
+    servlet.getServiceStore().addToUserStore("testID", "testName2", kas);
 
     expect(resp.getWriter()).andReturn(writer);
     expect(authority.getOrigin()).andReturn("testOrigin/");
@@ -216,7 +216,6 @@ public class ServicesServletTest {
     
     replay(req);
     replay(resp);
-    replay(handler);
     replay(authority);
     replay(st);
     
@@ -242,6 +241,23 @@ public class ServicesServletTest {
   }
   
   @Test
+  public void testDoPostEmptyParameter() throws Exception {
+    expect(req.getParameter("key")).andReturn("");
+    expect(req.getParameter("secret")).andReturn("testSecret");
+    expect(req.getParameter("name")).andReturn("testName");
+    
+    resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Name, Key and Secret parameters on POST request cannot be empty.");
+    expectLastCall();
+    
+    replay(req);
+    replay(resp);
+    replay(authority);
+    replay(st);
+    
+    servlet.doPost(req, resp);
+  }
+  
+  @Test
   public void testDoDeleteEmpty() throws Exception {
     expect(req.getParameter("name")).andReturn("testName");
     resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "The store corresponding to the user's data we are trying to get doesn't exist!");
@@ -249,27 +265,36 @@ public class ServicesServletTest {
     
     replay(req);
     replay(resp);
-    replay(handler);
     replay(authority);
     replay(st);
     
     servlet.doDelete(req, resp);
   }
   
+  @Test
+  public void testDoDeleteEmptyParameter() throws Exception {
+    expect(req.getParameter("name")).andReturn("");
+    resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Name parameter on DELETE request cannot be empty.");
+    expectLastCall();
+    
+    replay(req);
+    replay(resp);
+    replay(authority);
+    replay(st);
+    
+    servlet.doDelete(req, resp);
+  }
   
   @Test
   public void testDoDelete() throws Exception {
     BasicOAuthStoreConsumerKeyAndSecret kas = new BasicOAuthStoreConsumerKeyAndSecret("testKey", "testSecret", KeyType.HMAC_SYMMETRIC, "testName", "testCallbackUrl");
-    HashMap<String, BasicOAuthStoreConsumerKeyAndSecret> userEntry = new HashMap<String, BasicOAuthStoreConsumerKeyAndSecret>();
-    userEntry.put("testName", kas);
-    servlet.getServiceStore().getUserStore().put("testID", userEntry);
+    servlet.getServiceStore().addToUserStore("testID", "testName", kas);
 
     expect(resp.getWriter()).andReturn(writer);
     expect(req.getParameter("name")).andReturn("testName");
     
     replay(req);
     replay(resp);
-    replay(handler);
     replay(authority);
     replay(st);
     

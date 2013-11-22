@@ -38,14 +38,15 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
     /**
      * Called right before widget is added to the dom. See link for more information.
      *
-     * @memberof module:explorer/widgets/creation/CreationSpecMenu#
+     * @memberof module:explorer/widgets/creation/CreationMenu#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     postCreate : function() {
       var self = this;
-      domStyle.set(this.domNode, "display", "none");
+      domClass.add(this.domNode, "hide");
+      
       on(this.addGadgetButton, 'click', function() {
-        self.publishToggleCreationSpecModal();
+        topic.publish("toggleCreationSpecModal");
       });
       
       on(this.addServiceButton, 'click', function() {
@@ -53,23 +54,14 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
       });
 
       this.subscription = topic.subscribe("updateToken", function() {
-        domStyle.set(self.domNode, "display", "block");
+        domClass.remove(self.domNode, "hide");
       }); 
-    },
-    
-    /**
-     * Sends a publish request for the CreationSpecModal to be opened. Used for testing purposes.
-     *
-     * @memberof module:explorer/widgets/creation/CreationSpecMenu#
-     */
-    publishToggleCreationSpecModal: function() {
-      topic.publish("toggleCreationSpecModal");
     },
     
     /**
      * Unsubscribes and deletes the Widget. Used for testing purposes.
      *
-     * @memberof module:explorer/widgets/creation/CreationSpecMenu#
+     * @memberof module:explorer/widgets/creation/CreationMenu#
      */
     destroy: function() {
       this.subscription.remove();

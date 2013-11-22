@@ -16,8 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['explorer/widgets/creation/CreationServiceItem', 'dojo/topic'], 
-        function(CreationServiceItem, topic){
+define(['explorer/widgets/creation/CreationServiceItem', 'dojo/topic', 'explorer/services-service', 'dojo/Deferred'], 
+        function(CreationServiceItem, topic, servicesService, Deferred){
   describe('An CreationServiceItem widget', function() {
     var creationJSON = {
         version: "oauth1",
@@ -54,21 +54,35 @@ define(['explorer/widgets/creation/CreationServiceItem', 'dojo/topic'],
     
     it("can delete itself", function() {
       var creationItem = new CreationServiceItem(creationJSON);
+      var subscriptionReceived = false;
+      var subscription = topic.subscribe("itemDeleted", function(data) {
+        subscriptionReceived = true;
+      });
       document.getElementById('testDiv').appendChild(creationItem.domNode);
       
-      spyOn(creationItem, "publishUpdatedData");
-      spyOn(creationItem, "getServicesService").andReturn({
-        deleteService: function(nameTokenPair, callbacks) {
-          var data = [];
-          callbacks.success(data);
-        }
-      })
+      spyOn(creationItem, "getToken").andReturn("token123");
+      spyOn(servicesService, "deleteService").andCallFake(function() {
+        var dfd = new Deferred();
+        var data = [];
+        dfd.resolve(data);
+        return dfd;
+      });
       
-      creationItem.itemDelete.click();
+      runs(function() {
+        creationItem.itemDelete.click();
+      });
       
-      expect(creationItem.publishUpdatedData).toHaveBeenCalledWith([]);
+      waitsFor(function() {
+        return subscriptionReceived;
+      }, "The subscription should have been received", 750);
       
-      creationItem.destroy();
+      runs(function() {
+        expect(subscriptionReceived).toBe(true);
+        expect(servicesService.deleteService).toHaveBeenCalled();
+        
+        subscription.remove();
+        creationItem.destroy();
+      });
     }); 
   });
 });

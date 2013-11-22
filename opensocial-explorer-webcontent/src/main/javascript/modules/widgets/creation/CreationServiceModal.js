@@ -20,12 +20,14 @@
 /**
  * A modal window that allows users to create a new spec along with information about the spec.
  *
- * @module explorer/widgets/creation/CreationSpecModal
+ * @module explorer/widgets/creation/CreationServiceModal
  * @requires module:explorer/ExplorerContainer
  * @requires module:explorer/widgets/creation/CreationServiceItem
  * @augments module:explorer/widgets/ModalDialog
  * @augments dijit/_WidgetsInTemplateMixin
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetsInTemplateMixin.html|WidgetsInTemplateMixin Documentation}
+ * 
+ * TODO: Implement OAuth2 support.
  */
 define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInTemplateMixin', 
         'dojo/text!./../../templates/CreationServiceModal.html', 'explorer/widgets/creation/CreationServiceItem', 
@@ -41,7 +43,7 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
     /**
      * Called right before widget is added to the dom. See link for more information.
      *
-     * @memberof module:explorer/widgets/creation/CreationSpecModal#
+     * @memberof module:explorer/widgets/creation/CreationServiceModal#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     postCreate: function() {
@@ -51,10 +53,6 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
       query('.tab', this.domNode).on('click', function(e) {
         if(!domClass.contains(this, 'active')) {
           self.toggleTab();
-          
-          if(this.id == 'services-tab') {
-            lang.hitch(self, self.fetchServices());
-          }
         }
       });
       
@@ -116,19 +114,36 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
           }
         }
         
-        self.submitService(oAuth);
+        if(self.validateFields(oAuth)) {
+          domClass.add(self.oAuthFieldsValidation, "hide");
+          self.submitService(oAuth);
+        } else {
+          domClass.remove(self.oAuthFieldsValidation, "hide");
+        }
       });
       
       // Deletion Listener
-      topic.subscribe('itemDeleted', function(data) {
+      this.subscription = topic.subscribe('itemDeleted', function(data) {
         self.populate(data);
       });
     },
     
     /**
+     * Checks the oAuth object generated from user entry fields 
+     * to ensure no fields are empty prior to submission.
+     *
+     * @memberof module:explorer/widgets/creation/CreationServiceModal#
+     * 
+     * @param {Object} oAuth - The oAuth service object containing user-filled data.
+     */
+    validateFields: function(oAuth) {
+      return oAuth.name != "" && oAuth.key != "" && oAuth.secret != "";
+    },
+    
+    /**
      * Handles the logic after the dropdown is clicked and a selection is toggled.
      *
-     * @memberof module:explorer/widgets/creation/CreationSpecModal#
+     * @memberof module:explorer/widgets/creation/CreationServiceModal#
      */
     dropdownClickHandler: function() {
       var value = this.serviceSelection.value;
@@ -159,11 +174,11 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
       var self = this;
       
       if (data.length > 0) {
-        domStyle.set(this.noServices, "display", "none");
-        domStyle.set(this.oAuth, "display", "");
+        domClass.add(this.noServices, "hide");
+        domClass.remove(this.oAuth, "hide");
       } else {
-        domStyle.set(this.noServices, "display", "");
-        domStyle.set(this.oAuth, "display", "none");
+        domClass.remove(this.noServices, "hide");
+        domClass.add(this.oAuth, "hide");
       }
       
       query("#services-content > div").forEach(domConstruct.destroy);
@@ -179,14 +194,13 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
      */
     fetchServices: function() {
       var self = this;
-      this.getServicesService().getServices(this.getToken(), {
-        success: function(data) {
+      servicesService.getServices(this.getToken()).then(
+        function(data) {
           self.populate(data);
         },
-        error: function(data) {
+        function(data) {
           console.error("Error fetching services");
-        }
-      });
+        });
     },
 
     /**
@@ -197,15 +211,15 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
      */
     submitService: function(oAuth) {
       var self = this;
-      this.getServicesService().createNewService(oAuth, {
-        success: function(data) {
+      servicesService.createNewService(oAuth).then(
+        function(data) {
           self.toggleTab();
           self.populate(data);
+          self.resetFields();
         },
-        error: function(data) {
-          console.error("There was an error");
-        }
-      }); 
+        function(data) {
+          console.error("Error submitting service");
+        });
     },
     
     /**
@@ -252,13 +266,15 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
     },
     
     /**
-     * Opens the modal and requests a user's services.
+     * Resets all the user inputted fields upon submission.
      *
      * @memberof module:explorer/widgets/creation/CreationServiceModal#
      */
-    show: function() {
-      this.inherited(arguments);
-      this.fetchServices();
+    resetFields: function() {
+      this.oAuthName.value = "";
+      this.oAuthKey.value = "";
+      this.oAuthSecret.value = "";
+      this.oAuthKeyType.selectedIndex = 0;
     },
     
     /**
@@ -272,13 +288,23 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
     },
     
     /**
-     * Getter method for the servicesService module for testing purposes.
+     * Opens the modal and requests a user's services.
      *
      * @memberof module:explorer/widgets/creation/CreationServiceModal#
-     * @returns {servicesService} The servicesService object.
      */
-    getServicesService : function() {
-      return servicesService;
+    show: function() {
+      this.inherited(arguments);
+      this.fetchServices();
+    },
+    
+    /**
+     * Unsubscribes and deletes the Widget. Used for testing purposes.
+     *
+     * @memberof module:explorer/widgets/creation/CreationServiceModal#
+     */
+    destroy: function() {
+      this.subscription.remove();
+      this.inherited(arguments);
     }
   });
 });

@@ -17,8 +17,8 @@
  * under the License.
  */
 define(['explorer/widgets/creation/CreationServiceModal', 'explorer/widgets/creation/CreationMenu', 
-        'dojo/topic', 'dojo/dom-class', 'dojo/dom-style'], 
-        function(CreationServiceModal, CreationMenu, topic, domClass, domStyle){
+        'dojo/topic', 'dojo/dom-class', 'dojo/dom-style', 'explorer/services-service', 'dojo/Deferred'], 
+        function(CreationServiceModal, CreationMenu, topic, domClass, domStyle, servicesService, Deferred){
   describe('An CreationServiceModal widget', function() {
     
     beforeEach(function() {
@@ -47,18 +47,17 @@ define(['explorer/widgets/creation/CreationServiceModal', 'explorer/widgets/crea
       var creationServiceModal = new CreationServiceModal();
       document.getElementById('testDiv').appendChild(creationServiceModal.domNode);
       
-      spyOn(creationServiceModal, "getServicesService").andReturn({
-        getServices: function(token, callbacks) {
-          var data = [];
-          callbacks.success(data);
-        }
+      spyOn(servicesService, "getServices").andCallFake(function() {
+        var dfd = new Deferred();
+        var data = [];
+        dfd.resolve(data);
+        return dfd;
       });
       
       creationServiceModal.show();
-      
-      expect(creationServiceModal.getServicesService).toHaveBeenCalled();
-      expect(domStyle.get(creationServiceModal.noServices, "display")).toBe("block");
-      expect(domStyle.get(creationServiceModal.oAuth, "display")).toBe("none");      
+
+      expect(domClass.contains(creationServiceModal.noServices, "hide")).toBe(false);
+      expect(domClass.contains(creationServiceModal.oAuth, "hide")).toBe(true);
       
       creationServiceModal.destroy();
     });
@@ -70,24 +69,23 @@ define(['explorer/widgets/creation/CreationServiceModal', 'explorer/widgets/crea
           secret: "testSecret",
           keyType: "testKeyType",
           callbackUrl : "testCallbackUrl"
-      }
+      };
       
       var creationServiceModal = new CreationServiceModal();
       document.getElementById('testDiv').appendChild(creationServiceModal.domNode);
       
       spyOn(creationServiceModal, "addServiceItem");
-      spyOn(creationServiceModal, "getServicesService").andReturn({
-        getServices: function(token, callbacks) {
-          var data = [testData];
-          callbacks.success(data);
-        }
+      spyOn(servicesService, "getServices").andCallFake(function() {
+        var dfd = new Deferred();
+        var data = [testData];
+        dfd.resolve(data);
+        return dfd;
       });
       
       creationServiceModal.show();
-      
-      expect(creationServiceModal.getServicesService).toHaveBeenCalled();
-      expect(domStyle.get(creationServiceModal.noServices, "display")).toBe("none");
-      expect(domStyle.get(creationServiceModal.oAuth, "display")).toBe("block");
+
+      expect(domClass.contains(creationServiceModal.noServices, "hide")).toBe(true);
+      expect(domClass.contains(creationServiceModal.oAuth, "hide")).toBe(false);
       expect(creationServiceModal.addServiceItem).toHaveBeenCalledWith(testData);
       
       creationServiceModal.destroy();
@@ -97,33 +95,104 @@ define(['explorer/widgets/creation/CreationServiceModal', 'explorer/widgets/crea
       var testData = {
           version: "OAuth",
           st: "testSt",
-          name: "",
-          key: "",
-          secret: "",
+          name: "testName",
+          key: "testKey",
+          secret: "testSecret",
           keyType: "HMAC_SYMMETRIC",
           callbackUrl : "%origin%%contextRoot%/gadgets/oauthcallback"
-      }
+      };
       
       var creationServiceModal = new CreationServiceModal();
       document.getElementById('testDiv').appendChild(creationServiceModal.domNode);
       
       spyOn(creationServiceModal, "getToken").andReturn("testSt");
       spyOn(creationServiceModal, "addServiceItem");
-      spyOn(creationServiceModal, "getServicesService").andReturn({
-        createNewService: function(oAuth, callbacks) {
-          var data = [oAuth];
-          callbacks.success(data);
-        }
+      spyOn(servicesService, "createNewService").andCallFake(function() {
+        var dfd = new Deferred();
+        var data = [testData];
+        dfd.resolve(data);
+        return dfd;
       });
       
+      creationServiceModal.oAuthName.value = "testName";
+      creationServiceModal.oAuthKey.value = "testKey";
+      creationServiceModal.oAuthSecret.value = "testSecret";
       creationServiceModal.toggleTab();
       creationServiceModal.serviceSubmit.click();
       
       expect(creationServiceModal.addServiceItem).toHaveBeenCalledWith(testData);
       expect(domClass.contains(creationServiceModal.servicesTab, "active")).toBe(true);
+      expect(domClass.contains(creationServiceModal.oAuthFieldsValidation, "hide")).toBe(true);
       
       creationServiceModal.destroy();
     });
+    
+    it("resets user inputted fields after a successful submission", function() {
+      var testData = {
+          version: "OAuth",
+          st: "testSt",
+          name: "testName",
+          key: "testKey",
+          secret: "testSecret",
+          keyType: "PLAINTEXT",
+          callbackUrl : "%origin%%contextRoot%/gadgets/oauthcallback"
+      };
+      
+      var creationServiceModal = new CreationServiceModal();
+      document.getElementById('testDiv').appendChild(creationServiceModal.domNode);
+      
+      spyOn(creationServiceModal, "getToken").andReturn("testSt");
+      spyOn(creationServiceModal, "addServiceItem");
+      spyOn(servicesService, "createNewService").andCallFake(function() {
+        var dfd = new Deferred();
+        var data = [testData];
+        dfd.resolve(data);
+        return dfd;
+      });
+      
+      creationServiceModal.oAuthName.value = "testName";
+      creationServiceModal.oAuthKey.value = "testKey";
+      creationServiceModal.oAuthSecret.value = "testSecret";
+      creationServiceModal.oAuthKeyType.selectedIndex = 1;
+      creationServiceModal.toggleTab();
+      creationServiceModal.serviceSubmit.click();
+      
+      expect(creationServiceModal.oAuthName.value).toBe("");
+      expect(creationServiceModal.oAuthKey.value).toBe("");
+      expect(creationServiceModal.oAuthSecret.value).toBe("");
+      expect(creationServiceModal.oAuthKeyType.selectedIndex).toBe(0);
+      
+      expect(creationServiceModal.addServiceItem).toHaveBeenCalledWith(testData);
+      expect(domClass.contains(creationServiceModal.servicesTab, "active")).toBe(true);
+      expect(domClass.contains(creationServiceModal.oAuthFieldsValidation, "hide")).toBe(true);
+      
+      creationServiceModal.destroy();
+    });
+    
+    it("will prompt the user to fill out all fields if any are left blank upon submission", function() {
+      var testData = {
+          version: "OAuth",
+          st: "testSt",
+          name: "",
+          key: "",
+          secret: "",
+          keyType: "HMAC_SYMMETRIC",
+          callbackUrl : "%origin%%contextRoot%/gadgets/oauthcallback"
+      };
+      
+      var creationServiceModal = new CreationServiceModal();
+      document.getElementById('testDiv').appendChild(creationServiceModal.domNode);
+      
+      spyOn(creationServiceModal, "getToken").andReturn("testSt");
+      spyOn(creationServiceModal, "validateFields");
+      creationServiceModal.toggleTab();
+      creationServiceModal.serviceSubmit.click();
+      
+      expect(creationServiceModal.validateFields).toHaveBeenCalledWith(testData);
+      expect(domClass.contains(creationServiceModal.oAuthFieldsValidation, "hide")).toBe(false);
+      
+      creationServiceModal.destroy();
+    }); 
     
     it("changes its content when a different oAuth selection in the dropdown is toggled", function() {
       var testData = {
@@ -134,7 +203,7 @@ define(['explorer/widgets/creation/CreationServiceModal', 'explorer/widgets/crea
           secret: "",
           keyType: "HMAC_SYMMETRIC",
           callbackUrl : "%origin%%contextRoot%/gadgets/oauthcallback"
-      }
+      };
       
       var creationServiceModal = new CreationServiceModal();
       document.getElementById('testDiv').appendChild(creationServiceModal.domNode);
@@ -154,6 +223,6 @@ define(['explorer/widgets/creation/CreationServiceModal', 'explorer/widgets/crea
       expect(domClass.contains(creationServiceModal.oAuthGeneralContent, "active")).toBe(false);
       
       creationServiceModal.destroy();
-    });
+    }); 
   });
 });

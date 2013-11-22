@@ -34,36 +34,45 @@ define(['explorer/widgets/creation/CreationMenu', 'dojo/dom-class', 'dojo/topic'
     it("is visible only when the user is logged in", function() {
       var creationMenu = new CreationMenu();
       document.getElementById('testDiv').appendChild(creationMenu.domNode);
-      expect(domStyle.get(creationMenu.domNode, "display")).toBe("none");
+      expect(domClass.contains(creationMenu.domNode, "hide")).toBe(true);
       
       topic.publish("updateToken");
-      expect(domStyle.get(creationMenu.domNode, "display")).toBe("block");
+      expect(domClass.contains(creationMenu.domNode, "hide")).toBe(false);
       
       creationMenu.destroy();
     }); 
      
     it("opens the new spec modal when the new spec button is toggled", function() {
       var creationMenu = new CreationMenu();
+      var subscriptionReceived = false;
+      var subscription = topic.subscribe("toggleCreationSpecModal", function() {
+        subscriptionReceived = true;
+      });
       document.getElementById('testDiv').appendChild(creationMenu.domNode);
       
-      spyOn(creationMenu, "publishToggleCreationSpecModal");
-      creationMenu.addGadgetButton.click();
+      runs(function() {
+        creationMenu.addGadgetButton.click();
+      });
+
+      waitsFor(function() {
+        return subscriptionReceived;
+      }, "The subscription should have been received", 750);
       
-      expect(creationMenu.publishToggleCreationSpecModal).toHaveBeenCalled();
-      
-      creationMenu.destroy();
+      runs(function() {
+        expect(subscriptionReceived).toBe(true);
+        subscription.remove();
+        creationMenu.destroy();
+      });
     }); 
     
     it("opens the services modal when the service button is toggled", function() {
       var creationMenu = new CreationMenu();
       document.getElementById('testDiv').appendChild(creationMenu.domNode);
       
-      spyOn(creationMenu, "publishToggleCreationSpecModal");
       creationMenu.addServiceButton.click();
       
       expect(domClass.contains(creationMenu.serviceModal, "hide")).toBe(false);
-      
       creationMenu.destroy();
-    });  
+    });   
   });
 });
