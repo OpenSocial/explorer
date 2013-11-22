@@ -38,6 +38,20 @@ define([], function() {
       pathArray.pop();
       pathArray.pop();
       return pathArray.join('/');
+    },
+    
+    /**
+     * Transforms a json into a query string to use in xhr requests.
+     * Example: {name: "abc", id: "123"} -> name=abc&id=123  
+     * 
+     * @memberof module:explorer/url-util
+     * @returns {String} The context root.
+     */
+    serialize: function(json) {
+      var str = [];
+      for(var ele in json)
+         str.push(encodeURIComponent(ele) + "=" + encodeURIComponent(json[ele]));
+      return str.join("&");
     }
   };
 });

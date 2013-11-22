@@ -53,7 +53,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     },
 
     /**
-     * Takes the gadget's metadata and sets the GadgetToolbar's title, constructs the GadgetDropDownMenu.
+     * Takes the gadget's metadata, sets the GadgetToolbar's title and constructs the GadgetDropDownMenu.
      * 
      * @memberof module:explorer/widgets/gadgetarea/GadgetToolbar#
      * @param {Object} metadata - Object with the gadget's metadata.

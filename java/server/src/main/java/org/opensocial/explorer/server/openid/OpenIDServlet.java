@@ -33,6 +33,7 @@ import org.apache.shindig.config.ContainerConfig;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
 import org.openid4java.discovery.Identifier;
+import org.opensocial.explorer.server.login.LoginSecurityToken;
 import org.opensocial.explorer.specserver.servlet.ExplorerInjectedServlet;
 
 import com.google.inject.Inject;
@@ -132,7 +133,7 @@ public class OpenIDServlet extends ExplorerInjectedServlet {
       JSONObject obj = new JSONObject();
       // We shouldn't ever need to send this to the client. The security token is all it needs for now.
       // obj.put("openid", identifier.getIdentifier());
-      obj.put("securityToken", this.codec.encodeToken(new OpenIDSecurityToken(identifier, CONTAINER)));
+      obj.put("securityToken", this.codec.encodeToken(new LoginSecurityToken(identifier, CONTAINER)));
       obj.put("securityTokenTTL", this.codec.getTokenTimeToLive(CONTAINER));
       String content = obj.toString();
       resp.setContentType(HTML_CONTENT_TYPE);

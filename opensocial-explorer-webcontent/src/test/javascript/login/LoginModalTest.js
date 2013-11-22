@@ -16,10 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['explorer/widgets/login/LoginDialog', 'dojo/query',
+define(['explorer/widgets/login/LoginModal', 'dojo/query',
         'dojo/NodeList-manipulate', 'dojo/NodeList-dom'], 
-    function(LoginDialog, query) {
-  describe('A LoginDialog widget', function() {
+    function(LoginModal, query) {
+  describe('A LoginModal widget', function() {
     beforeEach(function() {
       var div = document.createElement("div");
       div.style.display = 'none';
@@ -32,15 +32,15 @@ define(['explorer/widgets/login/LoginDialog', 'dojo/query',
     });
   
     it("can load Google OpenID provider for login", function() {
-      var loginDialog = new LoginDialog();
-      loginDialog.facebookOAuth = {};
-      loginDialog.googleOAuth = {};
+      var loginModal = new LoginModal();
+      loginModal.facebookOAuth = {};
+      loginModal.googleOAuth = {};
       
-      spyOn(loginDialog, 'getOpenIdServiceProviders').andReturn({
+      spyOn(loginModal, 'getOpenIdServiceProviders').andReturn({
         getProviders : function(callbacks) {
           var data = {
               testPlatform: {
-                imageUrl: "",
+                imageUrl: "testImageUrl",
                 name: "testName",
                 url: "testUrl"
               }
@@ -49,37 +49,37 @@ define(['explorer/widgets/login/LoginDialog', 'dojo/query',
         }
       });
       
-      loginDialog.show();
-      expect(loginDialog.providers.testPlatform.imageUrl).toBe("");
-      expect(loginDialog.providers.testPlatform.name).toBe("testName");
-      expect(loginDialog.providers.testPlatform.url).toBe("testUrl");
-      expect(query("a", loginDialog.domNode).innerHTML()).toBe("testName");
+      loginModal.show();
+      expect(loginModal.providers.testPlatform.imageUrl).toBe("testImageUrl");
+      expect(loginModal.providers.testPlatform.name).toBe("testName");
+      expect(loginModal.providers.testPlatform.url).toBe("testUrl");
+      expect(query("a", loginModal.domNode).innerHTML()).toBe("testName");
       
-      loginDialog.destroy();
+      loginModal.destroy();
     }); 
     
     it("can load Google OAuth for login", function() {
-      var loginDialog = new LoginDialog();
-      loginDialog.providers = {};
-      loginDialog.facebookOAuth = {};
+      var loginModal = new LoginModal();
+      loginModal.providers = {};
+      loginModal.facebookOAuth = {};
       
-      loginDialog.show();
+      loginModal.show();
       
-      expect(query("a", loginDialog.domNode).innerHTML()).toBe("Google OAuth");
+      expect(query("a", loginModal.domNode).innerHTML()).toBe("Google OAuth");
       
-      loginDialog.destroy();
+      loginModal.destroy();
     });
     
     it("can load Facebook OAuth for login", function() {
-      var loginDialog = new LoginDialog();
-      loginDialog.providers = {};
-      loginDialog.googleOAuth = {};
+      var loginModal = new LoginModal();
+      loginModal.providers = {};
+      loginModal.googleOAuth = {};
       
-      loginDialog.show();
+      loginModal.show();
       
-      expect(query("a", loginDialog.domNode).innerHTML()).toBe("Facebook");
+      expect(query("a", loginModal.domNode).innerHTML()).toBe("Facebook");
       
-      loginDialog.destroy();
+      loginModal.destroy();
     });
   });
 });

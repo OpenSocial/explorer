@@ -149,6 +149,7 @@
     <url-pattern>/gadgets/api/rest/*</url-pattern>
     <url-pattern>/rpc/*</url-pattern>
     <url-pattern>/rest/*</url-pattern>
+    <url-pattern>/services/*</url-pattern>
   </filter-mapping>
 
   <filter-mapping>
@@ -301,6 +302,19 @@
       org.opensocial.explorer.server.openid.OpenIDServlet
     </servlet-class>
   </servlet>
+  
+  <!-- Services -->
+  <servlet>
+    <servlet-name>services</servlet-name>
+    <servlet-class>
+      org.opensocial.explorer.server.services.ServicesServlet
+    </servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>services</servlet-name>
+    <url-pattern>/services/*</url-pattern>
+  </servlet-mapping>
   
   <servlet-mapping>
     <servlet-name>googleLogin</servlet-name>

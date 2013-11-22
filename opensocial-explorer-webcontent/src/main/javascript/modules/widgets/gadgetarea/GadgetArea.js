@@ -28,11 +28,11 @@
 */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dojo/topic',
         'dojo/_base/array', 'dojo/text!./../../templates/GadgetArea.html', './GadgetToolbar',
-        'dojo/dom-construct','../Loading', '../../opensocial-data', './GadgetModalDialog',
+        'dojo/dom-construct','../Loading', '../../opensocial-data', './GadgetModal',
         'dojo/_base/window', 'dojo/dom', 'dojo/json', '../../ExplorerContainer', 'dojo/on', 'dojo/Deferred', 
         './LocationMenuItem'],
         function(declare, WidgetBase, TemplatedMixin, topic, arrayUtil, template, GadgetToolbar, 
-            domConstruct, Loading, osData, GadgetModalDialog, win, dom, JSON, ExplorerContainer, on, Deferred,
+            domConstruct, Loading, osData, GadgetModal, win, dom, JSON, ExplorerContainer, on, Deferred,
             LocationMenuItem) {
       return declare('GadgetAreaWidget', [ WidgetBase, TemplatedMixin ], {
                 templateString : template,
@@ -46,7 +46,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     startup : function() {
-      this.expContainer = new ExplorerContainer();
+      this.expContainer = ExplorerContainer.getInstance();
       this.siteCounter = 0;
       this.siteParent = this.domNode;
       this.gadgetToolbar = new GadgetToolbar();
@@ -100,7 +100,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
       });
       
       on(this.getExplorerContainer(), 'navigateurl', function(rel, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
-        opt_callback(self.createDialog('URL', opt_viewTarget));
+        opt_callback(self.createModal('URL', opt_viewTarget));
       });
       
       on(this.getExplorerContainer(), 'navigategadget', function(metadata, rel, opt_view, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
@@ -108,7 +108,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
         if(metadata.modulePrefs && metadata.modulePrefs.title) {
           title = metadata.modulePrefs.title;
         }
-        opt_callback(self.createDialog(title, opt_viewTarget));
+        opt_callback(self.createModal(title, opt_viewTarget));
       });
       
       on(this.getExplorerContainer(), 'navigateee', function(el, opt_gadgetInfo, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
@@ -116,11 +116,11 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
         if(opt_gadgetInfo && opt_gadgetInfo.modulePrefs && opt_gadgetInfo.modulePrefs.title) {
           title = opt_gadgetInfo.modulePrefs.title;
         }
-        opt_callback(self.createDialog(title, opt_viewTarget));
+        opt_callback(self.createModal(title, opt_viewTarget));
       });
       
       on(this.getExplorerContainer(), 'destroyelement', function(site) {
-        self.gadgetDialog.hide(site);
+        self.gadgetModal.hide(site);
       });
       
       on(this.getExplorerContainer(), 'navigateforactions', function(gadgetUrl, opt_params) {
@@ -130,7 +130,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
     },
     
     /**
-     * Gets the {@link module:explorer/widgets/ExplorerContainer}.
+     * Gets the {@link module:explorer/ExplorerContainer}.
      * @memberof module:explorer/widgets/gadgetarea/GadgetArea#
      */
     getExplorerContainer : function() {
@@ -207,24 +207,24 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
     },
     
     /**
-     * Creates a modal dialog.  Typically used when handling open-views requests from the gadget.
+     * Creates a modal.  Typically used when handling open-views requests from the gadget.
      * 
      * @memberof module:explorer/widgets/gadgetarea/GadgetArea#
-     * @param {String} title - The title to give the dialog.
+     * @param {String} title - The title to give the modal.
      * @param {String} viewTarget - Should be one of the 
      * {@link http://opensocial.github.io/spec/2.5/Core-Gadget.xml#gadgets.views.ViewType.ViewTarget|view targets} 
      * defined in the OpenSocial spec.
      */
-    createDialog : function(title, viewTarget) {
-      if(this.gadgetDialog) {
-        this.gadgetDialog.destroy();
+    createModal : function(title, viewTarget) {
+      if(this.gadgetModal) {
+        this.gadgetModal.destroy();
       }
-      this.gadgetDialog = new GadgetModalDialog({"title" : title, "viewTarget" : viewTarget, 
+      this.gadgetModal = new GadgetModal({"title" : title, "viewTarget" : viewTarget, 
         "container" : this.getExplorerContainer().getContainer()});
-      domConstruct.place(this.gadgetDialog.domNode, win.body());
-      this.gadgetDialog.startup();
-      this.gadgetDialog.show();
-      return this.gadgetDialog.getGadgetNode();
+      domConstruct.place(this.gadgetModal.domNode, win.body());
+      this.gadgetModal.startup();
+      this.gadgetModal.show();
+      return this.gadgetModal.getGadgetNode();
     },
     
     /**
@@ -235,8 +235,8 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
      */
     destroy : function() {
       this.inherited(arguments);
-      if(this.gadgetDialog) {
-        this.gadgetDialog.destroy();
+      if(this.gadgetModal) {
+        this.gadgetModal.destroy();
       }
       if(this.reRenderGadgetViewHandle) {
         this.reRenderGadgetViewHandle.remove();

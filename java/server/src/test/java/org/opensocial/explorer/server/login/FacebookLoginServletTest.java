@@ -39,7 +39,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.opensocial.explorer.server.openid.OpenIDSecurityToken;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -147,7 +146,7 @@ public class FacebookLoginServletTest {
     expect(fetcher.fetch(isA(HttpRequest.class))).andReturn(inspectResponse);  
     expect(inspectResponse.getResponse()).andReturn(new ByteArrayInputStream("{data: {is_valid: true, user_id: userId123} }".getBytes("UTF-8")));
 
-    expect(codec.encodeToken(isA(OpenIDSecurityToken.class))).andReturn("mockTokenString123");
+    expect(codec.encodeToken(isA(LoginSecurityToken.class))).andReturn("mockTokenString123");
     expect(codec.getTokenTimeToLive(isA(String.class))).andReturn(123);
     
     replay(accessTokenResponse);
@@ -270,7 +269,7 @@ public class FacebookLoginServletTest {
     expect(fetcher.fetch(isA(HttpRequest.class))).andReturn(inspectResponse);  
     expect(inspectResponse.getResponse()).andReturn(new ByteArrayInputStream("{data: {is_valid: true, user_id: userId123} }".getBytes("UTF-8")));
 
-    expect(codec.encodeToken(isA(OpenIDSecurityToken.class))).andThrow(new SecurityTokenException("Bad Security Token"));
+    expect(codec.encodeToken(isA(LoginSecurityToken.class))).andThrow(new SecurityTokenException("Bad Security Token"));
     resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error generating security token.");
     expectLastCall();
     

@@ -18,7 +18,7 @@
  */
 
 /**
- * A ControlGroup for the enum option of the PreferencesDialog.
+ * A ControlGroup for the enum option of the PreferencesModal.
  *
  * @module explorer/widgets/controlgroups/EnumControlGroup
  * @augments module:explorer/widgets/controlgroups/ControlGroup

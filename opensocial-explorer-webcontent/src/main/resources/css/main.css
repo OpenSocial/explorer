@@ -16,7 +16,51 @@
  * specific language governing permissions and limitations
  * under the License.
  */
- 
+
+.center-image {
+	display : block;
+    margin : auto;
+}
+
+.clear-both {
+	clear: both;
+} 
+.itemTitle {
+	font-weight: bold;
+	line-height: 25px;
+}
+.creationServiceItem {
+	margin-bottom: 10px;
+	background-color: #f2f4fb;
+} 
+.right {
+	float: right;
+}
+
+.block {
+	display: block;
+}
+
+.pointer {
+	cursor: pointer;
+}
+
+.inline-block {
+	display: inline-block;
+}
+
+.inline {
+	display: inline;
+}
+
+.left {
+	float: left;
+}
+
+.creationMenu {
+	margin-bottom: 20px;
+}
+
 .center {
 	text-align: center;
 }

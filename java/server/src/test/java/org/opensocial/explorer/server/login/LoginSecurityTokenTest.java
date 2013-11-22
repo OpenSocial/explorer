@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.opensocial.explorer.server.openid;
+package org.opensocial.explorer.server.login;
 
 import static org.junit.Assert.assertEquals;
 
@@ -26,19 +26,20 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openid4java.discovery.Identifier;
+import org.opensocial.explorer.server.login.LoginSecurityToken;
 
-public class OpenIDSecurityTokenTest {
-  private static final String ID = "someId";
+public class LoginSecurityTokenTest {
+  private static final String ID = "http://blah.com?id=someId";
   private static final String CONTAINER = "ose";
   private Identifier mockIdentifier;
-  private OpenIDSecurityToken token;
+  private LoginSecurityToken token;
 
   @Before
   public void setUp() throws Exception {
     mockIdentifier = EasyMock.createMock(Identifier.class);
     EasyMock.expect(mockIdentifier.getIdentifier()).andReturn(ID);
     EasyMock.replay(mockIdentifier);
-    token = new OpenIDSecurityToken(mockIdentifier, CONTAINER);
+    token = new LoginSecurityToken(mockIdentifier, CONTAINER);
   }
 
   @After
@@ -64,12 +65,12 @@ public class OpenIDSecurityTokenTest {
 
   @Test
   public void testGetOwnerId() {
-    assertEquals(ID, token.getOwnerId());
+    assertEquals("someId", token.getOwnerId());
   }
 
   @Test
   public void testGetViewerId() {
-    assertEquals(ID, token.getViewerId());
+    assertEquals("someId", token.getViewerId());
   }
 
   @Test

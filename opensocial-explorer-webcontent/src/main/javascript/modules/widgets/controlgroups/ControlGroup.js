@@ -18,7 +18,7 @@
  */
 
 /**
- * A ControlGroup template for features of the PreferencesDialog.
+ * A ControlGroup template for features of the PreferencesModal.
  *
  * @module explorer/widgets/controlgroups/ControlGroup
  * @augments dijit/_WidgetBase

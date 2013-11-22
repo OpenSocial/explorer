@@ -55,7 +55,7 @@ define(['explorer/widgets/login/OAuthLogin', 'dojo/query', 'dojo/topic',
       expect(calledFunction).toHaveBeenCalled();
       
       oAuthLogin.destroy();
-    });
+    }); 
     
     it("listens for the security token from the server and updates the welcome text", function() {
       var oAuthLogin = new OAuthLogin({
@@ -63,28 +63,22 @@ define(['explorer/widgets/login/OAuthLogin', 'dojo/query', 'dojo/topic',
         name: "testName",
         endpoint: "testEndpoint"
       });
-      var calledFunction = jasmine.createSpy('calledFunction');
       
-      var popup = {};
-      popup.createOpenerOnClick = jasmine.createSpy('createOpenerOnClick').andReturn(calledFunction);
-      popup.win_ = {};
-      popup.win_.close = jasmine.createSpy('close');
-      popup.win_.document = {};
-      popup.win_.document.responseObj = {securityToken: "abc123", securityTokenTTL: 456};
+      oAuthLogin.popup = {};
+      oAuthLogin.popup.win_ = {};
+      oAuthLogin.popup.win_.close = jasmine.createSpy('close');
+      oAuthLogin.popup.win_.document = {};
+      oAuthLogin.popup.win_.document.responseObj = {securityToken: "abc123", securityTokenTTL: 456};
       
-      window.gadgets.oauth = {};
-      window.gadgets.oauth.Popup = jasmine.createSpy('Popup').andReturn(popup);
-      
-      oAuthLogin.togglePopup();
       oAuthLogin.onPopupOpen();
       
       var evt = window.document.createEvent('Event');
       evt.initEvent('returnSecurityToken', true, true);
       window.document.dispatchEvent(evt);
       
-      expect(oAuthLogin.securityToken).toBe("abc123");
-      expect(oAuthLogin.securityTokenTTL).toBe(456);
-      expect(popup.win_.close).toHaveBeenCalled();
+      expect(oAuthLogin.popup.win_.document.responseObj.securityToken).toBe("abc123");
+      expect(oAuthLogin.popup.win_.document.responseObj.securityTokenTTL).toBe(456);
+      expect(oAuthLogin.popup.win_.close).toHaveBeenCalled();
       expect(document.getElementById('login').innerHTML).toBe("Welcome!");
       
       oAuthLogin.onPopupClose();
@@ -123,6 +117,6 @@ define(['explorer/widgets/login/OAuthLogin', 'dojo/query', 'dojo/topic',
       expect(oAuthLogin.onSecurityTokenListener).not.toHaveBeenCalled();
       expect(document.getElementById('login').innerHTML).not.toBe("Welcome!");
       oAuthLogin.destroy();
-    });
+    }); 
   });
 });

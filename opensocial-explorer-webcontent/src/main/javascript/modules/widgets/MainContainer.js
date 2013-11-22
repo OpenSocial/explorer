@@ -24,15 +24,17 @@
  * @augments dijit/_WidgetBase
  * @augments dijit/_TemplatedMixin
  * @augments dijit/_WidgetsInTemplateMixin
+ * @requires module:explorer/widgets/creation/CreationMenu
+ * @requires module:explorer/widgets/login/LoginModal
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_TemplatedMixin.html|TemplatedMixin Documentation}
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetsInTemplateMixin.html|WidgetsInTemplateMixin Documentation}
  */
-define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin', 
-        'explorer/widgets/login/LoginDialog', 'dojo/query', 'dojo/on', 'dojo/text!./../templates/MainContainer.html', 
-        'explorer/widgets/sidebar/SidebarNav', 'explorer/widgets/gadgetarea/GadgetArea', 'explorer/widgets/editorarea/EditorArea',
-        'explorer/widgets/gadgetarea/PreferencesDialog', 'explorer/widgets/login/LoginDialog'], 
-         function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, LoginDialog, query, on, template) {
+define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin', 'explorer/widgets/creation/CreationMenu',
+        'explorer/widgets/login/LoginModal', 'dojo/query', 'dojo/on', 'dojo/text!./../templates/MainContainer.html', 
+        'explorer/widgets/SidebarNav', 'explorer/widgets/gadgetarea/GadgetArea', 'explorer/widgets/editorarea/EditorArea',
+        'explorer/widgets/gadgetarea/PreferencesModal', 'explorer/widgets/login/LoginModal'], 
+         function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, CreationMenu, LoginModal, query, on, template) {
   return declare('MainContainerWidget', [ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin ], {
     templateString : template,
     
@@ -54,7 +56,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
         var url = document.location.protocol + '//' + document.location.host + self.editorArea.getContextRoot() + '/gadgetspec/' + id + '/' + self.editorArea.getGadgetSpec().gadgetResource.name;
         self.gadgetArea.renderGadget(url).then(function(metadata) {
           if(metadata && metadata[url]) {
-            self.prefDialog.addPrefsToUI(metadata[url].userPrefs);
+            self.prefModal.addPrefsToUI(metadata[url].userPrefs);
           }
         });
         self.sidebarNav.setNewId(id);
@@ -64,21 +66,21 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
         var url = document.location.protocol + '//' + document.location.host + self.editorArea.getContextRoot() + '/gadgetspec/' + id + '/' + self.editorArea.getGadgetSpec().gadgetResource.name;
         self.gadgetArea.renderEmbeddedExperience(url, self.editorArea.getGadgetSpec().eeResource.content).then(function(results) {
           if(results.metadata && results.metadata[url]) {
-            self.prefDialog.addPrefsToUI(results.metadata[url].userPrefs);
+            self.prefModal.addPrefsToUI(results.metadata[url].userPrefs);
           }
         }); 
         self.sidebarNav.setNewId(id);
       });
       
       on(this.gadgetArea.getExplorerContainer(), 'setpreferences', function(site, url, prefs) {
-        self.prefDialog.setPrefs(prefs);
+        self.prefModal.setPrefs(prefs);
       });
       
       query('#login').on('click', function(e) {
         self.loginModal.show();
       });
       
-      this.prefDialog.addPrefsChangedListener(function(prefs) {
+      this.prefModal.addPrefsChangedListener(function(prefs) {
         var params = {};
         params[osapi.container.RenderParam.USER_PREFS] = prefs;
         self.gadgetArea.reRenderGadget(params);

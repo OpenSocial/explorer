@@ -16,9 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['explorer/widgets/gadgetarea/PreferencesDialog', 'dojo/query', 
-        'dojo/topic', 'dojo/dom-class'], function(PreferencesDialog, query, topic, domClass){
-  describe('A PreferencesDialog widget', function() {
+define(['explorer/widgets/gadgetarea/PreferencesModal', 'dojo/query', 
+        'dojo/topic', 'dojo/dom-class'], function(PreferencesModal, query, topic, domClass){
+  describe('A PreferencesModal widget', function() {
     
     var prefs = {
             "hello_pref": {
@@ -100,35 +100,35 @@ define(['explorer/widgets/gadgetarea/PreferencesDialog', 'dojo/query',
     });
   
     it("can be started", function() {
-      var prefDialog = new PreferencesDialog();
+      var prefModal = new PreferencesModal();
     
-      document.getElementById('testDiv').appendChild(prefDialog.domNode);
-      prefDialog.startup();
-      expect(query('div.modal-header h3', prefDialog.domNode).innerHTML()).toEqual('Preferences');
-      expect(query('.btn', prefDialog.domNode).length).toEqual(2);
-      prefDialog.destroy();
+      document.getElementById('testDiv').appendChild(prefModal.domNode);
+      prefModal.startup();
+      expect(query('div.modal-header h3', prefModal.domNode).innerHTML()).toEqual('Preferences');
+      expect(query('.btn', prefModal.domNode).length).toEqual(2);
+      prefModal.destroy();
     });
     
     it("supports adding preferences", function() {
-      var prefDialog = new PreferencesDialog();
-      document.getElementById('testDiv').appendChild(prefDialog.domNode);
-      prefDialog.startup();
-      prefDialog.addPrefsToUI(prefs);
+      var prefModal = new PreferencesModal();
+      document.getElementById('testDiv').appendChild(prefModal.domNode);
+      prefModal.startup();
+      prefModal.addPrefsToUI(prefs);
       expect(query('.control-group', this.domNode).length).toEqual(5);
-      prefDialog.destroy();
+      prefModal.destroy();
     });
     
     it("can notify pref listeners", function() {
-      var prefDialog = new PreferencesDialog();
-      document.getElementById('testDiv').appendChild(prefDialog.domNode);
-      prefDialog.startup();
-      prefDialog.addPrefsToUI(prefs);
+      var prefModal = new PreferencesModal();
+      document.getElementById('testDiv').appendChild(prefModal.domNode);
+      prefModal.startup();
+      prefModal.addPrefsToUI(prefs);
       var myPrefs;
-      prefDialog.addPrefsChangedListener(function(prefs) {
+      prefModal.addPrefsChangedListener(function(prefs) {
         myPrefs = prefs;
       });
-      prefDialog.show();
-      query('.btn-primary', prefDialog.domNode)[0].click();
+      prefModal.show();
+      query('.btn-primary', prefModal.domNode)[0].click();
       expect(myPrefs).toEqual({
         "hello_pref" : "World",
         "number_pref" : "0",
@@ -136,63 +136,63 @@ define(['explorer/widgets/gadgetarea/PreferencesDialog', 'dojo/query',
         "boolean_pref" : false,
         "enum_pref" : "Red"
       });
-      prefDialog.destroy();
+      prefModal.destroy();
     });
     
     it("does not notify pref listeners if invalid", function() {
-      var prefDialog = new PreferencesDialog();
-      document.getElementById('testDiv').appendChild(prefDialog.domNode);
-      prefDialog.startup();
-      prefDialog.addPrefsToUI(prefs);
+      var prefModal = new PreferencesModal();
+      document.getElementById('testDiv').appendChild(prefModal.domNode);
+      prefModal.startup();
+      prefModal.addPrefsToUI(prefs);
       var myPrefs;
-      prefDialog.addPrefsChangedListener(function(prefs) {
+      prefModal.addPrefsChangedListener(function(prefs) {
         myPrefs = prefs;
       });
-      spyOn(prefDialog, 'isValid').andReturn(false);
-      prefDialog.show();
-      query('.btn-primary', prefDialog.domNode)[0].click();
+      spyOn(prefModal, 'isValid').andReturn(false);
+      prefModal.show();
+      query('.btn-primary', prefModal.domNode)[0].click();
       expect(myPrefs).toBeUndefined();
-      prefDialog.destroy();
+      prefModal.destroy();
     });
     
     it("allows consumers to set preferences", function() {
-      var prefDialog = new PreferencesDialog();
-      document.getElementById('testDiv').appendChild(prefDialog.domNode);
-      prefDialog.startup();
-      prefDialog.addPrefsToUI(prefs);
-      prefDialog.setPrefs({
+      var prefModal = new PreferencesModal();
+      document.getElementById('testDiv').appendChild(prefModal.domNode);
+      prefModal.startup();
+      prefModal.addPrefsToUI(prefs);
+      prefModal.setPrefs({
         "hello_pref" : "Foo",
         "number_pref" : "1",
         "list_pref" : "foo|foobar",
         "boolean_pref" : true,
         "enum_pref" : "Blue"
       });
-      expect(prefDialog.getPrefs()).toEqual({
+      expect(prefModal.getPrefs()).toEqual({
         "hello_pref" : "Foo",
         "number_pref" : "1",
         "list_pref" : "foo|foobar",
         "boolean_pref" : true,
         "enum_pref" : "Blue"
       });
-      prefDialog.destroy();
+      prefModal.destroy();
     });
     
     it("can be shown via a topic", function() {
-      var prefDialog = new PreferencesDialog();
-      document.getElementById('testDiv').appendChild(prefDialog.domNode);
-      prefDialog.startup();
+      var prefModal = new PreferencesModal();
+      document.getElementById('testDiv').appendChild(prefModal.domNode);
+      prefModal.startup();
       topic.publish('org.opensocial.explorer.prefdialog.show');
-      expect(domClass.contains(prefDialog.domNode, 'hide')).toBeFalsy();
-      prefDialog.destroy();
+      expect(domClass.contains(prefModal.domNode, 'hide')).toBeFalsy();
+      prefModal.destroy();
     });
     
     it("can be hidden via a topic", function() {
-      var prefDialog = new PreferencesDialog();
-      document.getElementById('testDiv').appendChild(prefDialog.domNode);
-      prefDialog.startup();
+      var prefModal = new PreferencesModal();
+      document.getElementById('testDiv').appendChild(prefModal.domNode);
+      prefModal.startup();
       topic.publish('org.opensocial.explorer.prefdialog.hide');
-      expect(domClass.contains(prefDialog.domNode, 'hide')).toBeTruthy();
-      prefDialog.destroy();
+      expect(domClass.contains(prefModal.domNode, 'hide')).toBeTruthy();
+      prefModal.destroy();
     });
   });
 });

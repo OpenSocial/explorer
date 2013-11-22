@@ -19,7 +19,7 @@
 
 /**
  * Handles the OAuth login process via a popup. Multiple instances of this module are created
- * in the LoginDialog for each individual login option.
+ * in the LoginModal for each individual login option.
  *
  * @module explorer/widgets/login/OAuthLogin
  * @augments dijit/_WidgetBase
@@ -32,7 +32,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
         'dojo/dom', 'dojo/dom-class', 'dojo/on', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, WidgetBase, TemplatedMixin, lang,
             query, template, domConstruct, topic, dom, domClass, on) {
-  return declare('OAuthLogin', [ WidgetBase, TemplatedMixin ], {
+  return declare('OAuthLoginWidget', [ WidgetBase, TemplatedMixin ], {
     templateString : template,
     
     /**
@@ -72,11 +72,9 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'doj
      */
     onSecurityTokenListener : function() {
       var responseObj = this.popup.win_.document.responseObj;
-      this.securityToken = responseObj.securityToken;
-      this.securityTokenTTL = responseObj.securityTokenTTL;
-      this.popup.win_.close();
-      topic.publish("updateToken", this.securityToken, this.securityTokenTTL);
+      topic.publish("updateToken", responseObj.securityToken, responseObj.securityTokenTTL);
       query('#login')[0].innerHTML = "Welcome!";
+      this.popup.win_.close();
     },
     
     /**

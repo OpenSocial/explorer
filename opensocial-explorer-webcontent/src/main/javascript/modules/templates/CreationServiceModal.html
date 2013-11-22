@@ -1,0 +1,190 @@
+<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div id="creation-header" class="modal-header center">
+		<button data-dojo-attach-point="creationExit" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3>Services</h3>
+	</div>
+	<!-- Modal Body -->
+	<div id="creation-body" class="modal-body">
+		<div class="tabbable">
+			<!-- Tabs -->
+			<ul class="nav nav-tabs">
+				<li id="services-tab" data-dojo-attach-point="servicesTab" class="tab active">
+					<a href="#services">Services</a>
+				</li>
+				<li data-dojo-attach-point="newServiceTab" class="tab">
+					<a href="#newservice">New Service</a>
+				</li>
+			</ul>
+			<!-- Tab Content -->
+			<div class="tab-content">
+				<div class="tab-pane active" data-dojo-attach-point="servicesContent" id="services-content">
+					<h5 data-dojo-attach-point="noServices">No existing services. Click 'New Service' to create a new service!</h5>
+					<h4 data-dojo-attach-point="oAuth">OAuth</h4>
+				</div>
+				<div class="tab-pane" data-dojo-attach-point="newServiceContent">
+					<div>
+						<select data-dojo-attach-point="serviceSelection">
+							<option>OAuth</option>
+							<option>OAuth2</option>
+						</select>
+					</div>
+					<!-- Pills -->
+					<ul class="nav nav-pills inline-block">
+						<li data-dojo-attach-point="generalPill" class="pill active inline">
+							<a href="#general">General</a>
+						</li>
+						<li data-dojo-attach-point="advancedPill" class="pill inline">
+							<a href="#advanced">Advanced</a>
+						</li>
+					</ul>
+					<!-- Pill Content -->
+					<div class="pill-content">
+						<!-- OAuth1 General -->
+						<div class="pill-pane active" data-dojo-attach-point="oAuthGeneralContent">
+							<form class="form-horizontal">
+								<p class="center hide" data-dojo-attach-point="oAuthFieldsValidation" style="color:red">Please complete all fields!</p>
+								<div class="control-group">
+									<label class="control-label">Name</label>
+									<div class="controls">
+										<input data-dojo-attach-point="oAuthName" type="text" placeholder="Name">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">Key</label>
+									<div class="controls">
+										<input data-dojo-attach-point="oAuthKey" type="text" placeholder="Key">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">Secret</label>
+									<div class="controls">
+										<input data-dojo-attach-point="oAuthSecret" type="text" placeholder="Secret">
+									</div>
+								</div>
+							</form>
+						</div>
+						<!-- OAuth1 Advanced -->
+						<div class="pill-pane" data-dojo-attach-point="oAuthAdvancedContent">
+							<form class="form-horizontal">
+								<div class="control-group">
+									<label class="control-label">Key Type</label>
+									<div class="controls">
+										<select data-dojo-attach-point="oAuthKeyType">
+											<option>HMAC_SYMMETRIC</option>
+											<option>RSA_PRIVATE</option>
+											<option>PLAINTEXT</option>
+										</select>
+									</div>
+								</div>
+							</form>
+						</div>
+						<!-- OAuth2 General -->
+						<div class="pill-pane" data-dojo-attach-point="oAuth2GeneralContent">
+							<form class="form-horizontal">
+								<div class="control-group">
+									<label class="control-label">Name</label>
+									<div class="controls">
+										<input data-dojo-attach-point="oAuth2Name" type="text" placeholder="Name">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">Key</label>
+									<div class="controls">
+										<input data-dojo-attach-point="oAuth2Key" type="text" placeholder="Key">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">Secret</label>
+									<div class="controls">
+										<input data-dojo-attach-point="oAuth2Secret" type="text" placeholder="Secret">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">Authorization URL</label>
+									<div class="controls">
+										<input data-dojo-attach-point="oAuth2Authorization" type="text" placeholder="Authorization URL">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">Token URL</label>
+									<div class="controls">
+										<input data-dojo-attach-point="oAuth2Token" type="text" placeholder="Token URL">
+									</div>
+								</div>
+							</form>
+						</div>
+						<!-- OAuth2 Advanced -->
+						<div class="pill-pane" data-dojo-attach-point="oAuth2AdvancedContent">
+							<form class="form-horizontal">
+								<div class="control-group">
+									<label class="control-label">Type</label>
+									<div class="controls">
+										<select data-dojo-attach-point="oAuth2Type">
+											<option value="confidential">Confidential</option>
+											<option value="public">Public</option>
+											<option value="unknown">Unknown</option>
+										</select>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">Grant Type</label>
+									<div class="controls">
+										<select data-dojo-attach-point="oAuth2GrantType">
+											<option value="code">Authorization Code</option>
+											<option value="client_credentials">Client Credentials</option>
+										</select>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">Client Authentication</label>
+									<div class="controls">
+										<select data-dojo-attach-point="oAuth2Authentication">
+											<option value="STANDARD">Standard</option>
+											<option value="Basic">Basic</option>
+										</select>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">Allow override</label>
+									<div class="controls">
+										<label class="radio inline"> 
+											<input type="radio" data-dojo-attach-point="oAuth2Override" name="oAuth2OverrideRadio" checked> True
+										</label> 
+										<label class="radio inline"> 
+											<input type="radio" name="oAuth2OverrideRadio"> False
+										</label>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">Use Authorization Header</label>
+									<div class="controls">
+										<label class="radio inline"> 
+											<input type="radio" data-dojo-attach-point="oAuth2Header" name="oAuth2HeaderRadio"> True
+										</label> 
+										<label class="radio inline"> 
+											<input type="radio" name="oAuth2HeaderRadio" checked> False
+										</label>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">Use URL Parameter</label>
+									<div class="controls">
+										<label class="radio inline"> 
+											<input type="radio" data-dojo-attach-point="oAuth2Parameter" name="oAuth2ParameterRadio" checked> True
+										</label> 
+										<label class="radio inline"> 
+											<input type="radio" name="oAuth2ParameterRadio"> False
+										</label>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="center">
+						<button data-dojo-attach-point="serviceSubmit" id="creation-submit" class="btn btn-success">Create!</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

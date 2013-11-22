@@ -20,7 +20,7 @@
 /**
  * A modal window that allows users to create a new spec along with information about the spec.
  *
- * @module explorer/widgets/sidebar/CreationModalDialog
+ * @module explorer/widgets/creation/CreationSpecModal
  * @requires module:explorer/gadget-spec-service
  * @augments module:explorer/widgets/ModalDialog
  * @augments dijit/_WidgetsInTemplateMixin
@@ -28,21 +28,20 @@
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetsInTemplateMixin.html|WidgetsInTemplateMixin Documentation}
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dojo/Evented.html|Evented Documentation}
  */
-
 define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInTemplateMixin', 'dojo/Evented',
-        'dojo/query', 'dojo/text!./../../templates/CreationModalDialog.html', 'dojo/text!./../../stubs/StubXML.xml', 
+        'dojo/query', 'dojo/text!./../../templates/CreationSpecModal.html', 'dojo/text!./../../stubs/StubXML.xml', 
         'dojo/text!./../../stubs/StubEEXML.xml', 'dojo/text!./../../stubs/StubHTML.html',
         'dojo/dom', '../../gadget-spec-service', 'dojo/on',
         'dojo/dom-class', 'dojo/dom-style','dojo/NodeList-manipulate', 'dojo/NodeList-dom'],
         function(declare, ModalDialog, WidgetsInTemplateMixin, Evented, query, template, 
             stubxml, stubeexml, stubhtml, dom, gadgetSpecService, on, domClass, domStyle) {
-  return declare('CreationModalDialogWidget', [ModalDialog, WidgetsInTemplateMixin, Evented], {
+  return declare('CreationSpecModalWidget', [ModalDialog, WidgetsInTemplateMixin, Evented], {
     templateString : template,
     
     /**
      * Called right before widget is added to the dom. See link for more information.
      *
-     * @memberof module:explorer/widgets/sidebar/CreationModalDialog#
+     * @memberof module:explorer/widgets/creation/CreationSpecModal#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     postCreate: function() {
@@ -59,7 +58,7 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
     /**
      * Sends the data of user-submitted spec to the servlet and hides and clears the modal.
      *
-     * @memberof module:explorer/widgets/sidebar/CreationModalDialog#
+     * @memberof module:explorer/widgets/creation/CreationSpecModal#
      */
     onSubmit : function() {
       var self = this;
@@ -88,7 +87,7 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
     /**
      * Posts a new GadgetSpec to the servlet.
      *
-     * @memberof module:explorer/widgets/sidebar/CreationModalDialog#
+     * @memberof module:explorer/widgets/creation/CreationSpecModal#
      *
      * @param {Object} userInput - User input information in the form of { title: ..., filename: ..., author: ..., description: ... }
      * @param {Function} thenFunction - Callback function to execute if the POST to the servlet is successful.
@@ -116,7 +115,7 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
     /**
      * Posts a new EESpec to the servlet.
      *
-     * @memberof module:explorer/widgets/sidebar/CreationModalDialog#
+     * @memberof module:explorer/widgets/creation/CreationSpecModal#
      *
      * @param {Object} userInput - User input information in the form of { title: ..., filename: ..., author: ..., description: ... }
      * @param {Function} thenFunction - Callback function to execute if the POST to the servlet is successful.
@@ -147,7 +146,7 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
      * This method makes sure that the stubs generated for a new spec have the user's 
      * information in it (title, description, author).
      *
-     * @memberof module:explorer/widgets/sidebar/CreationModalDialog#
+     * @memberof module:explorer/widgets/creation/CreationSpecModal#
      *
      * @param {String} str - The html string that has instances of ${...} to replace.
      * @param {Object} mapObj - The object containing user data.
@@ -161,7 +160,7 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
     /**
      * Clears the input boxes after a new spec is added.
      *
-     * @memberof module:explorer/widgets/sidebar/CreationModalDialog#
+     * @memberof module:explorer/widgets/creation/CreationSpecModal#
      */
     clear: function() {
       var self = this;
@@ -173,7 +172,7 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
     /**
      * Getter method for the GadgetSpecService module for testing purposes.
      *
-     * @memberof module:explorer/widgets/sidebar/CreationModalDialog#
+     * @memberof module:explorer/widgets/creation/CreationSpecModal#
      * @returns {gadgetSpecService} The gadgetSpecService object.
      */
     getGadgetSpecService : function() {
