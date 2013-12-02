@@ -18,13 +18,13 @@
  */
 package org.opensocial.explorer.server.oauth2;
 
-import org.apache.shindig.gadgets.oauth2.OAuth2Accessor;
-import org.apache.shindig.gadgets.oauth2.OAuth2CallbackState;
-import org.apache.shindig.gadgets.oauth2.OAuth2Token;
-import org.apache.shindig.gadgets.oauth2.persistence.OAuth2CacheException;
-import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Client;
+import java.io.UnsupportedEncodingException;
 
-import java.util.Collection;
+import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Cache;
+import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Client;
+import org.apache.wink.json4j.JSONArray;
+import org.apache.wink.json4j.JSONException;
+import org.opensocial.explorer.server.oauth.NoSuchStoreException;
 
 /**
  * Used by {@link OAuth2Store} to cache OAuth2 data.
@@ -32,32 +32,14 @@ import java.util.Collection;
  * Default implementation is in-memory HashMaps for shindig.
  *
  */
-public interface IOAuth2Cache {
-  /**
-   * Clears all cached {@link OAuth2Client}s.
-   *
-   * @throws OAuth2CacheException
-   */
-  void clearAccessors() throws OAuth2CacheException;
+public interface IOAuth2Cache extends OAuth2Cache {
 
   /**
-   * Clears all cached {@link OAuth2Client}s.
+   * Find an {@link OAuth2Client}. Overrides the 2 parameter getClient.
+   * This method is used to extract a client with the matching userId
+   * that is stored in the userStore. 
    *
-   * @throws OAuth2CacheException
-   */
-  void clearClients() throws OAuth2CacheException;
-
-  /**
-   * Clears all cached {@link OAuth2Token}s.
-   *
-   * @throws OAuth2CacheException
-   */
-  void clearTokens() throws OAuth2CacheException;
-
-  /**
-   * Find an {@link OAuth2Client}.
-   *
-   * @param userId 
+   * @param userId
    * @param gadgetUri
    * @param serviceName
    * @return OAuth2Client
@@ -65,89 +47,40 @@ public interface IOAuth2Cache {
   OAuth2Client getClient(String userId, String gadgetUri, String serviceName);
 
   /**
-   * Find an {@link OAuth2Accessor} by state.
-   *
-   * @param state
-   * @return OAuth2Accessor
+   * Gets the services associated with the given userId and serviceName.
+   * @param userId The user ID.
    */
-  OAuth2Accessor getOAuth2Accessor(OAuth2CallbackState state);
+  OAuth2Client getUserService(String userId, String serviceName);
+  
+  /**
+   * Gets all the services associated with the given userId. Returns an empty JSONArray
+   * if user doesn't exist or user has no services. 
+   * @param userId The user ID.
+   * @throws JSONException 
+   * @throws UnsupportedEncodingException 
+   */
+  JSONArray getUserServices(String userId) throws JSONException, UnsupportedEncodingException;
 
   /**
-   * Find an {@link OAuth2Token} based on index
-   *
-   * @param gadgetUri
-   * @param serviceName
-   * @param user
-   * @param scope
-   * @param type
-   * @return an OAuth2Token
+   * Adds a service with the given serviceName to the given userId.
+   * Overwrites the service if the service already exists.
+   * @param userId The user ID.
+   * @param serviceName The name of the service.
+   * @param client The container class with all of the service's information.
    */
-  OAuth2Token getToken(String gadgetUri, String serviceName, String user, String scope,
-          OAuth2Token.Type type);
+  void addUserService(String userId, String serviceName, OAuth2Client client);
 
   /**
-   * @return true if the cache has already been primed. (presumably by another node.)
+   * Deletes a service with the given serviceName associated with the given userId.
+   * Throws an exception if the userId does not exist in the userStore.
+   * @param userId The user ID.
+   * @param serviceName The name of the service.
    */
-  boolean isPrimed();
+  void deleteUserService(String userId, String serviceName) throws NoSuchStoreException;
 
   /**
-   * Remove the given client;
-   *
-   * @param client
-   * @return the client that was removed, or <code>null</code> if removal failed
+   * Checks to see if the user already exists in the userStore.
+   * @param userId The user ID.
    */
-  OAuth2Client removeClient(OAuth2Client client);
-
-  /**
-   * Remove the given accessor.
-   *
-   * @param accessor
-   * @return the accessor that was removed, or <code>null</code> if removal failed
-   */
-  OAuth2Accessor removeOAuth2Accessor(OAuth2Accessor accessor);
-
-  /**
-   * Remove the given token;
-   *
-   * @param token
-   * @return the token that was removed, or <code>null</code> if removal failed
-   */
-  OAuth2Token removeToken(OAuth2Token token);
-
-  /**
-   * Stores the given client.
-   *
-   * @param index
-   * @param client
-   * @throws OAuth2CacheException
-   */
-  void storeClient(OAuth2Client client) throws OAuth2CacheException;
-
-  /**
-   * Store all clients in the collection.
-   *
-   * @param clients
-   * @throws OAuth2CacheException
-   */
-  void storeClients(Collection<OAuth2Client> clients) throws OAuth2CacheException;
-
-  /**
-   * Stores the given accessor.
-   *
-   * @param accessor
-   */
-  void storeOAuth2Accessor(OAuth2Accessor accessor);
-
-  /**
-   * Stores the given token.
-   */
-  void storeToken(OAuth2Token token) throws OAuth2CacheException;
-
-  /**
-   * Stores all tokens in the collection.
-   *
-   * @param tokens
-   * @throws OAuth2CacheException
-   */
-  void storeTokens(Collection<OAuth2Token> tokens) throws OAuth2CacheException;
+  boolean isUserExisting(String userId);
 }

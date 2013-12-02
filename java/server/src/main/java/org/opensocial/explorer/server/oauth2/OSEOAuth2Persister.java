@@ -105,8 +105,13 @@ public class OSEOAuth2Persister implements IOAuth2Persister {
     }
   }
 
-  public OAuth2Client findClient(String id, String gadgetUri, String serviceName)
+  public OAuth2Client findClient(String userId, String gadgetUri, String serviceName)
           throws OAuth2PersistenceException {
+    return null;
+  }
+  
+  public OAuth2Client findClient(String gadgetUri, String serviceName)
+      throws OAuth2PersistenceException {
     return null;
   }
 

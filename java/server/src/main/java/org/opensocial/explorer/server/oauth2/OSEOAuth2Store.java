@@ -26,6 +26,7 @@ import org.apache.shindig.common.servlet.Authority;
 import org.apache.shindig.gadgets.GadgetException;
 import org.apache.shindig.gadgets.GadgetException.Code;
 import org.apache.shindig.gadgets.oauth2.BasicOAuth2Accessor;
+import org.apache.shindig.gadgets.oauth2.BasicOAuth2Store;
 import org.apache.shindig.gadgets.oauth2.OAuth2Accessor;
 import org.apache.shindig.gadgets.oauth2.OAuth2CallbackState;
 import org.apache.shindig.gadgets.oauth2.OAuth2FetcherConfig;
@@ -39,7 +40,14 @@ import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Encrypter;
 import org.apache.shindig.gadgets.oauth2.persistence.OAuth2PersistenceException;
 import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Persister;
 import org.apache.shindig.gadgets.oauth2.persistence.OAuth2TokenPersistence;
+import org.apache.wink.json4j.JSONArray;
+import org.apache.wink.json4j.JSONException;
+import org.apache.wink.json4j.JSONObject;
+import org.opensocial.explorer.server.oauth.NoSuchStoreException;
 
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -53,89 +61,81 @@ import java.util.Set;
  * 1) {@link OAuth2Persister} 2) {@link OAuth2Cache} 3) {@link OAuth2Encrypter}
  *
  */
-public class OSEOAuth2Store implements IOAuth2Store {
+public class OSEOAuth2Store extends BasicOAuth2Store implements OAuth2Store {
   private static final String LOG_CLASS = OSEOAuth2Store.class.getName();
   private static final FilteredLogger LOG = FilteredLogger
           .getFilteredLogger(OSEOAuth2Store.LOG_CLASS);
 
   private final IOAuth2Cache cache;
   private final IOAuth2Persister persister;
-  private final OAuth2Encrypter encrypter;
-  private final BlobCrypter stateCrypter;
   private final String globalRedirectUri;
   private final Authority authority;
   private final String contextRoot;
+  private final BlobCrypter stateCrypter;
 
   @Inject
   public OSEOAuth2Store(final IOAuth2Cache cache, final IOAuth2Persister persister,
           final OAuth2Encrypter encrypter, final String globalRedirectUri,
           final Authority authority, final String contextRoot,
-          @Named(OAuth2FetcherConfig.OAUTH2_STATE_CRYPTER)
-          final BlobCrypter stateCrypter) {
+          @Named(OAuth2FetcherConfig.OAUTH2_STATE_CRYPTER) final BlobCrypter stateCrypter) {
+    super(cache, persister, encrypter, globalRedirectUri, authority, contextRoot, stateCrypter);
+
     this.cache = cache;
     this.persister = persister;
     this.globalRedirectUri = globalRedirectUri;
     this.authority = authority;
     this.contextRoot = contextRoot;
-    this.encrypter = encrypter;
     this.stateCrypter = stateCrypter;
-    if (OSEOAuth2Store.LOG.isLoggable()) {
-      OSEOAuth2Store.LOG.log("this.cache = {0}", this.cache);
-      OSEOAuth2Store.LOG.log("this.persister = {0}", this.persister);
-      OSEOAuth2Store.LOG.log("this.globalRedirectUri = {0}", this.globalRedirectUri);
-      OSEOAuth2Store.LOG.log("this.encrypter = {0}", this.encrypter);
-      OSEOAuth2Store.LOG.log("this.stateCrypter = {0}", this.stateCrypter);
-    }
   }
 
-  public boolean clearCache() throws GadgetException {
-    final boolean isLogging = OSEOAuth2Store.LOG.isLoggable();
-    if (isLogging) {
-      OSEOAuth2Store.LOG.entering(OSEOAuth2Store.LOG_CLASS, "clearCache");
-    }
-
-    try {
-      this.cache.clearClients();
-      this.cache.clearTokens();
-      this.cache.clearAccessors();
-    } catch (final OAuth2PersistenceException e) {
-      if (isLogging) {
-        OSEOAuth2Store.LOG.log("Error clearing OAuth2 cache", e);
-      }
-      throw new GadgetException(Code.OAUTH_STORAGE_ERROR, "Error clearing OAuth2 cache", e);
-    }
-
-    if (isLogging) {
-      OSEOAuth2Store.LOG.exiting(OSEOAuth2Store.LOG_CLASS, "clearCache", true);
-    }
-
-    return true;
+  /**
+   * Gets all the services associated with the given userId. Returns an empty JSONArray
+   * if user doesn't exist or user has no services. 
+   * @param userId The user ID.
+   * @throws UnsupportedEncodingException 
+   */
+  public JSONArray getUserServices(String userId) throws JSONException, UnsupportedEncodingException {
+    return this.cache.getUserServices(userId);
   }
-
-  public OAuth2Token createToken() {
-    final boolean isLogging = OSEOAuth2Store.LOG.isLoggable();
-    if (isLogging) {
-      OSEOAuth2Store.LOG.entering(OSEOAuth2Store.LOG_CLASS, "createToken");
-    }
-
-    final OAuth2Token ret = this.internalCreateToken();
-
-    if (isLogging) {
-      OSEOAuth2Store.LOG.exiting(OSEOAuth2Store.LOG_CLASS, "clearCache", ret);
-    }
-
-    return ret;
+  
+  /**
+   * Adds a service with the given serviceName to the given userId.
+   * Overwrites the service if the service already exists.
+   * @param userId The user ID.
+   * @param serviceName The name of the service.
+   * @param kas The container class with all of the service's information.
+   */
+  public void addUserService(String userId, String serviceName, OAuth2Client client) {
+    this.cache.addUserService(userId, serviceName, client);
   }
-
-  public OAuth2Client getClient(String userId, String gadgetUri, String serviceName)
+  
+  /**
+   * Deletes a service with the given serviceName associated with the given userId.
+   * Throws an exception if the userId does not exist in the userStore.
+   * @param userId The user ID.
+   * @param serviceName The name of the service.
+   */
+  public void deleteUserService(String userId, String serviceName) throws NoSuchStoreException {
+    this.cache.deleteUserService(userId, serviceName);
+  }
+  
+  // Overloading getClient(String, String) from BasicOAuth2Store
+  public OAuth2Client getClient(final String userId, final String gadgetUri, final String serviceName)
           throws GadgetException {
     final boolean isLogging = OSEOAuth2Store.LOG.isLoggable();
+    OAuth2Client client;
     if (isLogging) {
       OSEOAuth2Store.LOG.entering(OSEOAuth2Store.LOG_CLASS, "getClient", new Object[] {
               gadgetUri, serviceName });
     }
-
-    OAuth2Client client = this.cache.getClient(null, gadgetUri, serviceName);
+    
+    // check in cache's user map
+    if(this.cache.isUserExisting(userId)) {
+      client = this.cache.getUserService(userId, serviceName);
+    // else the client is in the cache's anon map
+    } else {
+      client = this.cache.getClient(gadgetUri, serviceName);
+    }
 
     if (isLogging) {
       OSEOAuth2Store.LOG.log("client from cache = {0}", client);
@@ -143,7 +143,7 @@ public class OSEOAuth2Store implements IOAuth2Store {
 
     if (client == null) {
       try {
-        client = this.persister.findClient(null, gadgetUri, serviceName);
+        client = this.persister.findClient(userId, gadgetUri, serviceName);
         if (client != null) {
           this.cache.storeClient(client);
         }
@@ -162,28 +162,13 @@ public class OSEOAuth2Store implements IOAuth2Store {
 
     return client;
   }
-
-  public OAuth2Accessor getOAuth2Accessor(final OAuth2CallbackState state) {
-    final boolean isLogging = OSEOAuth2Store.LOG.isLoggable();
-    if (isLogging) {
-      OSEOAuth2Store.LOG.entering(OSEOAuth2Store.LOG_CLASS, "getOAuth2Accessor", state);
-    }
-
-    final OAuth2Accessor ret = this.cache.getOAuth2Accessor(state);
-
-    if (isLogging) {
-      OSEOAuth2Store.LOG.exiting(OSEOAuth2Store.LOG_CLASS, "getOAuth2Accessor", ret);
-    }
-
-    return ret;
-  }
-
+   
   public OAuth2Accessor getOAuth2Accessor(final String gadgetUri, final String serviceName,
-          final String user, final String scope) throws GadgetException {
+      final String user, final String scope) throws GadgetException {
     final boolean isLogging = OSEOAuth2Store.LOG.isLoggable();
     if (isLogging) {
       OSEOAuth2Store.LOG.entering(OSEOAuth2Store.LOG_CLASS, "getOAuth2Accessor", new Object[] {
-              gadgetUri, serviceName, user, scope });
+          gadgetUri, serviceName, user, scope });
     }
 
     final OAuth2CallbackState state = new OAuth2CallbackState(this.stateCrypter);
@@ -199,13 +184,13 @@ public class OSEOAuth2Store implements IOAuth2Store {
 
       if (client != null) {
         final OAuth2Token accessToken = this.getToken(gadgetUri, serviceName, user, scope,
-                OAuth2Token.Type.ACCESS);
+            OAuth2Token.Type.ACCESS);
         final OAuth2Token refreshToken = this.getToken(gadgetUri, serviceName, user, scope,
-                OAuth2Token.Type.REFRESH);
+            OAuth2Token.Type.REFRESH);
 
-        final OSEOAuth2Accessor newAccessor = new OSEOAuth2Accessor(gadgetUri, serviceName,
-                user, scope, client.isAllowModuleOverride(), this, this.globalRedirectUri,
-                this.authority, this.contextRoot);
+        final BasicOAuth2Accessor newAccessor = new BasicOAuth2Accessor(gadgetUri, serviceName,
+            user, scope, client.isAllowModuleOverride(), this, this.globalRedirectUri,
+            this.authority, this.contextRoot);
         newAccessor.setAccessToken(accessToken);
         newAccessor.setAuthorizationUrl(client.getAuthorizationUrl());
         newAccessor.setClientAuthenticationType(client.getClientAuthenticationType());
@@ -231,7 +216,7 @@ public class OSEOAuth2Store implements IOAuth2Store {
 
     return ret;
   }
-
+  
   public OAuth2Token getToken(final String gadgetUri, final String serviceName, final String user,
           final String scope, final OAuth2Token.Type type) throws GadgetException {
 
@@ -268,68 +253,7 @@ public class OSEOAuth2Store implements IOAuth2Store {
     return token;
   }
 
-  public boolean init() throws GadgetException {
-    final boolean isLogging = OSEOAuth2Store.LOG.isLoggable();
-    if (isLogging) {
-      OSEOAuth2Store.LOG.entering(OSEOAuth2Store.LOG_CLASS, "init");
-    }
-
-    if (this.cache.isPrimed()) {
-      if (isLogging) {
-        OSEOAuth2Store.LOG.exiting(OSEOAuth2Store.LOG_CLASS, "init", false);
-      }
-      return false;
-    }
-
-    this.clearCache();
-
-    try {
-      final Set<OAuth2Client> clients = this.persister.loadClients();
-      if (isLogging) {
-        OSEOAuth2Store.LOG.log("clients = {0}", clients);
-      }
-      this.cache.storeClients(clients);
-    } catch (final OAuth2PersistenceException e) {
-      throw new GadgetException(Code.OAUTH_STORAGE_ERROR, "Error loading OAuth2 clients", e);
-    }
-
-    try {
-      final Set<OAuth2Token> tokens = this.persister.loadTokens();
-      if (isLogging) {
-        OSEOAuth2Store.LOG.log("tokens = {0}", tokens);
-      }
-      this.cache.storeTokens(tokens);
-    } catch (final OAuth2PersistenceException e) {
-      throw new GadgetException(Code.OAUTH_STORAGE_ERROR, "Error loading OAuth2 tokens", e);
-    }
-
-    if (isLogging) {
-      OSEOAuth2Store.LOG.exiting(OSEOAuth2Store.LOG_CLASS, "init", true);
-    }
-
-    return true;
-  }
-
-  public OAuth2Accessor removeOAuth2Accessor(final OAuth2Accessor accessor) {
-    final boolean isLogging = OSEOAuth2Store.LOG.isLoggable();
-    if (isLogging) {
-      OSEOAuth2Store.LOG.entering(OSEOAuth2Store.LOG_CLASS, "removeOAuth2Accessor", accessor);
-    }
-
-    final OAuth2Accessor ret = null;
-
-    if (accessor != null) {
-      return this.cache.removeOAuth2Accessor(accessor);
-    }
-
-    if (isLogging) {
-      OSEOAuth2Store.LOG.exiting(OSEOAuth2Store.LOG_CLASS, "removeOAuth2Accessor", ret);
-    }
-
-    return ret;
-  }
-
-  public OAuth2Token removeToken(String userId, OAuth2Token token) throws GadgetException {
+  public OAuth2Token removeToken(final OAuth2Token token) throws GadgetException {
     final boolean isLogging = OSEOAuth2Store.LOG.isLoggable();
     if (isLogging) {
       OSEOAuth2Store.LOG.entering(OSEOAuth2Store.LOG_CLASS, "removeToken", token);
@@ -343,7 +267,7 @@ public class OSEOAuth2Store implements IOAuth2Store {
       try {
         synchronized (token) {
           final String origGadgetApi = token.getGadgetUri();
-          final String processedGadgetUri = this.getGadgetUri(userId, token.getGadgetUri(), token.getServiceName());
+          final String processedGadgetUri = this.getGadgetUri(token.getUser(), token.getGadgetUri(), token.getServiceName());
           token.setGadgetUri(processedGadgetUri);
           try {
             // Remove token from the cache
@@ -383,7 +307,7 @@ public class OSEOAuth2Store implements IOAuth2Store {
     return false;
   }
 
-  public void setToken(String userId, OAuth2Token token) throws GadgetException {
+  public void setToken(final OAuth2Token token) throws GadgetException {
     final boolean isLogging = OSEOAuth2Store.LOG.isLoggable();
     if (isLogging) {
       OSEOAuth2Store.LOG.entering(OSEOAuth2Store.LOG_CLASS, "setToken", token);
@@ -393,7 +317,7 @@ public class OSEOAuth2Store implements IOAuth2Store {
       final String gadgetUri = token.getGadgetUri();
       final String serviceName = token.getServiceName();
 
-      final String processedGadgetUri = this.getGadgetUri(userId, gadgetUri, serviceName);
+      final String processedGadgetUri = this.getGadgetUri(token.getUser(), gadgetUri, serviceName);
       synchronized (token) {
         token.setGadgetUri(processedGadgetUri);
         try {
@@ -436,23 +360,10 @@ public class OSEOAuth2Store implements IOAuth2Store {
     }
   }
 
-  public void storeOAuth2Accessor(final OAuth2Accessor accessor) {
-    final boolean isLogging = OSEOAuth2Store.LOG.isLoggable();
-    if (isLogging) {
-      OSEOAuth2Store.LOG.entering(OSEOAuth2Store.LOG_CLASS, "storeOAuth2Accessor", accessor);
-    }
-
-    this.cache.storeOAuth2Accessor(accessor);
-
-    if (isLogging) {
-      OSEOAuth2Store.LOG.exiting(OSEOAuth2Store.LOG_CLASS, "storeOAuth2Accessor");
-    }
-  }
-
-  protected String getGadgetUri(String userId, String gadgetUri, String serviceName)
+  protected String getGadgetUri(final String userId, final String gadgetUri, final String serviceName)
           throws GadgetException {
     String ret = gadgetUri;
-    final OAuth2Client client = this.getClient(userId, ret, serviceName);
+    final OAuth2Client client = this.getClient(ret, serviceName);
     if (client != null) {
       if (client.isSharedToken()) {
         ret = client.getClientId() + ':' + client.getServiceName();
@@ -461,81 +372,4 @@ public class OSEOAuth2Store implements IOAuth2Store {
 
     return ret;
   }
-
-  protected OAuth2Token internalCreateToken() {
-    return new OAuth2TokenPersistence(this.encrypter);
-  }
-
-  public BlobCrypter getStateCrypter() {
-    return this.stateCrypter;
-  }
-
-  public OAuth2Client invalidateClient(final OAuth2Client client) {
-    return this.cache.removeClient(client);
-  }
-
-  public OAuth2Token invalidateToken(final OAuth2Token token) {
-    return this.cache.removeToken(token);
-  }
-
-  public void clearAccessorCache() throws GadgetException {
-    final boolean isLogging = OSEOAuth2Store.LOG.isLoggable();
-    if (isLogging) {
-      OSEOAuth2Store.LOG.entering(OSEOAuth2Store.LOG_CLASS, "clearAccessorCache");
-    }
-
-    try {
-      this.cache.clearAccessors();
-    } catch (final OAuth2CacheException e) {
-      if (isLogging) {
-        OSEOAuth2Store.LOG.log("Error clearing OAuth2 Accessor cache", e);
-      }
-      throw new GadgetException(Code.OAUTH_STORAGE_ERROR, "Error clearing OAuth2Accessor cache", e);
-    }
-
-    if (isLogging) {
-      OSEOAuth2Store.LOG.exiting(OSEOAuth2Store.LOG_CLASS, "clearAccessorCache");
-    }
-  }
-
-  public void clearTokenCache() throws GadgetException {
-    final boolean isLogging = OSEOAuth2Store.LOG.isLoggable();
-    if (isLogging) {
-      OSEOAuth2Store.LOG.entering(OSEOAuth2Store.LOG_CLASS, "clearTokenCache");
-    }
-
-    try {
-      this.cache.clearTokens();
-    } catch (final OAuth2CacheException e) {
-      if (isLogging) {
-        OSEOAuth2Store.LOG.log("Error clearing OAuth2 Token cache", e);
-      }
-      throw new GadgetException(Code.OAUTH_STORAGE_ERROR, "Error clearing OAuth2Token cache", e);
-    }
-
-    if (isLogging) {
-      OSEOAuth2Store.LOG.exiting(OSEOAuth2Store.LOG_CLASS, "clearTokenCache");
-    }
-  }
-
-  public void clearClientCache() throws GadgetException {
-    final boolean isLogging = OSEOAuth2Store.LOG.isLoggable();
-    if (isLogging) {
-      OSEOAuth2Store.LOG.entering(OSEOAuth2Store.LOG_CLASS, "clearClientCache");
-    }
-
-    try {
-      this.cache.clearClients();
-    } catch (final OAuth2CacheException e) {
-      if (isLogging) {
-        OSEOAuth2Store.LOG.log("Error clearing OAuth2 Client cache", e);
-      }
-      throw new GadgetException(Code.OAUTH_STORAGE_ERROR, "Error clearing OAuth2Client cache", e);
-    }
-
-    if (isLogging) {
-      OSEOAuth2Store.LOG.exiting(OSEOAuth2Store.LOG_CLASS, "clearClientCache");
-    }
-  }
 }
-

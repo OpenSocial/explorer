@@ -16,6 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+.overflow {
+	overflow: auto;
+}
 
 .center-image {
 	display : block;
@@ -39,6 +42,10 @@
 
 .block {
 	display: block;
+}
+
+.bold {
+	font-weight: bold;
 }
 
 .pointer {

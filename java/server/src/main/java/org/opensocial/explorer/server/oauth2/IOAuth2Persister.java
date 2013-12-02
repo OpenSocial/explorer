@@ -24,6 +24,7 @@ import org.apache.shindig.gadgets.oauth2.OAuth2Store;
 import org.apache.shindig.gadgets.oauth2.OAuth2Token;
 import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Client;
 import org.apache.shindig.gadgets.oauth2.persistence.OAuth2PersistenceException;
+import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Persister;
 import org.apache.shindig.gadgets.oauth2.persistence.sample.JSONOAuth2Persister;
 
 import java.util.Set;
@@ -43,12 +44,12 @@ import java.util.Set;
  *
  */
 
-public interface IOAuth2Persister {
-
+public interface IOAuth2Persister extends OAuth2Persister {
+  
   /**
    * Retrieves a client from the persistence layer. Returns <code>null</code> if not found.
    *
-   * @param userId 
+   * @param userId
    * @param gadgetUri
    * @param serviceName
    * @return the client in the given mapping, must return <code>null</code> if the client is not
@@ -56,65 +57,4 @@ public interface IOAuth2Persister {
    * @throws OAuth2PersistenceException
    */
   OAuth2Client findClient(String userId, String gadgetUri, String serviceName) throws OAuth2PersistenceException;
-
-  /**
-   *
-   * @param gadgetUri
-   * @param serviceName
-   * @param user
-   * @param scope
-   * @param type
-   * @return the token in the given mapping
-   * @throws OAuth2PersistenceException
-   */
-  OAuth2Token findToken(String gadgetUri, String serviceName, String user, String scope,
-          OAuth2Token.Type type) throws OAuth2PersistenceException;
-
-  /**
-   * Inserts a new {@link OAuth2Token} into the persistence layer.
-   *
-   * @param token
-   * @throws OAuth2PersistenceException
-   */
-  void insertToken(OAuth2Token token) throws OAuth2PersistenceException;
-
-  /**
-   * Load all the clients from the persistence layer. The {@link BasicOAuth2Store#init()} method
-   * will call this to prepopulate the cache.
-   *
-   * @return
-   * @throws OAuth2PersistenceException
-   */
-  Set<OAuth2Client> loadClients() throws OAuth2PersistenceException;
-
-  /**
-   * Load all the tokens from the persistence layer. The {@link BasicOAuth2Store#init()} method will
-   * call this to prepopulate the cache.
-   *
-   * @return
-   * @throws OAuth2PersistenceException
-   */
-  Set<OAuth2Token> loadTokens() throws OAuth2PersistenceException;
-
-  /**
-   * Removes a token from the persistence layer.
-   *
-   * @param gadgetUri
-   * @param serviceName
-   * @param user
-   * @param scope
-   * @param type
-   * @return
-   * @throws OAuth2PersistenceException
-   */
-  boolean removeToken(String gadgetUri, String serviceName, String user, String scope,
-          OAuth2Token.Type type) throws OAuth2PersistenceException;
-
-  /**
-   * Updates an existing {@link OAuth2Token} in the persistence layer.
-   *
-   * @param token
-   * @throws OAuth2PersistenceException
-   */
-  void updateToken(OAuth2Token token) throws OAuth2PersistenceException;
 }

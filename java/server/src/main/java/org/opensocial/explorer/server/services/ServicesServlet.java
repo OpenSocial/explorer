@@ -20,6 +20,7 @@ package org.opensocial.explorer.server.services;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -33,13 +34,19 @@ import org.apache.shindig.auth.UrlParameterAuthenticationHandler;
 import org.apache.shindig.common.servlet.Authority;
 import org.apache.shindig.gadgets.oauth.BasicOAuthStoreConsumerKeyAndSecret;
 import org.apache.shindig.gadgets.oauth.BasicOAuthStoreConsumerKeyAndSecret.KeyType;
+import org.apache.shindig.gadgets.oauth2.OAuth2Accessor.Type;
+import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Client;
+import org.apache.shindig.gadgets.oauth2.persistence.OAuth2EncryptionException;
 import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
 import org.opensocial.explorer.server.oauth.NoSuchStoreException;
 import org.opensocial.explorer.server.oauth.OSEOAuthStore;
 import org.opensocial.explorer.server.oauth.OSEOAuthStoreProvider;
+import org.opensocial.explorer.server.oauth2.OSEOAuth2Store;
+import org.opensocial.explorer.server.oauth2.OSEOAuth2StoreProvider;
 import org.opensocial.explorer.server.openid.OpenIDServlet;
+import org.opensocial.explorer.specserver.api.GadgetSpec;
 import org.opensocial.explorer.specserver.servlet.ExplorerInjectedServlet;
 
 import com.google.caja.util.Maps;
@@ -51,54 +58,56 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * A servlet that handles requests for services.
+ * A servlet that handles requests for user-stored services.
  * 
- * Services are information used by an OAuth gadget for authorization. A service has the following information:
- * Key, Secret, Name, Callback Url, and KeyType.
- * 
- * Services are stored in this servlet as a BasicOAuthStoreConsumerKeyAndSecret, which is in turn
- * stored in a nested Map data structure.
- * 
- * The first Map maps the userID to another map. This second map maps the name of the service to the
- * BasicOAuthStoreConsumerKeyAndSecret.
+ * Services are information used by an OAuth gadget for authorization. 
+ * They are stored in this servlet as a BasicOAuthStoreConsumerKeyAndSecret for OAuth 1.0, and
+ * as a OAuth2Client for OAuth 2.0.
  * 
  * <pre>
  * GET /services
  * - Takes the ID from the SecurityToken string sent in the request and 
- * returns a stringified array of all the services that belong to the matching ID.
+ * returns a stringified JSONObject of all the services that belong to the matching ID.
+ * The format of the response json is:
  * 
- * POST /services
- * - Creates a BasicOAuthStoreConsumerKeyAndSecret from the request parameters, which include:
- * Key, Secret, Name, Callback Url, and KeyType.
- * - Stores it in the Map under the ID taken from the SecurityToken.
- * - Returns an updated stringified array of all the services that belong to the matching ID.
+ * { 
+ *   oauth: [...],
+ *   oauth2: [...]
+ * }
+ * The oauth and oauth2 arrays can be empty.
  * 
- * DELETE /services
- * - Returns a list of OpenID providers supported by the server from which users can choose in order to login with OpenID
+ * POST /services/oauth or /services/oauth2
+ * - Creates a BasicOAuthStoreConsumerKeyAndSecret or OAuth2Client from the request parameters, 
+ * - Stores it in the map of the appropriate store under the ID taken from the SecurityToken.
+ * - Returns in the response an updated stringified array of all the services that belong to the matching ID.
+ * 
+ * DELETE /services/oauth or /services/oauth2
  * - Deletes the service that matches the ID from the SecurityToken and the service name. If there
  * is no matching user, we throw a NoSuchStoreException.
- * - Returns an updated stringified array of all the services that belong to the matching ID.
+ * - Returns in the response an updated stringified array of all the services that belong to the matching ID.
  * 
  * TODO: Add PUT option for editing an existing OAuth service.
  * 
- * The services returned in the array are stringified JSONObjects and have the same keys as the servlet request: 
- * Key, Secret, Name, Callback Url, and KeyType.
+ * The services returned in the array are stringified JSONObjects and contain the same fields as in the servlet request.
  * </pre>
  */
 public class ServicesServlet extends ExplorerInjectedServlet {
   private static final long serialVersionUID = -5185591095912083066L;
   private static final String CLASS = ServicesServlet.class.getName();
   private static final Logger LOG = Logger.getLogger(CLASS);
-  private OSEOAuthStore serviceStore;
+  private OSEOAuthStore oAuthServiceStore;
+  private OSEOAuth2Store oAuth2ServiceStore;
   private Authority authority;
   private String contextRoot;
   
   
   @Inject
-  public void injectDependencies(OSEOAuthStoreProvider storeProvider,
+  public void injectDependencies(OSEOAuthStoreProvider oAuthStoreProvider,
+                                 OSEOAuth2StoreProvider oAuth2StoreProvider,
                                  Authority authority,
                                  @Named("shindig.contextroot") String contextRoot) {
-    this.serviceStore = storeProvider.get();
+    this.oAuthServiceStore = oAuthStoreProvider.get();
+    this.oAuth2ServiceStore = oAuth2StoreProvider.get();
     this.authority = authority;
     this.contextRoot = contextRoot;
   }
@@ -109,11 +118,11 @@ public class ServicesServlet extends ExplorerInjectedServlet {
     try {
       SecurityToken token = AuthInfoUtil.getSecurityTokenFromRequest(req);
       String userId = token.getOwnerId();
-      JSONArray userData = this.serviceStore.getUserServices(userId);
       
+      JSONObject responseData = constructResponseJSON(userId);
       resp.setContentType(JSON_CONTENT_TYPE);
       PrintWriter writer = resp.getWriter();
-      writer.print(userData.toString());
+      writer.print(responseData.toString());
       resp.setStatus(HttpServletResponse.SC_OK);
     } catch (JSONException e) {
       LOG.logp(Level.SEVERE, CLASS, method, "Error parsing JSON!", e);
@@ -125,42 +134,106 @@ public class ServicesServlet extends ExplorerInjectedServlet {
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     final String method = "doPost";
     try {
-      SecurityToken token = AuthInfoUtil.getSecurityTokenFromRequest(req);
-      String userId = token.getOwnerId();
-      String key = req.getParameter("key");
-      String secret = req.getParameter("secret");
-      String serviceName = req.getParameter("name");
-      
-      if (key.equals("") || secret.equals("") || serviceName.equals("")) {
-        resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Name, Key and Secret parameters on POST request cannot be empty.");
+      // Oauth1 or Oauth2?
+      String[] paths = getPaths(req);
+      if (paths.length == 0) {
+        resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "The request must specify a service version.");
         return;
       }
       
-      String callbackUrl = req.getParameter("callbackUrl")
-          .replaceAll("%origin%", authority.getOrigin())
-          .replaceAll("%contextRoot%", this.contextRoot);
-      String keyTypeStr = req.getParameter("keyType");
-      KeyType keyType;
+      String serviceVersion = paths[0];
+      SecurityToken token = AuthInfoUtil.getSecurityTokenFromRequest(req);
+      String userId = token.getOwnerId();
+      
+      // /services/oauth
+      if ("oauth".equalsIgnoreCase(serviceVersion)) {
+        String key = req.getParameter("key");
+        String secret = req.getParameter("secret");
+        String serviceName = req.getParameter("name");
+        
+        if (key.equals("") || secret.equals("") || serviceName.equals("")) {
+          resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Name, Key and Secret parameters on POST request cannot be empty.");
+          return;
+        }
+        
+        String callbackUrl = req.getParameter("callbackUrl")
+            .replaceAll("%origin%", authority.getOrigin())
+            .replaceAll("%contextRoot%", this.contextRoot);
+        String keyTypeStr = req.getParameter("keyType");
+        KeyType keyType;
 
-      if(keyTypeStr.equals("PLAINTEXT")) {
-        keyType = KeyType.PLAINTEXT;
-      } else if (keyTypeStr.equals("RSA_PRIVATE")) {
-        keyType = KeyType.RSA_PRIVATE;
-      } else {
-        keyType = KeyType.HMAC_SYMMETRIC;
+        if(keyTypeStr.equals("PLAINTEXT")) {
+          keyType = KeyType.PLAINTEXT;
+        } else if (keyTypeStr.equals("RSA_PRIVATE")) {
+          keyType = KeyType.RSA_PRIVATE;
+        } else {
+          keyType = KeyType.HMAC_SYMMETRIC;
+        }
+
+        BasicOAuthStoreConsumerKeyAndSecret kas = new BasicOAuthStoreConsumerKeyAndSecret(key, secret, keyType, serviceName, callbackUrl);
+        this.oAuthServiceStore.addUserService(userId, serviceName, kas);
       }
+      
+      // /services/oauth2
+      if ("oauth2".equalsIgnoreCase(serviceVersion)) {
+        String clientId = req.getParameter("clientId");
+        String clientSecret = req.getParameter("clientSecret");
+        String serviceName = req.getParameter("name");
+        String authUrl = req.getParameter("authUrl");
+        String tokenUrl = req.getParameter("tokenUrl");
+        
+        if (clientId.equals("") || clientSecret.equals("") || serviceName.equals("") || authUrl.equals("") || tokenUrl.equals("")) {
+          resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Name, Id, Secret, AuthUrl, and TokenUrl parameters on POST request cannot be empty.");
+          return;
+        }
+        
+        String grantType = req.getParameter("grantType");
+        String authentication = req.getParameter("authentication");
+        String override = req.getParameter("override");
+        String authHeader = req.getParameter("authHeader");
+        String urlParam = req.getParameter("urlParam");
+        String redirectUrl = req.getParameter("redirectUrl")
+            .replaceAll("%origin%", authority.getOrigin())
+            .replaceAll("%contextRoot%", this.contextRoot);
+        String typeStr = req.getParameter("type");
+        Type type;
 
-      BasicOAuthStoreConsumerKeyAndSecret kas = new BasicOAuthStoreConsumerKeyAndSecret(key, secret, keyType, serviceName, callbackUrl);
-      this.serviceStore.addToUserStore(userId, serviceName, kas);
-      JSONArray userData = this.serviceStore.getUserServices(userId);
+        if(typeStr.equals("public")) {
+          type = Type.PUBLIC;
+        } else if (typeStr.equals("unknown")) {
+          type = Type.UNKNOWN;
+        } else {
+          type = Type.CONFIDENTIAL;
+        }
+        
+        OAuth2Client client = new OAuth2Client();
+        client.setServiceName(serviceName);
+        client.setClientId(clientId);
+        client.setClientSecret(clientSecret.getBytes());
+        client.setAuthorizationUrl(authUrl);
+        client.setTokenUrl(tokenUrl);
+        client.setType(type);
+        client.setGrantType(grantType);
+        client.setClientAuthenticationType(authentication);
+        client.setAllowModuleOverride(Boolean.parseBoolean(override));
+        client.setAuthorizationHeader(Boolean.parseBoolean(authHeader));
+        client.setUrlParameter(Boolean.parseBoolean(urlParam));
+        client.setRedirectUri(redirectUrl);
+        
+        this.oAuth2ServiceStore.addUserService(userId, serviceName, client);
+      }
+      
+      JSONObject responseData = constructResponseJSON(userId);
       
       resp.setContentType(JSON_CONTENT_TYPE);
       PrintWriter writer = resp.getWriter();
-      writer.print(userData.toString());
+      writer.print(responseData.toString());
       resp.setStatus(HttpServletResponse.SC_OK);
     } catch (JSONException e) {
       LOG.logp(Level.SEVERE, CLASS, method, "Error parsing JSON!", e);
       resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error parsing JSON!");
+    } catch (OAuth2EncryptionException e) {
+      
     }
   }
   
@@ -168,6 +241,15 @@ public class ServicesServlet extends ExplorerInjectedServlet {
   protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     final String method = "doDelete";
     try {
+      
+      // Oauth1 or Oauth2?
+      String[] paths = getPaths(req);
+      if (paths.length == 0) {
+        resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "The request must specify a service version.");
+        return;
+      }
+      
+      String serviceVersion = paths[0];
       SecurityToken token = AuthInfoUtil.getSecurityTokenFromRequest(req);
       String userId = token.getOwnerId();
       String serviceName = req.getParameter("name");
@@ -177,12 +259,20 @@ public class ServicesServlet extends ExplorerInjectedServlet {
         return;
       }
       
-      this.serviceStore.deleteFromUserStore(userId, serviceName);
+      // /services/oauth
+      if ("oauth".equalsIgnoreCase(serviceVersion)) {
+        this.oAuthServiceStore.deleteUserService(userId, serviceName);
+      }
       
-      JSONArray userData = this.serviceStore.getUserServices(userId);
+      // /services/oauth2
+      if ("oauth2".equalsIgnoreCase(serviceVersion)) {
+        this.oAuth2ServiceStore.deleteUserService(userId, serviceName);
+      }
+      
+      JSONObject responseData = constructResponseJSON(userId);
       resp.setContentType(JSON_CONTENT_TYPE);
       PrintWriter writer = resp.getWriter();
-      writer.print(userData.toString());
+      writer.print(responseData.toString());
       resp.setStatus(HttpServletResponse.SC_OK);
     } catch (NoSuchStoreException e) {
       LOG.logp(Level.SEVERE, CLASS, method, "The store corresponding to the user's data we are trying to get doesn't exist!", e);
@@ -193,7 +283,22 @@ public class ServicesServlet extends ExplorerInjectedServlet {
     }
   }
 
-  public OSEOAuthStore getServiceStore() {
-    return this.serviceStore;
+  private JSONObject constructResponseJSON(String userId) throws JSONException, UnsupportedEncodingException {
+    JSONArray oAuthData = this.oAuthServiceStore.getUserServices(userId);
+    JSONArray oAuth2Data = this.oAuth2ServiceStore.getUserServices(userId);
+    
+    JSONObject responseData = new JSONObject();
+    responseData.put("oauth", oAuthData);
+    responseData.put("oauth2", oAuth2Data);
+    
+    return responseData;
+  }
+  
+  public OSEOAuthStore getOAuthStore() {
+    return this.oAuthServiceStore;
+  }
+  
+  public OSEOAuth2Store getOAuth2Store() {
+    return this.oAuth2ServiceStore;
   }
 }

@@ -22,7 +22,7 @@
  *
  * @module explorer/widgets/creation/CreationServiceModal
  * @requires module:explorer/ExplorerContainer
- * @requires module:explorer/widgets/creation/CreationServiceItem
+ * @requires module:explorer/widgets/creation/CreationOAuthItem
  * @augments module:explorer/widgets/ModalDialog
  * @augments dijit/_WidgetsInTemplateMixin
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetsInTemplateMixin.html|WidgetsInTemplateMixin Documentation}
@@ -30,15 +30,15 @@
  * TODO: Implement OAuth2 support.
  */
 define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInTemplateMixin', 
-        'dojo/text!./../../templates/CreationServiceModal.html', 'explorer/widgets/creation/CreationServiceItem', 
-        'explorer/ExplorerContainer', 'dojo/_base/lang', 'dojo/query', 'dojo/dom', 'dojo/on', 
-        'dojo/dom-construct', 'dojo/dom-class', 'explorer/services-service', 'dojo/dom-style',
-        'dojo/topic', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom', 'dojo/domReady!'],
-        function(declare, ModalDialog, WidgetsInTemplateMixin, template, CreationServiceItem, ExplorerContainer, lang, query, 
+        'dojo/text!./../../templates/CreationServiceModal.html', 'explorer/widgets/creation/CreationOAuthItem',
+        'explorer/widgets/creation/CreationOAuth2Item','explorer/ExplorerContainer', 'dojo/_base/lang', 
+        'dojo/query', 'dojo/dom', 'dojo/on', 'dojo/dom-construct', 'dojo/dom-class', 'explorer/services-service', 
+        'dojo/dom-style', 'dojo/topic', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom', 'dojo/domReady!'],
+        function(declare, ModalDialog, WidgetsInTemplateMixin, template, CreationOAuthItem, CreationOAuth2Item, ExplorerContainer, lang, query, 
             dom, on, domConstruct, domClass, servicesService, domStyle, topic) {
   return declare('CreationServiceModalWidget', [ModalDialog, WidgetsInTemplateMixin], {
     templateString: template,
-    dropdownValue: 'OAuth',
+    dropdownValue: 'oauth',
     
     /**
      * Called right before widget is added to the dom. See link for more information.
@@ -60,12 +60,12 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
       query('.pill', this.domNode).on('click', function(e) {
         if(!domClass.contains(this, 'active')) {
           var value = self.serviceSelection.value;
-          if(value == 'OAuth') {
+          if(value == 'oauth') {
             domClass.toggle(self.oAuthAdvancedContent, 'active');
             domClass.toggle(self.oAuthGeneralContent, 'active');
           }
 
-          if(value == 'OAuth2') {
+          if(value == 'oauth2') {
             domClass.toggle(self.oAuth2AdvancedContent, 'active');
             domClass.toggle(self.oAuth2GeneralContent, 'active');
           }
@@ -84,7 +84,7 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
       query(this.serviceSubmit, this.domNode).on('click', function(e) {
         var value = self.serviceSelection.value;
         var securityToken = self.getToken();
-        if(value == 'OAuth') {
+        if(value == 'oauth') {
           var oAuth = {
               version: value,
               st: securityToken,
@@ -92,33 +92,39 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
               key: self.oAuthKey.value,
               secret: self.oAuthSecret.value,
               keyType: self.oAuthKeyType.value,
-              callbackUrl : "%origin%%contextRoot%/gadgets/oauthcallback"
+              callbackUrl: "%origin%%contextRoot%/gadgets/oauthcallback"
           }
         }
         
-        if(value == 'OAuth2') {
+        if(value == 'oauth2') {
           var oAuth = {
               version: value,
               st: securityToken,
               name: self.oAuth2Name.value,
-              key: self.oAuth2Key.value,
-              secret: self.oAuth2Secret.value,
-              authUrl: self.oAuth2Authorization.value,
-              tokenUrl: self.oAuth2Token.value,
+              clientId: self.oAuth2ClientId.value,
+              clientSecret: self.oAuth2ClientSecret.value,
+              authUrl: self.oAuth2AuthUrl.value,
+              tokenUrl: self.oAuth2TokenUrl.value,
               type: self.oAuth2Type.value,
               grantType: self.oAuth2GrantType.value,
               authentication: self.oAuth2Authentication.value,
               override: self.oAuth2Override.checked ? 'true' : 'false',
-              authHeader: self.oAuth2Header.checked ? 'true' : 'false',
-              urlParam: self.oAuth2Parameter.checked ? 'true' : 'false'    
+              authHeader: self.oAuth2Header.checked ? 'false' : 'true',
+              urlParam: self.oAuth2Parameter.checked ? 'true' : 'false',
+              redirectUrl: "%origin%%contextRoot%/gadgets/oauth2callback"
           }
         }
         
         if(self.validateFields(oAuth)) {
           domClass.add(self.oAuthFieldsValidation, "hide");
+          domClass.add(self.oAuth2FieldsValidation, "hide");
           self.submitService(oAuth);
         } else {
-          domClass.remove(self.oAuthFieldsValidation, "hide");
+          if(oAuth.version == "oauth") {
+            domClass.remove(self.oAuthFieldsValidation, "hide");
+          } else {
+            domClass.remove(self.oAuth2FieldsValidation, "hide");
+          }
         }
       });
       
@@ -137,7 +143,11 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
      * @param {Object} oAuth - The oAuth service object containing user-filled data.
      */
     validateFields: function(oAuth) {
-      return oAuth.name != "" && oAuth.key != "" && oAuth.secret != "";
+      if(oAuth.version == "oauth") {
+        return oAuth.name != "" && oAuth.key != "" && oAuth.secret != "";
+      } else {
+        return oAuth.name != "" && oAuth.id != "" && oAuth.secret != "" && oAuth.authUrl != "" && oAuth.tokenUrl != "";
+      }
     },
     
     /**
@@ -152,39 +162,52 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
         this.clearContent();
         this.dropdownValue = value;
         this.resetPill();
-        if(value == 'OAuth') {
+        if(value == 'oauth') {
           query(this.oAuthGeneralContent).addClass('active');
         }
         
-        if(value == 'OAuth2') {
+        if(value == 'oauth2') {
           query(this.oAuth2GeneralContent).addClass('active');
         }
       }
     },
     
     /**
-     * Adds all of a user's services to the servicesContent UI. Also adds and deletes the
-     * "No Services" and "OAuth" title.
+     * Adds all of a user's services to the servicesContent UI. Also hides/unhides the
+     * "No Services", "OAuth", and "OAuth2" title appropriately.
      *
      * @memberof module:explorer/widgets/creation/CreationServiceModal#
      * 
      * @param {Object} data - The service data returned from the servlet that contains all of a user's services.
+     * This object is comprised of two arrays, each of which can be empty: one for OAuth1, and one for OAuth2.
      */
     populate: function(data) {
       var self = this;
+      query("#services-content > div").forEach(domConstruct.destroy);
       
-      if (data.length > 0) {
-        domClass.add(this.noServices, "hide");
-        domClass.remove(this.oAuth, "hide");
-      } else {
-        domClass.remove(this.noServices, "hide");
+      if(data.oauth.length == 0) {
         domClass.add(this.oAuth, "hide");
+      } else {
+        domClass.remove(this.oAuth, "hide");
+        data.oauth.forEach(function(obj) {
+          self.addOAuthItem(obj);
+        });
       }
       
-      query("#services-content > div").forEach(domConstruct.destroy);
-      data.forEach(function(obj) {
-        self.addServiceItem(obj);
-      }); 
+      if(data.oauth2.length == 0) {
+        domClass.add(this.oAuth2, "hide");
+      } else {
+        domClass.remove(this.oAuth2, "hide");
+        data.oauth2.forEach(function(obj) {
+          self.addOAuth2Item(obj);
+        }); 
+      }
+
+      if(data.oauth.length == 0 && data.oauth2.length == 0) {
+        domClass.remove(this.noServices, "hide");
+      } else {
+        domClass.add(this.noServices, "hide");
+      }
     },
     
     /**
@@ -223,14 +246,26 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
     },
     
     /**
-     * Creates a new CreationServiceItem out of the data and places it in the DOM.
+     * Creates a new CreationOAuthItem out of the data and places it in the DOM.
      *
      * @memberof module:explorer/widgets/creation/CreationServiceModal#
      * @param {Object} data - The service's data.
      */
-    addServiceItem: function(data) {
-      var newItem = new CreationServiceItem(data);
-      domConstruct.place(newItem.domNode, this.servicesContent);
+    addOAuthItem: function(data) {
+      var newItem = new CreationOAuthItem(data);
+      domConstruct.place(newItem.domNode, this.oAuth, "after");
+    },
+    
+    /**
+     * Creates a new CreationOAuth2Item out of the data and places it in the DOM.
+     *
+     * @memberof module:explorer/widgets/creation/CreationServiceModal#
+     * @param {Object} data - The service's data.
+     */
+    addOAuth2Item: function(data) {
+      console.log(JSON.stringify(data));
+      var newItem = new CreationOAuth2Item(data);
+      domConstruct.place(newItem.domNode, this.oAuth2, "after");
     },
     
     /**
@@ -275,6 +310,18 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
       this.oAuthKey.value = "";
       this.oAuthSecret.value = "";
       this.oAuthKeyType.selectedIndex = 0;
+      
+      this.oAuth2Name.value = "";
+      this.oAuth2ClientId.value = "";
+      this.oAuth2ClientSecret.value = "";
+      this.oAuth2AuthUrl.value = "";
+      this.oAuth2TokenUrl.value = "";
+      this.oAuth2Type.selectedIndex = 0;
+      this.oAuth2GrantType.selectedIndex = 0;
+      this.oAuth2Authentication.selectedIndex = 0;
+      this.oAuth2Override.checked = true;
+      this.oAuth2Header.checked = true;
+      this.oAuth2Parameter.checked = true;
     },
     
     /**

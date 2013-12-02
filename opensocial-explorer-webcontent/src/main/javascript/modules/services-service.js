@@ -32,7 +32,7 @@ define(['dojo/request/xhr', 'dojo/json', './url-util'], function(xhr, json, urlU
      * @param {Object} authService - Data of the new service to be posted.
      */
     createNewService : function(authService) {
-      return xhr(urlUtil.getContextRoot() + '/services?' + urlUtil.serialize(authService), {
+      return xhr(urlUtil.getContextRoot() + '/services/' + authService.version + '?' + urlUtil.serialize(authService), {
         method: "POST",
         handleAs: "json"
       });
@@ -56,9 +56,10 @@ define(['dojo/request/xhr', 'dojo/json', './url-util'], function(xhr, json, urlU
      *
      * @memberof module:explorer/services-service
      * @param {Object} queryJson - Data of the service to be deleted. Includes service name and user security token.
+     * @param {String} version - The version of OAuth, either OAuth1 or OAuth2.
      */
-    deleteService : function(queryJson) {
-      return xhr(urlUtil.getContextRoot() + '/services?' + urlUtil.serialize(queryJson), {
+    deleteService : function(queryJson, version) {
+      return xhr(urlUtil.getContextRoot() + '/services/' + version + '?' + urlUtil.serialize(queryJson), {
         method: "DELETE",
         handleAs: "json"
       });

@@ -26,7 +26,7 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 @Singleton
-public class OSEOAuth2StoreProvider implements Provider<IOAuth2Store> {
+public class OSEOAuth2StoreProvider implements Provider<OSEOAuth2Store> {
   private static final String CLAZZ = OSEOAuth2StoreProvider.class.getName();
   private Logger LOG = Logger.getLogger(CLAZZ);
   
@@ -40,32 +40,19 @@ public class OSEOAuth2StoreProvider implements Provider<IOAuth2Store> {
       final Authority authority, final IOAuth2Cache cache, final IOAuth2Persister persister,
       final OAuth2Encrypter encrypter,
       @Nullable @Named("shindig.contextroot") final String contextRoot,
+      @Named("explorer.oauth20.config") String oauthConfig,
       @Named(OAuth2FetcherConfig.OAUTH2_STATE_CRYPTER) final BlobCrypter stateCrypter) {
 
     this.store = new OSEOAuth2Store(cache, persister, encrypter, globalRedirectUri, authority,
             contextRoot, stateCrypter);
-    loadClients();
-/*
+    
     if (importFromConfig) {
-      try {
-        final IOAuth2Persister source = new JSONOAuth2Persister(encrypter, authority,
-                globalRedirectUri, contextRoot);
-        OSEOAuth2Store.runImport(source, persister, importClean);
-      } catch (final OAuth2PersistenceException e) {
-        if (OAuth2Module.LOG.isLoggable()) {
-          OAuth2Module.LOG.log("store init exception", e);
-        }
-      }
+      final IOAuth2Persister source = new OSEOAuth2Persister(encrypter, authority,
+          globalRedirectUri, contextRoot, oauthConfig);
+      OSEOAuth2Store.runImport(source, persister, importClean);
     } 
 
-    try {
-      this.store.init();
-    } catch (final GadgetException e) {
-      LOG.logp(Level.WARNING, CLAZZ, method, "store init exception", e);
-      if (OAuth2Module.LOG.isLoggable()) {
-        OAuth2Module.LOG.log("store init exception", e);
-      }
-    } */
+    loadClients();
   }
   
   protected void loadClients() {
@@ -73,11 +60,11 @@ public class OSEOAuth2StoreProvider implements Provider<IOAuth2Store> {
     try {
       this.store.init();
     } catch (final GadgetException e) {
-      LOG.logp(Level.WARNING, CLAZZ, method, "store init exception", e);
+      LOG.logp(Level.WARNING, CLAZZ, method, "Exception loading clients.", e);
     }
   }
 
-  public IOAuth2Store get() {
+  public OSEOAuth2Store get() {
     return this.store;
   }
 }

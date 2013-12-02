@@ -16,11 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['explorer/widgets/creation/CreationServiceItem', 'dojo/topic', 'explorer/services-service', 'dojo/Deferred'], 
-        function(CreationServiceItem, topic, servicesService, Deferred){
-  describe('An CreationServiceItem widget', function() {
+define(['explorer/widgets/creation/CreationOAuthItem', 'dojo/topic', 'explorer/services-service', 'dojo/Deferred'], 
+        function(CreationOAuthItem, topic, servicesService, Deferred){
+  describe('An CreationOAuthItem widget', function() {
     var creationJSON = {
-        version: "oauth1",
+        version: "oauth",
         st: "testSt",
         name: "testName",
         key: "testKey",
@@ -41,7 +41,7 @@ define(['explorer/widgets/creation/CreationServiceItem', 'dojo/topic', 'explorer
     });
     
     it("can be created and can display the correct information", function() {
-      var creationItem = new CreationServiceItem(creationJSON);
+      var creationItem = new CreationOAuthItem(creationJSON);
       document.getElementById('testDiv').appendChild(creationItem.domNode);
       
       expect(creationItem.name).toBe("testName");
@@ -53,7 +53,7 @@ define(['explorer/widgets/creation/CreationServiceItem', 'dojo/topic', 'explorer
     }); 
     
     it("can delete itself", function() {
-      var creationItem = new CreationServiceItem(creationJSON);
+      var creationItem = new CreationOAuthItem(creationJSON);
       var subscriptionReceived = false;
       var subscription = topic.subscribe("itemDeleted", function(data) {
         subscriptionReceived = true;

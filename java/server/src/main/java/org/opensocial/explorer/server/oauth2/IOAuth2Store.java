@@ -22,6 +22,7 @@ import org.apache.shindig.common.crypto.BlobCrypter;
 import org.apache.shindig.gadgets.GadgetException;
 import org.apache.shindig.gadgets.oauth2.OAuth2Accessor;
 import org.apache.shindig.gadgets.oauth2.OAuth2CallbackState;
+import org.apache.shindig.gadgets.oauth2.OAuth2Store;
 import org.apache.shindig.gadgets.oauth2.OAuth2Token;
 import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Client;
 import org.apache.shindig.gadgets.servlet.OAuth2CallbackServlet;
@@ -41,8 +42,8 @@ import org.apache.shindig.gadgets.servlet.OAuth2CallbackServlet;
  * {@link OAuth2Accessor} storage should be cluster safe so it can be referenced by
  * {@link OAuth2CallbackServlet}
  */
-public interface IOAuth2Store {
-
+public interface IOAuth2Store extends OAuth2Store {
+  
   /**
    * Clears any in-memory caching of OAuth2Accessors or Tokens.
    *
@@ -137,25 +138,23 @@ public interface IOAuth2Store {
   /**
    * Removes an {@link OAuth2Token} from the store.
    *
-   * @param userId The User ID
    * @param token
    *          to remove
    * @return the token that was removed, or <code>null</code> if the token was already removed\
    * @throws GadgetException
    *           if something goes wrong
    */
-  OAuth2Token removeToken(String userId, OAuth2Token token) throws GadgetException;
+  OAuth2Token removeToken(OAuth2Token token) throws GadgetException;
 
   /**
    * Either inserts updates an {@link OAuth2Token} in the store.
    *
-   * @param userId the User ID
    * @param token
    *          to store
    * @throws GadgetException
    *           if something goes wrong
    */
-  void setToken(String userId, OAuth2Token token) throws GadgetException;
+  void setToken(OAuth2Token token) throws GadgetException;
 
   /**
    * Either inserts updates an {@link OAuth2Accessor} in the store.

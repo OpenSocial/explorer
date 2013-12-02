@@ -253,7 +253,7 @@ public class OSEOAuthStore implements OAuthStore {
    * @param serviceName The name of the service.
    * @param kas The container class with all of the service's information.
    */
-  public void addToUserStore(String userId, String serviceName, BasicOAuthStoreConsumerKeyAndSecret kas) {
+  public void addUserService(String userId, String serviceName, BasicOAuthStoreConsumerKeyAndSecret kas) {
     if(this.userStore.containsKey(userId)) {
       this.userStore.get(userId).put(serviceName, kas);
     } else {
@@ -268,7 +268,7 @@ public class OSEOAuthStore implements OAuthStore {
    * @param userId The user ID.
    * @param serviceName The name of the service.
    */
-  public void deleteFromUserStore(String userId, String serviceName) throws NoSuchStoreException {
+  public void deleteUserService(String userId, String serviceName) throws NoSuchStoreException {
     if(this.userStore.containsKey(userId)) {
       this.userStore.get(userId).remove(serviceName);
     } else {

@@ -47,6 +47,7 @@ public class ExplorerOAuthModule extends AbstractModule {
     
     // OAuth2
     install(Modules.override(new OAuth2Module()).with(new OAuth2ModuleOverride()));
+    //install(new OAuth2Module());
     install(Modules.override(new OAuth2PersistenceModule()).with(new OAuth2PersistenceModuleOverride()));
   }
 
@@ -60,7 +61,7 @@ public class ExplorerOAuthModule extends AbstractModule {
   private static class OAuth2ModuleOverride extends AbstractModule {
     @Override
     protected void configure() {
-      bind(IOAuth2Store.class).toProvider(OSEOAuth2StoreProvider.class);
+      bind(OAuth2Store.class).toProvider(OSEOAuth2StoreProvider.class);
     }
   }
 
