@@ -295,12 +295,4 @@ public class ServicesServlet extends ExplorerInjectedServlet {
     
     return responseData;
   }
-  
-  public OSEOAuthStore getOAuthStore() {
-    return this.oAuthServiceStore;
-  }
-  
-  public OSEOAuth2Store getOAuth2Store() {
-    return this.oAuth2ServiceStore;
-  }
 }
