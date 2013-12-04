@@ -26,7 +26,6 @@ import org.apache.shindig.gadgets.oauth2.persistence.sample.OAuth2PersistenceMod
 import org.opensocial.explorer.server.oauth.OSEOAuthStoreProvider;
 import org.opensocial.explorer.server.oauth2.IOAuth2Cache;
 import org.opensocial.explorer.server.oauth2.IOAuth2Persister;
-import org.opensocial.explorer.server.oauth2.IOAuth2Store;
 import org.opensocial.explorer.server.oauth2.OSEInMemoryCache;
 import org.opensocial.explorer.server.oauth2.OSEOAuth2Persister;
 import org.opensocial.explorer.server.oauth2.OSEOAuth2StoreProvider;
@@ -47,7 +46,6 @@ public class ExplorerOAuthModule extends AbstractModule {
     
     // OAuth2
     install(Modules.override(new OAuth2Module()).with(new OAuth2ModuleOverride()));
-    //install(new OAuth2Module());
     install(Modules.override(new OAuth2PersistenceModule()).with(new OAuth2PersistenceModuleOverride()));
   }
 

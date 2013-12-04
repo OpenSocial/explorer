@@ -341,5 +341,77 @@ define(['explorer/widgets/creation/CreationServiceModal', 'explorer/widgets/crea
       
       creationServiceModal.destroy();
     }); 
+    
+    it("removes the oAuth title after the last oAuth item is deleted", function() {
+      var subscriptionReceived = false;
+      var subscription = topic.subscribe("serviceDeleted", function(data) {
+        subscriptionReceived = true;
+      })
+      
+      var creationServiceModal = new CreationServiceModal();
+      document.getElementById('testDiv').appendChild(creationServiceModal.domNode);
+      domClass.remove(creationServiceModal.oAuth, "hide");
+
+      runs(function() {
+        topic.publish("serviceDeleted");
+      });
+    
+      waitsFor(function() {
+        return subscriptionReceived;
+      }, "The subscription should have been received", 750);
+
+      runs(function() {
+        expect(domClass.contains(creationServiceModal.oAuth, "hide")).toBe(true);
+        creationServiceModal.destroy();
+      });
+    }); 
+    
+    it("removes the oAuth2 title after the last oAuth2 item is deleted", function() {
+      var subscriptionReceived = false;
+      var subscription = topic.subscribe("serviceDeleted", function(data) {
+        subscriptionReceived = true;
+      })
+      
+      var creationServiceModal = new CreationServiceModal();
+      document.getElementById('testDiv').appendChild(creationServiceModal.domNode);
+      domClass.remove(creationServiceModal.oAuth2, "hide");
+
+      runs(function() {
+        topic.publish("serviceDeleted");
+      });
+    
+      waitsFor(function() {
+        return subscriptionReceived;
+      }, "The subscription should have been received", 750);
+
+      runs(function() {
+        expect(domClass.contains(creationServiceModal.oAuth2, "hide")).toBe(true);
+        creationServiceModal.destroy();
+      });
+    }); 
+    
+    it("shows the no services title after all services are deleted", function() {
+      var subscriptionReceived = false;
+      var subscription = topic.subscribe("serviceDeleted", function(data) {
+        subscriptionReceived = true;
+      })
+      
+      var creationServiceModal = new CreationServiceModal();
+      document.getElementById('testDiv').appendChild(creationServiceModal.domNode);
+      domClass.add(creationServiceModal.noServices, "hide");
+      
+      runs(function() {
+        topic.publish("serviceDeleted");
+      });
+    
+      waitsFor(function() {
+        return subscriptionReceived;
+      }, "The subscription should have been received", 750);
+
+      runs(function() {
+        expect(domClass.contains(creationServiceModal.noServices, "hide")).toBe(false);
+        creationServiceModal.destroy();
+      });
+    }); 
   });
 });

@@ -19,17 +19,14 @@
 package org.opensocial.explorer.server.oauth2;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.shindig.gadgets.oauth.BasicOAuthStoreConsumerKeyAndSecret;
 import org.apache.shindig.gadgets.oauth2.OAuth2Accessor;
 import org.apache.shindig.gadgets.oauth2.OAuth2CallbackState;
 import org.apache.shindig.gadgets.oauth2.OAuth2Token;
 import org.apache.shindig.gadgets.oauth2.OAuth2Token.Type;
-import org.apache.shindig.gadgets.oauth2.persistence.OAuth2CacheException;
 import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Client;
 import org.apache.shindig.gadgets.oauth2.persistence.sample.InMemoryCache;
 import org.apache.wink.json4j.JSONArray;
@@ -46,7 +43,7 @@ import com.google.inject.Inject;
  * gadgets.  Not something you would want to do for production containers but is suitable for
  * development containers like the OpenSocial Explorer. 
  */
-public class OSEInMemoryCache extends InMemoryCache implements IOAuth2Cache{
+public class OSEInMemoryCache extends InMemoryCache implements IOAuth2Cache {
   private final Map<String, OAuth2Accessor> accessors;
   private final Map<String, OAuth2Client> clients;
   private final Map<String, OAuth2Token> tokens;
@@ -65,14 +62,7 @@ public class OSEInMemoryCache extends InMemoryCache implements IOAuth2Cache{
     this.userClientStore = Collections.synchronizedMap(uMap);
   }
   
-  /**
-   * Gets all the services associated with the given userId. Returns an empty JSONArray
-   * if user doesn't exist or user has no services. 
-   * @param userId The user ID.
-   * @throws JSONException 
-   * @throws UnsupportedEncodingException 
-   */
-  public JSONArray getUserServices(String userId) throws JSONException, UnsupportedEncodingException {
+  public JSONArray getUserClients(String userId) throws JSONException, UnsupportedEncodingException {
     JSONArray array = new JSONArray();
     if(this.userClientStore.containsKey(userId)) {
       Map<String, OAuth2Client> userMap = this.userClientStore.get(userId);
@@ -97,71 +87,31 @@ public class OSEInMemoryCache extends InMemoryCache implements IOAuth2Cache{
     return array;
   }
   
-  /**
-   * Gets the services associated with the given userId and serviceName.
-   * @param userId The user ID.
-   */
-  public OAuth2Client getUserService(String userId, String serviceName) {
+  public OAuth2Client getUserClient(String userId, String serviceName) {
       Map<String, OAuth2Client> userMap = this.userClientStore.get(userId);
       return userMap.get(serviceName);
   }
   
-  /**
-   * Adds a service with the given serviceName to the given userId.
-   * Overwrites the service if the service already exists.
-   * @param userId The user ID.
-   * @param serviceName The name of the service.
-   * @param client The container class with all of the service's information.
-   */
-  public void addUserService(String userId, String serviceName, OAuth2Client client) {
+  public void addUserClient(String userId, String serviceName, OAuth2Client client) {
     if(this.userClientStore.containsKey(userId)) {
       this.userClientStore.get(userId).put(serviceName, client);
     } else {
-      this.userClientStore.put(userId, new HashMap<String, OAuth2Client>());
-      this.userClientStore.get(userId).put(serviceName, client);
+      HashMap<String, OAuth2Client> newUser = new HashMap<String, OAuth2Client>();
+      newUser.put(serviceName, client);
+      this.userClientStore.put(userId, newUser);
     }
   }
   
-  /**
-   * Deletes a service with the given serviceName associated with the given userId.
-   * Throws an exception if the userId does not exist in the userStore.
-   * @param userId The user ID.
-   * @param serviceName The name of the service.
-   */
-  public void deleteUserService(String userId, String serviceName) throws NoSuchStoreException {
+  public void deleteUserClient(String userId, String serviceName) throws NoSuchStoreException {
     if(this.userClientStore.containsKey(userId)) {
       this.userClientStore.get(userId).remove(serviceName);
     } else {
-      throw new NoSuchStoreException("Couldn't find the given userId in userStore!");
+      throw new NoSuchStoreException("Couldn't find the given userId in userStore:" + userId);
     }
   }
   
-  /**
-   * Checks to see if the user already exists in the userStore.
-   * @param userId The user ID.
-   */
   public boolean isUserExisting(String userId) {
     return this.userClientStore.containsKey(userId);
-  }
-
-  /**
-   * Find an {@link OAuth2Client}. Overrides the 2 parameter getClient.
-   * This method is used to extract a client with the matching userId
-   * that is stored in the userStore. 
-   *
-   * @param userId
-   * @param gadgetUri
-   * @param serviceName
-   * @return OAuth2Client
-   */
-  public OAuth2Client getClient(String userId, String gadgetUri, String serviceName) {
-    OAuth2Client ret = null;
-    final String clientKey = this.getClientKey(gadgetUri, serviceName);
-    if (clientKey != null) {
-      ret = this.getClientMap().get(clientKey);
-    }
-
-    return ret;
   }
   
   @Override

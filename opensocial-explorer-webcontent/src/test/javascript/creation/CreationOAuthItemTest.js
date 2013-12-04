@@ -16,8 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['explorer/widgets/creation/CreationOAuthItem', 'dojo/topic', 'explorer/services-service', 'dojo/Deferred'], 
-        function(CreationOAuthItem, topic, servicesService, Deferred){
+define(['explorer/widgets/creation/CreationOAuthItem', 'dojo/topic', 'explorer/services-service', 'dojo/Deferred', 'dojo/query', 'dojo/NodeList-traverse'], 
+        function(CreationOAuthItem, topic, servicesService, Deferred, query){
   describe('An CreationOAuthItem widget', function() {
     var creationJSON = {
         version: "oauth",
@@ -54,10 +54,6 @@ define(['explorer/widgets/creation/CreationOAuthItem', 'dojo/topic', 'explorer/s
     
     it("can delete itself", function() {
       var creationItem = new CreationOAuthItem(creationJSON);
-      var subscriptionReceived = false;
-      var subscription = topic.subscribe("itemDeleted", function(data) {
-        subscriptionReceived = true;
-      });
       document.getElementById('testDiv').appendChild(creationItem.domNode);
       
       spyOn(creationItem, "getToken").andReturn("token123");
@@ -68,21 +64,9 @@ define(['explorer/widgets/creation/CreationOAuthItem', 'dojo/topic', 'explorer/s
         return dfd;
       });
       
-      runs(function() {
-        creationItem.itemDelete.click();
-      });
-      
-      waitsFor(function() {
-        return subscriptionReceived;
-      }, "The subscription should have been received", 750);
-      
-      runs(function() {
-        expect(subscriptionReceived).toBe(true);
-        expect(servicesService.deleteService).toHaveBeenCalled();
-        
-        subscription.remove();
-        creationItem.destroy();
-      });
+      creationItem.itemDelete.click();
+      expect(query('testDiv').children().length).toBe(0);
+      creationItem.destroy();
     }); 
   });
 });

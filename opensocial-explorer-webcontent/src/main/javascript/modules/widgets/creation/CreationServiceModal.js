@@ -31,11 +31,11 @@
  */
 define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInTemplateMixin', 
         'dojo/text!./../../templates/CreationServiceModal.html', 'explorer/widgets/creation/CreationOAuthItem',
-        'explorer/widgets/creation/CreationOAuth2Item','explorer/ExplorerContainer', 'dojo/_base/lang', 
+        'explorer/widgets/creation/CreationOAuth2Item','explorer/ExplorerContainer', 'dojo/_base/lang',
         'dojo/query', 'dojo/dom', 'dojo/on', 'dojo/dom-construct', 'dojo/dom-class', 'explorer/services-service', 
-        'dojo/dom-style', 'dojo/topic', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom', 'dojo/domReady!'],
-        function(declare, ModalDialog, WidgetsInTemplateMixin, template, CreationOAuthItem, CreationOAuth2Item, ExplorerContainer, lang, query, 
-            dom, on, domConstruct, domClass, servicesService, domStyle, topic) {
+        'dojo/dom-style', 'dojo/topic', 'dojo/NodeList-manipulate', 'dojo/NodeList-traverse', 'dojo/NodeList-dom', 'dojo/domReady!'],
+        function(declare, ModalDialog, WidgetsInTemplateMixin, template, CreationOAuthItem, CreationOAuth2Item, 
+            ExplorerContainer, lang, query, dom, on, domConstruct, domClass, servicesService, domStyle, topic) {
   return declare('CreationServiceModalWidget', [ModalDialog, WidgetsInTemplateMixin], {
     templateString: template,
     dropdownValue: 'oauth',
@@ -129,9 +129,22 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
       });
       
       // Deletion Listener
-      this.subscription = topic.subscribe('itemDeleted', function(data) {
-        self.populate(data);
-      });
+      this.subscription = topic.subscribe('serviceDeleted', function() {
+        var oAuthServices = query(".creationOAuthItem", self.domNode);
+        var oAuth2Services = query(".creationOAuth2Item", self.domNode);
+        
+        if(oAuthServices.length == 0) {
+          domClass.add(self.oAuth, "hide");
+        }
+        
+        if(oAuth2Services.length == 0) {
+          domClass.add(self.oAuth2, "hide");
+        }
+        
+        if(oAuthServices.length == 0 && oAuth2Services.length == 0) {
+          domClass.remove(self.noServices, "hide");
+        } 
+      });  
     },
     
     /**
@@ -183,7 +196,7 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
      */
     populate: function(data) {
       var self = this;
-      query("#services-content > div").forEach(domConstruct.destroy);
+      query("#services-content > div", self.domNode).forEach(domConstruct.destroy);
       
       if(data.oauth.length == 0) {
         domClass.add(this.oAuth, "hide");
@@ -254,6 +267,7 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
     addOAuthItem: function(data) {
       var newItem = new CreationOAuthItem(data);
       domConstruct.place(newItem.domNode, this.oAuth, "after");
+      newItem.startup();
     },
     
     /**
@@ -263,9 +277,9 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
      * @param {Object} data - The service's data.
      */
     addOAuth2Item: function(data) {
-      console.log(JSON.stringify(data));
       var newItem = new CreationOAuth2Item(data);
       domConstruct.place(newItem.domNode, this.oAuth2, "after");
+      newItem.startup();
     },
     
     /**

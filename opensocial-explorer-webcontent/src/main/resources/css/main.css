@@ -16,13 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-.overflow {
-	overflow: auto;
+
+.serviceItemContentTop {
+	display: block;
+	margin-bottom: 15px;
+}
+.serviceItemContentBottom {
+	width: 50%;
+	float: left;
+}
+
+.red {
+ 	color: red;
 }
 
 .center-image {
-	display : block;
-    margin : auto;
+	display: block;
+    margin: auto;
 }
 
 .clear-both {
@@ -32,10 +42,16 @@
 	font-weight: bold;
 	line-height: 25px;
 }
-.creationServiceItem {
+.creationOAuthItem {
 	margin-bottom: 10px;
 	background-color: #f2f4fb;
 } 
+
+.creationOAuth2Item {
+	margin-bottom: 10px;
+	background-color: #f2f4fb;
+	overflow: auto;
+}
 .right {
 	float: right;
 }

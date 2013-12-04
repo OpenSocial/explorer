@@ -21,16 +21,11 @@ package org.opensocial.explorer.server.services;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.shindig.auth.AuthInfoUtil;
-import org.apache.shindig.auth.AuthenticationHandler;
-import org.apache.shindig.auth.AuthenticationHandler.InvalidAuthenticationException;
 import org.apache.shindig.auth.SecurityToken;
-import org.apache.shindig.auth.UrlParameterAuthenticationHandler;
 import org.apache.shindig.common.servlet.Authority;
 import org.apache.shindig.gadgets.oauth.BasicOAuthStoreConsumerKeyAndSecret;
 import org.apache.shindig.gadgets.oauth.BasicOAuthStoreConsumerKeyAndSecret.KeyType;
@@ -45,11 +40,8 @@ import org.opensocial.explorer.server.oauth.OSEOAuthStore;
 import org.opensocial.explorer.server.oauth.OSEOAuthStoreProvider;
 import org.opensocial.explorer.server.oauth2.OSEOAuth2Store;
 import org.opensocial.explorer.server.oauth2.OSEOAuth2StoreProvider;
-import org.opensocial.explorer.server.openid.OpenIDServlet;
-import org.opensocial.explorer.specserver.api.GadgetSpec;
 import org.opensocial.explorer.specserver.servlet.ExplorerInjectedServlet;
 
-import com.google.caja.util.Maps;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
@@ -147,80 +139,12 @@ public class ServicesServlet extends ExplorerInjectedServlet {
       
       // /services/oauth
       if ("oauth".equalsIgnoreCase(serviceVersion)) {
-        String key = req.getParameter("key");
-        String secret = req.getParameter("secret");
-        String serviceName = req.getParameter("name");
-        
-        if (key.equals("") || secret.equals("") || serviceName.equals("")) {
-          resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Name, Key and Secret parameters on POST request cannot be empty.");
-          return;
-        }
-        
-        String callbackUrl = req.getParameter("callbackUrl")
-            .replaceAll("%origin%", authority.getOrigin())
-            .replaceAll("%contextRoot%", this.contextRoot);
-        String keyTypeStr = req.getParameter("keyType");
-        KeyType keyType;
-
-        if(keyTypeStr.equals("PLAINTEXT")) {
-          keyType = KeyType.PLAINTEXT;
-        } else if (keyTypeStr.equals("RSA_PRIVATE")) {
-          keyType = KeyType.RSA_PRIVATE;
-        } else {
-          keyType = KeyType.HMAC_SYMMETRIC;
-        }
-
-        BasicOAuthStoreConsumerKeyAndSecret kas = new BasicOAuthStoreConsumerKeyAndSecret(key, secret, keyType, serviceName, callbackUrl);
-        this.oAuthServiceStore.addUserService(userId, serviceName, kas);
+        addOAuthClient(userId, req, resp);
       }
       
       // /services/oauth2
       if ("oauth2".equalsIgnoreCase(serviceVersion)) {
-        String clientId = req.getParameter("clientId");
-        String clientSecret = req.getParameter("clientSecret");
-        String serviceName = req.getParameter("name");
-        String authUrl = req.getParameter("authUrl");
-        String tokenUrl = req.getParameter("tokenUrl");
-        
-        if (clientId.equals("") || clientSecret.equals("") || serviceName.equals("") || authUrl.equals("") || tokenUrl.equals("")) {
-          resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Name, Id, Secret, AuthUrl, and TokenUrl parameters on POST request cannot be empty.");
-          return;
-        }
-        
-        String grantType = req.getParameter("grantType");
-        String authentication = req.getParameter("authentication");
-        String override = req.getParameter("override");
-        String authHeader = req.getParameter("authHeader");
-        String urlParam = req.getParameter("urlParam");
-        String redirectUrl = req.getParameter("redirectUrl")
-            .replaceAll("%origin%", authority.getOrigin())
-            .replaceAll("%contextRoot%", this.contextRoot);
-        String typeStr = req.getParameter("type");
-        Type type;
-
-        if(typeStr.equals("public")) {
-          type = Type.PUBLIC;
-        } else if (typeStr.equals("unknown")) {
-          type = Type.UNKNOWN;
-        } else {
-          type = Type.CONFIDENTIAL;
-        }
-        
-        OAuth2Client client = new OAuth2Client();
-        client.setServiceName(serviceName);
-        client.setClientId(clientId);
-        client.setClientSecret(clientSecret.getBytes());
-        client.setAuthorizationUrl(authUrl);
-        client.setTokenUrl(tokenUrl);
-        client.setType(type);
-        client.setGrantType(grantType);
-        client.setClientAuthenticationType(authentication);
-        client.setAllowModuleOverride(Boolean.parseBoolean(override));
-        client.setAuthorizationHeader(Boolean.parseBoolean(authHeader));
-        client.setUrlParameter(Boolean.parseBoolean(urlParam));
-        client.setRedirectUri(redirectUrl);
-        
-        this.oAuth2ServiceStore.addUserService(userId, serviceName, client);
+        addOAuth2Client(userId, req, resp);
       }
       
       JSONObject responseData = constructResponseJSON(userId);
@@ -233,7 +157,11 @@ public class ServicesServlet extends ExplorerInjectedServlet {
       LOG.logp(Level.SEVERE, CLASS, method, "Error parsing JSON!", e);
       resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error parsing JSON!");
     } catch (OAuth2EncryptionException e) {
-      
+      LOG.logp(Level.SEVERE, CLASS, method, "Error encrypting service secret!", e);
+      resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error encrypting service secret!");
+    } catch (IllegalArgumentException e) {
+      LOG.logp(Level.SEVERE, CLASS, method, e.getMessage(), e);
+      resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
     }
   }
   
@@ -266,7 +194,7 @@ public class ServicesServlet extends ExplorerInjectedServlet {
       
       // /services/oauth2
       if ("oauth2".equalsIgnoreCase(serviceVersion)) {
-        this.oAuth2ServiceStore.deleteUserService(userId, serviceName);
+        this.oAuth2ServiceStore.deleteUserClient(userId, serviceName);
       }
       
       JSONObject responseData = constructResponseJSON(userId);
@@ -283,9 +211,83 @@ public class ServicesServlet extends ExplorerInjectedServlet {
     }
   }
 
+  private void addOAuthClient(String userId, HttpServletRequest req, HttpServletResponse resp) throws IOException, IllegalArgumentException {
+    String key = req.getParameter("key");
+    String secret = req.getParameter("secret");
+    String serviceName = req.getParameter("name");
+    
+    if (key.equals("") || secret.equals("") || serviceName.equals("")) {
+      throw new IllegalArgumentException("Name, Key and Secret parameters on POST request cannot be empty.");
+    }
+    
+    String callbackUrl = req.getParameter("callbackUrl")
+        .replaceAll("%origin%", authority.getOrigin())
+        .replaceAll("%contextRoot%", this.contextRoot);
+    String keyTypeStr = req.getParameter("keyType");
+    KeyType keyType;
+
+    if(keyTypeStr.equals("PLAINTEXT")) {
+      keyType = KeyType.PLAINTEXT;
+    } else if (keyTypeStr.equals("RSA_PRIVATE")) {
+      keyType = KeyType.RSA_PRIVATE;
+    } else {
+      keyType = KeyType.HMAC_SYMMETRIC;
+    }
+
+    BasicOAuthStoreConsumerKeyAndSecret kas = new BasicOAuthStoreConsumerKeyAndSecret(key, secret, keyType, serviceName, callbackUrl);
+    this.oAuthServiceStore.addUserService(userId, serviceName, kas);
+  }
+  
+  private void addOAuth2Client(String userId, HttpServletRequest req, HttpServletResponse resp) throws IOException, OAuth2EncryptionException, IllegalArgumentException {
+    String clientId = req.getParameter("clientId");
+    String clientSecret = req.getParameter("clientSecret");
+    String serviceName = req.getParameter("name");
+    String authUrl = req.getParameter("authUrl");
+    String tokenUrl = req.getParameter("tokenUrl");
+    
+    if (clientId.equals("") || clientSecret.equals("") || serviceName.equals("") || authUrl.equals("") || tokenUrl.equals("")) {
+      throw new IllegalArgumentException("Name, Id, Secret, AuthUrl, and TokenUrl parameters on POST request cannot be empty.");
+    }
+    
+    String grantType = req.getParameter("grantType");
+    String authentication = req.getParameter("authentication");
+    String override = req.getParameter("override");
+    String authHeader = req.getParameter("authHeader");
+    String urlParam = req.getParameter("urlParam");
+    String redirectUrl = req.getParameter("redirectUrl")
+        .replaceAll("%origin%", authority.getOrigin())
+        .replaceAll("%contextRoot%", this.contextRoot);
+    String typeStr = req.getParameter("type");
+    Type type;
+
+    if(typeStr.equals("public")) {
+      type = Type.PUBLIC;
+    } else if (typeStr.equals("unknown")) {
+      type = Type.UNKNOWN;
+    } else {
+      type = Type.CONFIDENTIAL;
+    }
+    
+    OAuth2Client client = new OAuth2Client();
+    client.setServiceName(serviceName);
+    client.setClientId(clientId);
+    client.setClientSecret(clientSecret.getBytes());
+    client.setAuthorizationUrl(authUrl);
+    client.setTokenUrl(tokenUrl);
+    client.setType(type);
+    client.setGrantType(grantType);
+    client.setClientAuthenticationType(authentication);
+    client.setAllowModuleOverride(Boolean.parseBoolean(override));
+    client.setAuthorizationHeader(Boolean.parseBoolean(authHeader));
+    client.setUrlParameter(Boolean.parseBoolean(urlParam));
+    client.setRedirectUri(redirectUrl);
+    
+    this.oAuth2ServiceStore.addUserClient(userId, serviceName, client);
+  }
+  
   private JSONObject constructResponseJSON(String userId) throws JSONException, UnsupportedEncodingException {
     JSONArray oAuthData = this.oAuthServiceStore.getUserServices(userId);
-    JSONArray oAuth2Data = this.oAuth2ServiceStore.getUserServices(userId);
+    JSONArray oAuth2Data = this.oAuth2ServiceStore.getUserClients(userId);
     
     JSONObject responseData = new JSONObject();
     responseData.put("oauth", oAuthData);

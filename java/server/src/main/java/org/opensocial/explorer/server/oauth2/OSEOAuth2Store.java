@@ -33,22 +33,15 @@ import org.apache.shindig.gadgets.oauth2.OAuth2FetcherConfig;
 import org.apache.shindig.gadgets.oauth2.OAuth2Store;
 import org.apache.shindig.gadgets.oauth2.OAuth2Token;
 import org.apache.shindig.gadgets.oauth2.logger.FilteredLogger;
-import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Cache;
 import org.apache.shindig.gadgets.oauth2.persistence.OAuth2CacheException;
 import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Client;
 import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Encrypter;
 import org.apache.shindig.gadgets.oauth2.persistence.OAuth2PersistenceException;
-import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Persister;
-import org.apache.shindig.gadgets.oauth2.persistence.OAuth2TokenPersistence;
 import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONException;
-import org.apache.wink.json4j.JSONObject;
 import org.opensocial.explorer.server.oauth.NoSuchStoreException;
 
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * see {@link OAuth2Store}
@@ -58,10 +51,10 @@ import java.util.Set;
  *
  * Uses 3 Guice bindings to achieve storage implementation.
  *
- * 1) {@link OAuth2Persister} 2) {@link OAuth2Cache} 3) {@link OAuth2Encrypter}
+ * 1) {@link IOAuth2Persister} 2) {@link IOAuth2Cache} 3) {@link OAuth2Encrypter}
  *
  */
-public class OSEOAuth2Store extends BasicOAuth2Store implements OAuth2Store {
+public class OSEOAuth2Store extends BasicOAuth2Store {
   private static final String LOG_CLASS = OSEOAuth2Store.class.getName();
   private static final FilteredLogger LOG = FilteredLogger
           .getFilteredLogger(OSEOAuth2Store.LOG_CLASS);
@@ -87,39 +80,17 @@ public class OSEOAuth2Store extends BasicOAuth2Store implements OAuth2Store {
     this.contextRoot = contextRoot;
     this.stateCrypter = stateCrypter;
   }
-
-  /**
-   * Gets all the services associated with the given userId. Returns an empty JSONArray
-   * if user doesn't exist or user has no services. 
-   * @param userId The user ID.
-   * @throws UnsupportedEncodingException 
-   */
-  public JSONArray getUserServices(String userId) throws JSONException, UnsupportedEncodingException {
-    return this.cache.getUserServices(userId);
-  }
   
   /**
-   * Adds a service with the given serviceName to the given userId.
-   * Overwrites the service if the service already exists.
+   * Used to extract a client with the matching userId that is in the userStore. 
+   * If the client exists in the userClientStore, getUserClient is called. 
+   * Else, it calls the 2 parameter getClient to check the anonymous OAuth2Client store.
+   *
    * @param userId The user ID.
-   * @param serviceName The name of the service.
-   * @param kas The container class with all of the service's information.
+   * @param gadgetUri The uri of the gadget.
+   * @param serviceName The name of the client.
+   * @return The OAuth2Client matching the userId and serviceName.
    */
-  public void addUserService(String userId, String serviceName, OAuth2Client client) {
-    this.cache.addUserService(userId, serviceName, client);
-  }
-  
-  /**
-   * Deletes a service with the given serviceName associated with the given userId.
-   * Throws an exception if the userId does not exist in the userStore.
-   * @param userId The user ID.
-   * @param serviceName The name of the service.
-   */
-  public void deleteUserService(String userId, String serviceName) throws NoSuchStoreException {
-    this.cache.deleteUserService(userId, serviceName);
-  }
-  
-  // Overloading getClient(String, String) from BasicOAuth2Store
   public OAuth2Client getClient(final String userId, final String gadgetUri, final String serviceName)
           throws GadgetException {
     final boolean isLogging = OSEOAuth2Store.LOG.isLoggable();
@@ -131,8 +102,8 @@ public class OSEOAuth2Store extends BasicOAuth2Store implements OAuth2Store {
     
     // check in cache's user map
     if(this.cache.isUserExisting(userId)) {
-      client = this.cache.getUserService(userId, serviceName);
-    // else the client is in the cache's anon map
+      client = this.cache.getUserClient(userId, serviceName);
+    // else check cache's anon map
     } else {
       client = this.cache.getClient(gadgetUri, serviceName);
     }
@@ -143,7 +114,13 @@ public class OSEOAuth2Store extends BasicOAuth2Store implements OAuth2Store {
 
     if (client == null) {
       try {
-        client = this.persister.findClient(userId, gadgetUri, serviceName);
+        // check in persister's user map
+        if(this.persister.isUserExisting(userId)) {
+          client = this.persister.getUserClient(userId, serviceName);
+        // else check persister's anon map
+        } else {
+          client = this.persister.findClient(gadgetUri, serviceName);
+        }
         if (client != null) {
           this.cache.storeClient(client);
         }
@@ -161,6 +138,39 @@ public class OSEOAuth2Store extends BasicOAuth2Store implements OAuth2Store {
     }
 
     return client;
+  }
+  
+  /**
+   * Gets all the clients associated with the given userId in both the cache and persister. 
+   * Returns an empty JSONArray if user doesn't exist or user has no clients in either layer.
+   * @param userId The user ID.
+   * @throws UnsupportedEncodingException 
+   */
+  public JSONArray getUserClients(String userId) throws JSONException, UnsupportedEncodingException {
+    return this.cache.getUserClients(userId);
+  }
+  
+  /**
+   * Adds a client with the given serviceName to the given userId.
+   * Overwrites the client if it already exists.
+   * @param userId The user ID.
+   * @param serviceName The name of the client.
+   * @param client The container class with all of the client's information.
+   */
+  public void addUserClient(String userId, String serviceName, OAuth2Client client) {
+    this.cache.addUserClient(userId, serviceName, client);
+    this.persister.addUserClient(userId, serviceName, client);
+  }
+  
+  /**
+   * Deletes a client with the given serviceName associated with the given userId.
+   * Throws an exception if the userId does not exist in the userStore.
+   * @param userId The user ID.
+   * @param serviceName The name of the client.
+   */
+  public void deleteUserClient(String userId, String serviceName) throws NoSuchStoreException {
+    this.cache.deleteUserClient(userId, serviceName);
+    this.persister.deleteUserClient(userId, serviceName);
   }
    
   public OAuth2Accessor getOAuth2Accessor(final String gadgetUri, final String serviceName,

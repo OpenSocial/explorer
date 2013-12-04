@@ -28,9 +28,9 @@
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         'dojo/text!./../../templates/CreationOAuth2Item.html', 'dojo/dom-construct', 'dojo/topic',
-        'dojo/dom-class', 'dojo/on', 'explorer/services-service', 'explorer/ExplorerContainer'],
+        'dojo/dom-class', 'dojo/on', 'explorer/services-service', 'explorer/ExplorerContainer', 'dojo/Evented'],
         function(declare, WidgetBase, TemplatedMixin, template, domConstruct, topic,
-            domClass, on, servicesService, ExplorerContainer) {
+            domClass, on, servicesService, ExplorerContainer, Evented) {
   return declare('CreationOAuth2ItemWidget', [ WidgetBase, TemplatedMixin ], {
     templateString : template,
 
@@ -81,10 +81,11 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
       
       servicesService.deleteService(nameTokenPair, "oauth2").then(
           function(data) {
-            topic.publish('itemDeleted', data);
+            self.destroy();
+            topic.publish("serviceDeleted");
           },
           function(data) {
-            console.error("There was an error");
+            console.error("There was an error. Services data: " + JSON.stringify(data));
           }
       );
     },

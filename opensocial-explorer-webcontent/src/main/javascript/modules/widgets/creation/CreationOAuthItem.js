@@ -72,12 +72,13 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         st: this.getToken()
       };
       
-      servicesService.deleteService(nameTokenPair, 'oauth').then(
+      servicesService.deleteService(nameTokenPair, "oauth").then(
           function(data) {
-            topic.publish('itemDeleted', data);
+            self.destroy();
+            topic.publish("serviceDeleted");
           },
           function(data) {
-            console.error("There was an error");
+            console.error("There was an error. Services data: " + JSON.stringify(data));
           }
       );
     },

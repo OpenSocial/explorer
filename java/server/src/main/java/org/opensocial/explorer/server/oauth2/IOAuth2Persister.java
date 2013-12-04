@@ -26,35 +26,62 @@ import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Client;
 import org.apache.shindig.gadgets.oauth2.persistence.OAuth2PersistenceException;
 import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Persister;
 import org.apache.shindig.gadgets.oauth2.persistence.sample.JSONOAuth2Persister;
+import org.apache.wink.json4j.JSONArray;
+import org.apache.wink.json4j.JSONException;
+import org.opensocial.explorer.server.oauth.NoSuchStoreException;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Set;
 
 /**
- * Interface, used primarily by {@link OAuth2Store}, to manage {@link OAuth2Accessor} and
- * {@link OAuth2Token} storage.
+ * Used by {@link OSEOAuth2Store} to persist OAuth2 data.
  *
- * An {@link OAuth2Accessor} has the same basic information as the {@link OAuth2Client}, merged with
- * gadget spec and request prefs.
- *
- * {@link OAuth2Accessor} is short lived, for the life of one request.
- *
- * {@link OAuth2Clients} is intended to be persisted and cached.
- *
- * The default persister for shindig is {@link JSONOAuth2Persister}
+ * This interface provides additional functionality to the OAuth2Persister, allowing for
+ * the storage of user-created OAuth2Clients.
  *
  */
-
 public interface IOAuth2Persister extends OAuth2Persister {
   
   /**
-   * Retrieves a client from the persistence layer. Returns <code>null</code> if not found.
-   *
-   * @param userId
-   * @param gadgetUri
-   * @param serviceName
-   * @return the client in the given mapping, must return <code>null</code> if the client is not
-   *         found
-   * @throws OAuth2PersistenceException
+   * Gets the clients associated with the given userId and serviceName.
+   * @param userId The user ID.
+   * @param serviceName The name of the client.
+   * @return OAuth2Client
    */
-  OAuth2Client findClient(String userId, String gadgetUri, String serviceName) throws OAuth2PersistenceException;
+  OAuth2Client getUserClient(String userId, String serviceName);
+  
+  /**
+   * Gets all the clients associated with the given userId. Returns an empty JSONArray
+   * if user doesn't exist or user has no client. 
+   * @param userId The user ID.
+   * @throws JSONException 
+   * @throws UnsupportedEncodingException 
+   * @return JSONArray of a user's services.
+   */
+  JSONArray getUserClients(String userId) throws JSONException, UnsupportedEncodingException;
+
+  /**
+   * Adds a client with the given serviceName to the given userId.
+   * Overwrites the client if the client already exists.
+   * @param userId The user ID.
+   * @param serviceName The name of the client.
+   * @param client The container class with all of the client's information.
+   */
+  void addUserClient(String userId, String serviceName, OAuth2Client client);
+
+  /**
+   * Deletes a client with the given serviceName associated with the given userId.
+   * Throws an exception if the userId does not exist in the userStore.
+   * @param userId The user ID.
+   * @param serviceName The name of the client.
+   * @throws NoSuchStoreException
+   */
+  void deleteUserClient(String userId, String serviceName) throws NoSuchStoreException;
+
+  /**
+   * Checks to see if the user already exists in the userStore.
+   * @param userId The user ID.
+   * @return Whether or not the user exists.
+   */
+  boolean isUserExisting(String userId);
 }
