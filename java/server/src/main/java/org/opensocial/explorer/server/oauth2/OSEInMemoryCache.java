@@ -22,6 +22,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.shindig.gadgets.oauth2.OAuth2Accessor;
 import org.apache.shindig.gadgets.oauth2.OAuth2CallbackState;
@@ -66,8 +67,8 @@ public class OSEInMemoryCache extends InMemoryCache implements IOAuth2Cache {
     JSONArray array = new JSONArray();
     if(this.userClientStore.containsKey(userId)) {
       Map<String, OAuth2Client> userMap = this.userClientStore.get(userId);
-      for (String key : userMap.keySet()) {
-        OAuth2Client client = userMap.get(key);
+      for (Entry<String, OAuth2Client> entry : userMap.entrySet()) {
+        OAuth2Client client = entry.getValue();
         JSONObject service = new JSONObject();
         service.put("name", client.getServiceName());
         service.put("clientId", client.getClientId());

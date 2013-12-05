@@ -75,7 +75,7 @@ public abstract class ExplorerInjectedServlet extends InjectedServlet {
     for (String line = null; (line = reader.readLine()) != null;) {
         builder.append(line).append("\n");
     }
-    
+    reader.close();
     return new JSONObject(builder.toString());
   }
   
@@ -87,6 +87,7 @@ public abstract class ExplorerInjectedServlet extends InjectedServlet {
         builder.append(line);
     }
     
+    reader.close();
     return builder.toString();
   }
   

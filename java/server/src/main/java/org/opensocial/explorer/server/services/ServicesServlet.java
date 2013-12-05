@@ -271,7 +271,7 @@ public class ServicesServlet extends ExplorerInjectedServlet {
     OAuth2Client client = new OAuth2Client();
     client.setServiceName(serviceName);
     client.setClientId(clientId);
-    client.setClientSecret(clientSecret.getBytes());
+    client.setClientSecret(clientSecret.getBytes("UTF-8"));
     client.setAuthorizationUrl(authUrl);
     client.setTokenUrl(tokenUrl);
     client.setType(type);
