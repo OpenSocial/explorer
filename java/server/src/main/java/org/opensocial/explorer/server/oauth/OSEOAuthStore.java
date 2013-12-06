@@ -272,7 +272,7 @@ public class OSEOAuthStore implements OAuthStore {
     if(this.userStore.containsKey(userId)) {
       this.userStore.get(userId).remove(serviceName);
     } else {
-      throw new NoSuchStoreException();
+      throw new NoSuchStoreException("Couldn't find the given userId in userStore!");
     }
   }
   
@@ -321,14 +321,6 @@ public class OSEOAuthStore implements OAuthStore {
    */
   public void setContextRoot(String contextRoot) {
     this.contextRoot = contextRoot;
-  }
-  
-  /**
-   * Getter method for the userStore for OAuth services.
-   * @param contextRoot The contextRoot.
-   */
-  public Map<String, Map<String, BasicOAuthStoreConsumerKeyAndSecret>> getUserStore() {
-    return this.userStore;
   }
 }
 

@@ -307,7 +307,7 @@ public class GoogleLoginServletTest {
     expect(fetcher.fetch(isA(HttpRequest.class))).andReturn(googleResponse);  
     expect(googleResponse.getResponse()).andReturn(new ByteArrayInputStream("{error: \"invalid_request\"}".getBytes("UTF-8")));
 
-    resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error making token request.");
+    resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error making token request due to an invalid client id or secret. Please double check the credentials.");
     expectLastCall();
     
     replay(googleResponse);

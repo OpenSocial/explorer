@@ -117,9 +117,7 @@ public class ServicesServletTest {
   @Test
   public void testDoGetExisting() throws Exception {
     BasicOAuthStoreConsumerKeyAndSecret kas = new BasicOAuthStoreConsumerKeyAndSecret("testKey", "testSecret", KeyType.HMAC_SYMMETRIC, "testName", "testCallbackUrl");
-    HashMap<String, BasicOAuthStoreConsumerKeyAndSecret> userEntry = new HashMap<String, BasicOAuthStoreConsumerKeyAndSecret>();
-    userEntry.put("testService", kas);
-    servlet.getServiceStore().getUserStore().put("testID", userEntry);
+    servlet.getServiceStore().addToUserStore("testID", "testName", kas);
 
     expect(resp.getWriter()).andReturn(writer);
     
@@ -174,9 +172,7 @@ public class ServicesServletTest {
   @Test
   public void testDoPostOverwrite() throws Exception {
     BasicOAuthStoreConsumerKeyAndSecret kas = new BasicOAuthStoreConsumerKeyAndSecret("testKey2", "testSecret2", KeyType.HMAC_SYMMETRIC, "testName2", "testCallbackUrl2");
-    HashMap<String, BasicOAuthStoreConsumerKeyAndSecret> userEntry = new HashMap<String, BasicOAuthStoreConsumerKeyAndSecret>();
-    userEntry.put("testName", kas);
-    servlet.getServiceStore().getUserStore().put("testID", userEntry);
+    servlet.getServiceStore().addToUserStore("testID", "testName", kas);
 
     expect(resp.getWriter()).andReturn(writer);
     expect(authority.getOrigin()).andReturn("testOrigin/");
@@ -208,9 +204,7 @@ public class ServicesServletTest {
   @Test
   public void testDoPostAdd() throws Exception {
     BasicOAuthStoreConsumerKeyAndSecret kas = new BasicOAuthStoreConsumerKeyAndSecret("testKey2", "testSecret2", KeyType.HMAC_SYMMETRIC, "testName2", "testCallbackUrl2");
-    HashMap<String, BasicOAuthStoreConsumerKeyAndSecret> userEntry = new HashMap<String, BasicOAuthStoreConsumerKeyAndSecret>();
-    userEntry.put("testName2", kas);
-    servlet.getServiceStore().getUserStore().put("testID", userEntry);
+    servlet.getServiceStore().addToUserStore("testID", "testName2", kas);
 
     expect(resp.getWriter()).andReturn(writer);
     expect(authority.getOrigin()).andReturn("testOrigin/");
@@ -252,7 +246,7 @@ public class ServicesServletTest {
     expect(req.getParameter("secret")).andReturn("testSecret");
     expect(req.getParameter("name")).andReturn("testName");
     
-    resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "One or more parameters on POST request are empty.");
+    resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Name, Key and Secret parameters on POST request cannot be empty.");
     expectLastCall();
     
     replay(req);
@@ -280,7 +274,7 @@ public class ServicesServletTest {
   @Test
   public void testDoDeleteEmptyParameter() throws Exception {
     expect(req.getParameter("name")).andReturn("");
-    resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "One or more parameters on DELETE request are empty.");
+    resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Name parameter on DELETE request cannot be empty.");
     expectLastCall();
     
     replay(req);
@@ -294,9 +288,7 @@ public class ServicesServletTest {
   @Test
   public void testDoDelete() throws Exception {
     BasicOAuthStoreConsumerKeyAndSecret kas = new BasicOAuthStoreConsumerKeyAndSecret("testKey", "testSecret", KeyType.HMAC_SYMMETRIC, "testName", "testCallbackUrl");
-    HashMap<String, BasicOAuthStoreConsumerKeyAndSecret> userEntry = new HashMap<String, BasicOAuthStoreConsumerKeyAndSecret>();
-    userEntry.put("testName", kas);
-    servlet.getServiceStore().getUserStore().put("testID", userEntry);
+    servlet.getServiceStore().addToUserStore("testID", "testName", kas);
 
     expect(resp.getWriter()).andReturn(writer);
     expect(req.getParameter("name")).andReturn("testName");

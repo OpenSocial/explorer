@@ -132,7 +132,7 @@ public class ServicesServlet extends ExplorerInjectedServlet {
       String serviceName = req.getParameter("name");
       
       if (key.equals("") || secret.equals("") || serviceName.equals("")) {
-        resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "One or more parameters on POST request are empty.");
+        resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Name, Key and Secret parameters on POST request cannot be empty.");
         return;
       }
       
@@ -173,7 +173,7 @@ public class ServicesServlet extends ExplorerInjectedServlet {
       String serviceName = req.getParameter("name");
       
       if (serviceName.equals("")) {
-        resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "One or more parameters on DELETE request are empty.");
+        resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Name parameter on DELETE request cannot be empty.");
         return;
       }
       
