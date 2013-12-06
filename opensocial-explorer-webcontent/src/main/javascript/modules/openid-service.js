@@ -29,22 +29,11 @@ define(['dojo/request/xhr', 'dojo/json'], function(xhr, json) {
      * Gets the OpenID providers.
      *
      * @memberof module:explorer/openid-service
-     * @param {Object} callbacks - Object with a success and an error function.
-     * @param {Function} callbacks.success - Fired if xhr was successful.
-     * @param {Function} callbacks.error - Fired if xhr was not successful.
+     * @returns {Deferred} The deferred object from the xhr call.
      */
-    getProviders : function(callbacks) {
-      xhr('openid/providers', {
+    getProviders : function() {
+      return xhr('openid/providers', {
         handleAs : "json"
-      }).then(function(data) {
-        if(callbacks.success) {
-          callbacks.success(data);
-        }
-      },
-      function(error){
-        if(callbacks.error) {
-          callbacks.error(error);
-        }
       });
     }
   };

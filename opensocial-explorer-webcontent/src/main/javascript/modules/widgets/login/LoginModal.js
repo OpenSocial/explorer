@@ -58,28 +58,26 @@ define(['dojo/_base/declare',  'explorer/widgets/ModalDialog', 'dijit/_WidgetsIn
       
       if(!this.providers) {
         var self = this;
-        self.getOpenIdServiceProviders().getProviders({
-          success : function(data) {
-            self.providers = data;
-            for(var key in data) {
-              if(data.hasOwnProperty(key)) {
-                var metadata = data[key];
-                var openIdLoginControl = new OAuthLogin({
-                  imageUrl: metadata.imageUrl,
-                  name: metadata.name,
-                  endpoint: "openid/authrequest?openid_identifier=" + encodeURIComponent(metadata.url)
-                });
-                modalBodies.append(openIdLoginControl.domNode);
-                openIdLoginControl.startup();
-              }
+        openIdService.getProviders().then(function(data) {
+          self.providers = data;
+          for(var key in data) {
+            if(data.hasOwnProperty(key)) {
+              var metadata = data[key];
+              var openIdLoginControl = new OAuthLogin({
+                imageUrl: metadata.imageUrl,
+                name: metadata.name,
+                endpoint: "openid/authrequest?openid_identifier=" + encodeURIComponent(metadata.url)
+              });
+              modalBodies.append(openIdLoginControl.domNode);
+              openIdLoginControl.startup();
             }
-          },
-          error : function(error) {
-            console.error('Error fetching providers.');
           }
+        }, 
+        function(data) {
+          console.error('Error fetching providers.');
         });
-      };
-      
+      }
+
       if(!this.facebookOAuth) {
         this.facebookOAuth = new OAuthLogin({
           imageUrl: "http://g.etfv.co/http://www.facebook.com",
@@ -101,16 +99,6 @@ define(['dojo/_base/declare',  'explorer/widgets/ModalDialog', 'dijit/_WidgetsIn
       }
       
       this.inherited(arguments);
-    },
-    
-    /**
-     * Getter method for the GadgetSpecService module for testing purposes.
-     *
-     * @memberof module:explorer/widgets/login/LoginModal#
-     * @returns {openIdService} The openIdService object.
-     */
-    getOpenIdServiceProviders: function() {
-      return openIdService;
     },
     
     /**
