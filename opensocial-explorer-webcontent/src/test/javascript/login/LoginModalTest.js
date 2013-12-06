@@ -16,9 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['explorer/widgets/login/LoginModal', 'dojo/query',
-        'dojo/NodeList-manipulate', 'dojo/NodeList-dom'], 
-    function(LoginModal, query) {
+define(['explorer/widgets/login/LoginModal', 'dojo/query', 'dojo/Deferred',
+        'explorer/openid-service', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'], 
+    function(LoginModal, query, Deferred, openIdService) {
   describe('A LoginModal widget', function() {
     beforeEach(function() {
       var div = document.createElement("div");
@@ -36,17 +36,17 @@ define(['explorer/widgets/login/LoginModal', 'dojo/query',
       loginModal.facebookOAuth = {};
       loginModal.googleOAuth = {};
       
-      spyOn(loginModal, 'getOpenIdServiceProviders').andReturn({
-        getProviders : function(callbacks) {
-          var data = {
-              testPlatform: {
-                imageUrl: "testImageUrl",
-                name: "testName",
-                url: "testUrl"
-              }
-          };
-          callbacks.success(data);
-        }
+      spyOn(openIdService, "getProviders").andCallFake(function() {
+        var dfd = new Deferred();
+        var data = {
+            testPlatform: {
+              imageUrl: "testImageUrl",
+              name: "testName",
+              url: "testUrl"
+            }
+        };
+        dfd.resolve(data);
+        return dfd;
       });
       
       loginModal.show();
