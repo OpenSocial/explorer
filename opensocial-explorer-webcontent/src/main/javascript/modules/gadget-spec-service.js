@@ -33,9 +33,10 @@ define(['dojo/request/xhr', 'dojo/json', './url-util'], function(xhr, json, urlU
      * Gets the default gadget spec's data.
      *
      * @memberof module:explorer/gadget-spec-service
+     * @returns {Deferred} The deferred object from the xhr call.
      */
     getDefaultGadgetSpec : function() {
-      getGadgetSpecBase('default');
+      return getGadgetSpecBase('default');
     },
     
     /**
@@ -43,9 +44,10 @@ define(['dojo/request/xhr', 'dojo/json', './url-util'], function(xhr, json, urlU
      *
      * @memberof module:explorer/gadget-spec-service
      * @param {String} id - The ID of the gadget spec.
+     * @returns {Deferred} The deferred object from the xhr call.
      */
     getGadgetSpec : function(id) {
-      getGadgetSpecBase(id);
+      return getGadgetSpecBase(id);
     },
     
     /**
@@ -53,6 +55,7 @@ define(['dojo/request/xhr', 'dojo/json', './url-util'], function(xhr, json, urlU
      *
      * @memberof module:explorer/gadget-spec-service
      * @param {Object} specData - Data of the new spec to be posted.
+     * @returns {Deferred} The deferred object from the xhr call.
      */
     createNewGadgetSpec : function(specData) {
       return xhr(urlUtil.getContextRoot() + '/gadgetspec', {
@@ -69,6 +72,7 @@ define(['dojo/request/xhr', 'dojo/json', './url-util'], function(xhr, json, urlU
      * Gets the json representation of the spec tree.
      *
      * @memberof module:explorer/gadget-spec-service
+     * @returns {Deferred} The deferred object from the xhr call.
      */
     getSpecTree : function() {
       return xhr(urlUtil.getContextRoot() + '/gadgetspec/specTree', {
