@@ -97,7 +97,7 @@ public class OSEInMemoryCache extends InMemoryCache implements IOAuth2Cache {
     if(this.userClientStore.containsKey(userId)) {
       this.userClientStore.get(userId).put(serviceName, client);
     } else {
-      HashMap<String, OAuth2Client> newUser = new HashMap<String, OAuth2Client>();
+      Map<String, OAuth2Client> newUser = new HashMap<String, OAuth2Client>();
       newUser.put(serviceName, client);
       this.userClientStore.put(userId, newUser);
     }

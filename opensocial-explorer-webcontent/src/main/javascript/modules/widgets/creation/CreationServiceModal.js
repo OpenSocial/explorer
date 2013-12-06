@@ -31,11 +31,11 @@
  */
 define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInTemplateMixin', 
         'dojo/text!./../../templates/CreationServiceModal.html', 'explorer/widgets/creation/CreationOAuthItem',
-        'explorer/widgets/creation/CreationOAuth2Item','explorer/ExplorerContainer', 'dojo/_base/lang',
+        'explorer/widgets/creation/CreationOAuth2Item','explorer/ExplorerContainer', 'dojo/_base/lang', 'dojo/json',
         'dojo/query', 'dojo/dom', 'dojo/on', 'dojo/dom-construct', 'dojo/dom-class', 'explorer/services-service', 
         'dojo/dom-style', 'dojo/topic', 'dojo/NodeList-manipulate', 'dojo/NodeList-traverse', 'dojo/NodeList-dom', 'dojo/domReady!'],
         function(declare, ModalDialog, WidgetsInTemplateMixin, template, CreationOAuthItem, CreationOAuth2Item, 
-            ExplorerContainer, lang, query, dom, on, domConstruct, domClass, servicesService, domStyle, topic) {
+            ExplorerContainer, lang, JSON, query, dom, on, domConstruct, domClass, servicesService, domStyle, topic) {
   return declare('CreationServiceModalWidget', [ModalDialog, WidgetsInTemplateMixin], {
     templateString: template,
     dropdownValue: 'oauth',
@@ -96,7 +96,7 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
           }
         }
         
-        if(value == 'oauth2') {
+        else if(value == 'oauth2') {
           var oAuth = {
               version: value,
               st: securityToken,
@@ -179,7 +179,7 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
           query(this.oAuthGeneralContent).addClass('active');
         }
         
-        if(value == 'oauth2') {
+        else if(value == 'oauth2') {
           query(this.oAuth2GeneralContent).addClass('active');
         }
       }
@@ -254,7 +254,7 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
           self.resetFields();
         },
         function(data) {
-          console.error("Error submitting service");
+          console.error("Error submitting service. Services data: " + JSON.stringify(data));
         });
     },
     

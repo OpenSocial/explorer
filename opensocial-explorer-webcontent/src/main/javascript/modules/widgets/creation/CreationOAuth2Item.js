@@ -27,9 +27,9 @@
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_TemplatedMixin.html|TemplatedMixin Documentation}
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
-        'dojo/text!./../../templates/CreationOAuth2Item.html', 'dojo/dom-construct', 'dojo/topic',
+        'dojo/text!./../../templates/CreationOAuth2Item.html', 'dojo/dom-construct', 'dojo/topic', 'dojo/json',
         'dojo/dom-class', 'dojo/on', 'explorer/services-service', 'explorer/ExplorerContainer', 'dojo/Evented'],
-        function(declare, WidgetBase, TemplatedMixin, template, domConstruct, topic,
+        function(declare, WidgetBase, TemplatedMixin, template, domConstruct, topic, JSON,
             domClass, on, servicesService, ExplorerContainer, Evented) {
   return declare('CreationOAuth2ItemWidget', [ WidgetBase, TemplatedMixin ], {
     templateString : template,
