@@ -16,8 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['explorer/widgets/creation/CreationSpecModal', 'explorer/widgets/SidebarNav','dojo/query', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'], 
-    function(CreationSpecModal, SidebarNav, query){
+define(['explorer/widgets/creation/CreationSpecModal', 'explorer/widgets/SidebarNav', 'explorer/gadget-spec-service',
+        'dojo/query', 'dojo/Deferred', 'dojo/NodeList-manipulate', 'dojo/NodeList-dom'], 
+    function(CreationSpecModal, SidebarNav, gadgetSpecService, query, Deferred){
   describe('A CreationSpecModal widget', function(){
     it("can be shown and hidden", function() {
       var dialog = new CreationSpecModal();
@@ -38,11 +39,11 @@ define(['explorer/widgets/creation/CreationSpecModal', 'explorer/widgets/Sidebar
     
     it("has text fields that reset upon submission", function() {
       var dialog = new CreationSpecModal();
-      spyOn(dialog, 'getGadgetSpecService').andReturn({
-        createNewGadgetSpec : function(fakeData, callbacks) {
-          var data = {id: "12345"};
-          callbacks.success(data);
-        }
+      spyOn(gadgetSpecService, 'createNewGadgetSpec').andCallFake(function() {
+        var dfd = new Deferred();
+        var data = {id: "12345"};
+        dfd.resolve();
+        return dfd;
       });
       spyOn(dialog, 'emit').andCallThrough();
      
@@ -75,18 +76,17 @@ define(['explorer/widgets/creation/CreationSpecModal', 'explorer/widgets/Sidebar
       spyOn(dialog, 'onSubmit').andCallThrough();
       spyOn(dialog, 'postNewGadgetSpec').andCallThrough();
       spyOn(dialog, 'emit').andCallThrough();
-      spyOn(dialog, 'getGadgetSpecService').andReturn({
-        createNewGadgetSpec : function(fakeData, callbacks) {
-          var data = {id: "12345"};
-          callbacks.success(data);
-        }
+      spyOn(gadgetSpecService, 'createNewGadgetSpec').andCallFake(function(fakeData) {
+        var dfd = new Deferred();
+        var data = {id: "12345"};
+        dfd.resolve(data);
+        return dfd;
       });
         
       dialog.creationSubmit.click();
       
       expect(dialog.onSubmit).toHaveBeenCalled();
       expect(dialog.postNewGadgetSpec).toHaveBeenCalled();
-      expect(dialog.getGadgetSpecService).toHaveBeenCalled();
       expect(dialog.emit).toHaveBeenCalled();
       dialog.destroy();
     });
@@ -108,20 +108,19 @@ define(['explorer/widgets/creation/CreationSpecModal', 'explorer/widgets/Sidebar
       spyOn(dialog, 'onSubmit').andCallThrough();
       spyOn(dialog, 'postNewEESpec').andCallThrough();
       spyOn(dialog, 'emit').andCallThrough();
-      spyOn(dialog, 'getGadgetSpecService').andReturn({
-        createNewGadgetSpec : function(fakeData, callbacks) {
-          var data = {id: "12345"};
-          callbacks.success(data);
-        }
-      });  
+      spyOn(gadgetSpecService, 'createNewGadgetSpec').andCallFake(function(fakeData) {
+        var dfd = new Deferred();
+        var data = {id: "12345"};
+        dfd.resolve(data);
+        return dfd;
+      });
        
       dialog.creationSubmit.click();
       
       expect(dialog.onSubmit).toHaveBeenCalled();
       expect(dialog.postNewEESpec).toHaveBeenCalled();
-      expect(dialog.getGadgetSpecService).toHaveBeenCalled();
       expect(dialog.emit).toHaveBeenCalled();
       dialog.destroy();
-    });  
+    });
   });
 });

@@ -16,7 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['explorer/widgets/SidebarNav', 'dojo/topic', 'dojo/Deferred', 'dojo/on'], function(SidebarNav, topic, Deferred, on) {
+define(['explorer/widgets/SidebarNav', 'dojo/topic', 'dojo/Deferred', 'dojo/on', 
+        'explorer/gadget-spec-service', 'dojo/Deferred'], 
+    function(SidebarNav, topic, Deferred, on, gadgetSpecService) {
   describe('A SidebarNav widget', function() {
     beforeEach(function() {
       var div = document.createElement("div");
@@ -32,27 +34,25 @@ define(['explorer/widgets/SidebarNav', 'dojo/topic', 'dojo/Deferred', 'dojo/on']
     it("can be started", function() {
       var sidebar = new SidebarNav();
       
-      spyOn(sidebar, 'getGadgetSpecService').andReturn({
-        getSpecTree : function(callbacks) {
-          var data = [
-            {"id":"109641752",
-              "hasChildren":true,
-              "isDefault":false,
-              "name":"Specs",
-              "parent":"root"},
-            {"id":"-1583082176",
-              "hasChildren":false,
-              "isDefault":true,
-              "name":"Welcome",
-              "parent":"109641752"}];
-          callbacks.success(data);
-        }
-      }); 
+      spyOn(gadgetSpecService, 'getSpecTree').andCallFake(function() {
+        var dfd = new Deferred();
+        var data = [{"id":"109641752",
+                     "hasChildren":true,
+                     "isDefault":false,
+                     "name":"Specs",
+                     "parent":"root"},
+                    {"id":"-1583082176",
+                     "hasChildren":false,
+                     "isDefault":true,
+                     "name":"Welcome",
+                     "parent":"109641752"}];
+        dfd.resolve(data);
+        return dfd;
+      });
       
       document.getElementById('testDiv').appendChild(sidebar.domNode);
       sidebar.startup();
       
-      expect(sidebar.getGadgetSpecService).toHaveBeenCalled();
       expect(sidebar.specTree).not.toBe(null);
       sidebar.destroy();
     }); 
@@ -60,22 +60,21 @@ define(['explorer/widgets/SidebarNav', 'dojo/topic', 'dojo/Deferred', 'dojo/on']
     it("can add a new spec", function() {
       var sidebar = new SidebarNav();
       
-      spyOn(sidebar, 'getGadgetSpecService').andReturn({
-        getSpecTree : function(callbacks) {
-          var data = [
-            {"id":"109641752",
-              "hasChildren":true,
-              "isDefault":false,
-              "name":"Specs",
-              "parent":"root"},
-            {"id":"-1583082176",
-              "hasChildren":false,
-              "isDefault":true,
-              "name":"Welcome",
-              "parent":"109641752"}];
-          callbacks.success(data);
-        }
-      }); 
+      spyOn(gadgetSpecService, 'getSpecTree').andCallFake(function() {
+        var dfd = new Deferred();
+        var data = [{"id":"109641752",
+                     "hasChildren":true,
+                     "isDefault":false,
+                     "name":"Specs",
+                     "parent":"root"},
+                    {"id":"-1583082176",
+                     "hasChildren":false,
+                     "isDefault":true,
+                     "name":"Welcome",
+                     "parent":"109641752"}];
+        dfd.resolve(data);
+        return dfd;
+      });
       
       document.getElementById('testDiv').appendChild(sidebar.domNode);
       sidebar.startup();

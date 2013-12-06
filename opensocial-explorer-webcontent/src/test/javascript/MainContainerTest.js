@@ -17,8 +17,8 @@
  * under the License.
  */
 define(['explorer/widgets/MainContainer', 'dojo/_base/declare', 'dojo/Evented', 'dojo/dom-class', 'dojo/query',
-        'dojo/topic', 'explorer/gadget-spec-service'], 
-        function(MainContainer, declare, Evented, domClass, query, topic, gadgetSpecService){
+        'dojo/topic', 'explorer/gadget-spec-service', 'dojo/Deferred'], 
+        function(MainContainer, declare, Evented, domClass, query, topic, gadgetSpecService, Deferred){
   describe('An MainContainer widget', function() {
     
     var MockContainer = declare([Evented], {
@@ -78,8 +78,10 @@ define(['explorer/widgets/MainContainer', 'dojo/_base/declare', 'dojo/Evented', 
       div.id = 'testDiv';
       document.body.appendChild(div);
       mainContainer = new MainContainer();
-      spyOn(gadgetSpecService, 'getSpecTree').andReturn(undefined);
-      spyOn(gadgetSpecService, 'getDefaultGadgetSpec').andReturn(undefined);
+      var dfd = new Deferred();
+      spyOn(dfd, 'then').andReturn(undefined);
+      spyOn(gadgetSpecService, 'getSpecTree').andReturn(dfd);
+      spyOn(gadgetSpecService, 'getDefaultGadgetSpec').andReturn(dfd);
       mockContainer = new MockContainer();
       spyOn(mainContainer.gadgetArea, 'getExplorerContainer').andReturn(mockContainer);
       document.getElementById('testDiv').appendChild(mainContainer.domNode);
@@ -96,7 +98,7 @@ define(['explorer/widgets/MainContainer', 'dojo/_base/declare', 'dojo/Evented', 
       spyOn(mainContainer.gadgetArea, 'reRenderGadget').andReturn(undefined);
       mainContainer.prefModal.notifyPrefsChangedListeners();
       expect(mainContainer.gadgetArea.reRenderGadget.calls.length).toEqual(1);
-    });
+    }); 
     
     it("handles the setpreferences event", function() {
       spyOn(mainContainer.prefModal, 'setPrefs').andCallThrough();

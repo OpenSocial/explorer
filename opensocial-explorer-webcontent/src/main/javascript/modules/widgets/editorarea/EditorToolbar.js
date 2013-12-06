@@ -100,16 +100,6 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'dij
      */
     hideRenderGadgetButton: function() {
       domClass.add(this.renderGadgetButton, "hide");
-    },
-    
-    /**
-     * Getter method for the GadgetSpecService module for testing purposes.
-     *
-     * @memberof module:explorer/widgets/editorarea/EditorToolbar#
-     * @returns {gadgetSpecService} The gadgetSpecService object.
-     */
-    getGadgetSpecService : function() {
-      return gadgetSpecService;
     }
   });
 });
