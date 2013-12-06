@@ -16,7 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['explorer/widgets/editorarea/EditorArea'], function(EditorArea){
+define(['explorer/widgets/editorarea/EditorArea', 'explorer/gadget-spec-service', 'dojo/Deferred'], 
+    function(EditorArea, gadgetSpecService, Deferred){
   describe('An EditorArea widget', function() {
     beforeEach(function() {
       var div = document.createElement("div");
@@ -36,17 +37,17 @@ define(['explorer/widgets/editorarea/EditorArea'], function(EditorArea){
 
     it("can be started", function() {
       var editorArea = new EditorArea();
-      spyOn(editorArea, 'getGadgetSpecService').andReturn({
-        getDefaultGadgetSpec : function(callbacks) {
-          var data = {
-              gadgetResource : {
-                name : "gadget.xml",
-                content : "some content"
-              },
-              id: "testing"
-          };
-          callbacks.success(data);
-        }
+      spyOn(gadgetSpecService, 'getDefaultGadgetSpec').andCallFake(function() {
+        var dfd = new Deferred();
+        var data = {
+            gadgetResource : {
+              name : "gadget.xml",
+              content : "some content"
+            },
+            id: "testing"
+        };
+        dfd.resolve(data);
+        return dfd;
       });
       spyOn(editorArea, 'emit').andCallThrough();
       document.getElementById('testDiv').appendChild(editorArea.domNode);
@@ -58,11 +59,10 @@ define(['explorer/widgets/editorarea/EditorArea'], function(EditorArea){
 
     it("can be started with an error", function() {
       var editorArea = new EditorArea();
-
-      spyOn(editorArea, 'getGadgetSpecService').andReturn({
-        getDefaultGadgetSpec : function(callbacks) {
-          callbacks.error();
-        }
+      spyOn(gadgetSpecService, 'getDefaultGadgetSpec').andCallFake(function() {
+        var dfd = new Deferred();
+        dfd.reject();
+        return dfd;
       });
       spyOn(editorArea, 'emit').andCallThrough();
       document.getElementById('testDiv').appendChild(editorArea.domNode);
@@ -74,27 +74,29 @@ define(['explorer/widgets/editorarea/EditorArea'], function(EditorArea){
 
     it("can display any spec with an id", function() {
       var editorArea = new EditorArea();
-      spyOn(editorArea, 'getGadgetSpecService').andReturn({
-        getDefaultGadgetSpec : function(callbacks) {
-          var data = {
-              gadgetResource : {
-                name : "gadget.xml",
-                content : "some content"
-              },
-              id: "1234"
-          };
-          callbacks.success(data);
-        },
-        getGadgetSpec : function(id, callbacks) {
-          var data = {
-              gadgetResource : {
-                name : "gadget.xml",
-                content : "some content"
-              },
-              id: "1234"
-          };
-          callbacks.success(data);
-        }
+      spyOn(gadgetSpecService, 'getDefaultGadgetSpec').andCallFake(function() {
+        var dfd = new Deferred();
+        var data = {
+            gadgetResource : {
+              name : "gadget.xml",
+              content : "some content"
+            },
+            id: "1234"
+        };
+        dfd.resolve(data);
+        return dfd;
+      });
+      spyOn(gadgetSpecService, 'getGadgetSpec').andCallFake(function(id) {
+        var dfd = new Deferred();
+        var data = {
+            gadgetResource : {
+              name : "gadget.xml",
+              content : "some content"
+            },
+            id: "1234"
+        };
+        dfd.resolve(data);
+        return dfd;
       });
       spyOn(editorArea, 'emit').andCallThrough();
       document.getElementById('testDiv').appendChild(editorArea.domNode);
@@ -106,20 +108,22 @@ define(['explorer/widgets/editorarea/EditorArea'], function(EditorArea){
 
     it("can handle an error when displaying a spec with an id", function() {
       var editorArea = new EditorArea();
-      spyOn(editorArea, 'getGadgetSpecService').andReturn({
-        getDefaultGadgetSpec : function(callbacks) {
-          var data = {
-              gadgetResource : {
-                name : "gadget.xml",
-                content : "some content"
-              },
-              id: "1234"
-          };
-          callbacks.success(data);
-        },
-        getGadgetSpec : function(id, callbacks) {
-          callbacks.error();
-        }
+      spyOn(gadgetSpecService, 'getDefaultGadgetSpec').andCallFake(function() {
+        var dfd = new Deferred();
+        var data = {
+            gadgetResource : {
+              name : "gadget.xml",
+              content : "some content"
+            },
+            id: "1234"
+        };
+        dfd.resolve(data);
+        return dfd;
+      });
+      spyOn(gadgetSpecService, 'getGadgetSpec').andCallFake(function(id) {
+        var dfd = new Deferred();
+        dfd.reject();
+        return dfd;
       });
       spyOn(editorArea, 'emit').andCallThrough();
       document.getElementById('testDiv').appendChild(editorArea.domNode);

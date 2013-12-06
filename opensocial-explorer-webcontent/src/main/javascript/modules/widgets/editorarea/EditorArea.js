@@ -58,15 +58,15 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
      */
     startup : function() {
       var self = this;
-      this.getGadgetSpecService().getDefaultGadgetSpec({
-        success : function(data) {
+      gadgetSpecService.getDefaultGadgetSpec().then(
+        function(data) {
           self.setTitle(data.title);
           self.addToUi.call(self, data);
         },
-        error : function(data) {
+        function(data) {
           console.error("There was an error");
         }
-      });
+      );
 
       on(this.editorToolbar, "renderGadgetClick", function() {
         self.postGadgetSpec(function(data) {
@@ -94,12 +94,12 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
      */
     postGadgetSpec : function(thenFunction) {
       var self = this;
-      this.getGadgetSpecService().createNewGadgetSpec(this.getGadgetSpec(), {
-        success : thenFunction,
-        error : function(data) {
+      gadgetSpecService.createNewGadgetSpec(this.getGadgetSpec()).then(
+        thenFunction,
+        function(data) {
           console.error("There was an error");
         }
-      });
+      );
     },
 
     /**
@@ -110,15 +110,15 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
      */
     displaySpec : function(id) {
       var self = this;
-      this.getGadgetSpecService().getGadgetSpec(id, {
-        success : function(data) {
+      gadgetSpecService.getGadgetSpec(id).then(
+        function(data) {
           self.editorTabs.removeAllTabs();
           self.addToUi(data);
         },
-        error : function(data) {
+        function(data) {
           console.error("There was an error");
         }
-      });
+      );
     },
 
     /**
@@ -240,16 +240,6 @@ define([ 'dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin', 'di
      */
     getEditorTabs : function() {
       return this.editorTabs;
-    },
-
-    /**
-     * Getter method for the GadgetSpecService module for testing purposes.
-     *
-     * @memberof module:explorer/widgets/editorarea/EditorArea#
-     * @returns {gadgetSpecService} The gadgetSpecService object.
-     */
-    getGadgetSpecService : function() {
-      return gadgetSpecService;
     },
 
     /**

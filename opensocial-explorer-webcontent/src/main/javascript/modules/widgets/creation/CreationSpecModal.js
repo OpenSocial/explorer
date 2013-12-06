@@ -104,12 +104,12 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
                            name: userInput.filename + ".xml"}
       };
       
-      this.getGadgetSpecService().createNewGadgetSpec(postData, {
-        success : thenFunction,
-        error : function(data) {
+      gadgetSpecService.createNewGadgetSpec(postData).then(
+        thenFunction,
+        function(data) {
           console.error("There was an error");
         }
-      });
+      );
     },
     
     /**
@@ -132,13 +132,12 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
                            name: userInput.filename + ".xml"},
           eeResource:     {content: "{\n}", name: userInput.filename + ".json"}  
       };
-      
-      this.getGadgetSpecService().createNewGadgetSpec(postData, {
-        success : thenFunction,
-        error : function(data) {
+      gadgetSpecService.createNewGadgetSpec(postData).then(
+        thenFunction,
+        function(data) {
           console.error("There was an error");
         }
-      });
+      );
     },
     
     /**
@@ -167,16 +166,6 @@ define(['dojo/_base/declare', 'explorer/widgets/ModalDialog', 'dijit/_WidgetsInT
       query(".creation", self.domNode).forEach(function(node) {
         node.value = "";
       });
-    },
-    
-    /**
-     * Getter method for the GadgetSpecService module for testing purposes.
-     *
-     * @memberof module:explorer/widgets/creation/CreationSpecModal#
-     * @returns {gadgetSpecService} The gadgetSpecService object.
-     */
-    getGadgetSpecService : function() {
-      return gadgetSpecService;
     }
   });
 });
