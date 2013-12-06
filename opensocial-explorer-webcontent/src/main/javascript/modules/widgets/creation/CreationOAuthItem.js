@@ -18,27 +18,27 @@
  */
 
 /**
- * An individual item in the Services tab.
+ * An individual item in the Services tab for OAuth1.
  *
- * @module explorer/widgets/creation/CreationServiceItem
+ * @module explorer/widgets/creation/CreationOAuthItem
  * @augments dijit/_WidgetBase
  * @augments dijit/_TemplatedMixin
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|WidgetBase Documentation}
  * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_TemplatedMixin.html|TemplatedMixin Documentation}
  */
 define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
-        'dojo/text!./../../templates/CreationServiceItem.html', 'dojo/dom-construct', 'dojo/topic',
+        'dojo/text!./../../templates/CreationOAuthItem.html', 'dojo/dom-construct', 'dojo/topic', 'dojo/json',
         'dojo/dom-class', 'dojo/on', 'explorer/services-service', 'explorer/ExplorerContainer'],
-        function(declare, WidgetBase, TemplatedMixin, template, domConstruct, topic,
+        function(declare, WidgetBase, TemplatedMixin, template, domConstruct, topic, JSON,
             domClass, on, servicesService, ExplorerContainer) {
-  return declare('CreationServiceItemWidget', [ WidgetBase, TemplatedMixin ], {
+  return declare('CreationOAuthItemWidget', [ WidgetBase, TemplatedMixin ], {
     templateString : template,
 
     /**
-     * Creates a new CreationServiceItem.
+     * Creates a new CreationOAuthItem.
      * @constructor
      * 
-     * @memberof module:explorer/widgets/MenuItemWidget#
+     * @memberof module:explorer/widgets/CreationOAuthItem#
      */
     constructor: function(obj) {
       this.name = obj.name;
@@ -50,7 +50,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Called right before widget is added to the dom. See link for more information.
      *
-     * @memberof module:explorer/widgets/MenuItemWidget#
+     * @memberof module:explorer/widgets/CreationOAuthItem#
      * @see {@link http://dojotoolkit.org/reference-guide/1.8/dijit/_WidgetBase.html|Dojo Documentation}
      */
     postCreate : function() {
@@ -61,9 +61,9 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     },
     
     /**
-     * Deletes the CreationServiceItem that is clicked.
+     * Deletes the CreationOAuthItem that is clicked.
      *
-     * @memberof module:explorer/widgets/creation/CreationServiceItem#
+     * @memberof module:explorer/widgets/creation/CreationOAuthItem#
      */
     deleteItem: function() {
       var self = this;
@@ -72,12 +72,13 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
         st: this.getToken()
       };
       
-      servicesService.deleteService(nameTokenPair).then(
+      servicesService.deleteService(nameTokenPair, "oauth").then(
           function(data) {
-            topic.publish('itemDeleted', data);
+            self.destroy();
+            topic.publish("serviceDeleted");
           },
           function(data) {
-            console.error("There was an error");
+            console.error("There was an error. Services data: " + JSON.stringify(data));
           }
       );
     },
@@ -85,7 +86,7 @@ define(['dojo/_base/declare', 'dijit/_WidgetBase', 'dijit/_TemplatedMixin',
     /**
      * Gets the security token.
      *
-     * @memberof module:explorer/widgets/creation/CreationServiceItem#
+     * @memberof module:explorer/widgets/creation/CreationOAuthItem#
      * @returns {String} The security token as a string.
      */
     getToken: function() {

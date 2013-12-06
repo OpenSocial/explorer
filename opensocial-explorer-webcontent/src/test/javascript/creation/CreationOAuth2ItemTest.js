@@ -16,17 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['explorer/widgets/creation/CreationServiceItem', 'dojo/topic', 'explorer/services-service', 'dojo/Deferred'], 
-        function(CreationServiceItem, topic, servicesService, Deferred){
-  describe('An CreationServiceItem widget', function() {
+define(['explorer/widgets/creation/CreationOAuth2Item', 'dojo/topic', 'explorer/services-service', 'dojo/Deferred','dojo/query', 'dojo/NodeList-traverse'], 
+        function(CreationOAuth2Item, topic, servicesService, Deferred, query){
+  describe('An CreationOAuth2Item widget', function() {
     var creationJSON = {
-        version: "oauth1",
+        version: "oauth2",
         st: "testSt",
         name: "testName",
-        key: "testKey",
-        secret: "testSecret",
-        keyType: "testKeyType",
-        callbackUrl : "testCallbackUrl"
+        clientId: "testClientId",
+        clientSecret: "testClientSecret",
+        authUrl: "testAuthUrl",
+        tokenUrl: "testTokenUrl",
+        type: "testType",
+        grantType: "testGrantType",
+        authentication: "testAuthentication",
+        override: "true",
+        authHeader: "false",
+        urlParam: "true",
+        redirectUrl: "testCallbackUrl"
     };
     
     beforeEach(function() {
@@ -41,23 +48,29 @@ define(['explorer/widgets/creation/CreationServiceItem', 'dojo/topic', 'explorer
     });
     
     it("can be created and can display the correct information", function() {
-      var creationItem = new CreationServiceItem(creationJSON);
+      var creationItem = new CreationOAuth2Item(creationJSON);
       document.getElementById('testDiv').appendChild(creationItem.domNode);
       
       expect(creationItem.name).toBe("testName");
-      expect(creationItem.key).toBe("testKey");
-      expect(creationItem.secret).toBe("testSecret");
-      expect(creationItem.keyType).toBe("testKeyType");
+      expect(creationItem.clientId).toBe("testClientId");
+      expect(creationItem.clientSecret).toBe("testClientSecret");
+      expect(creationItem.authUrl).toBe("testAuthUrl");
+      
+      expect(creationItem.tokenUrl).toBe("testTokenUrl");
+      expect(creationItem.type).toBe("testType");
+      expect(creationItem.grantType).toBe("testGrantType");
+      expect(creationItem.authentication).toBe("testAuthentication");
+      
+      expect(creationItem.override).toBe("true");
+      expect(creationItem.authHeader).toBe("false");
+      expect(creationItem.urlParam).toBe("true");
+      expect(creationItem.redirectUrl).toBe("testCallbackUrl");
       
       creationItem.destroy();
     }); 
     
     it("can delete itself", function() {
-      var creationItem = new CreationServiceItem(creationJSON);
-      var subscriptionReceived = false;
-      var subscription = topic.subscribe("itemDeleted", function(data) {
-        subscriptionReceived = true;
-      });
+      var creationItem = new CreationOAuth2Item(creationJSON);
       document.getElementById('testDiv').appendChild(creationItem.domNode);
       
       spyOn(creationItem, "getToken").andReturn("token123");
@@ -68,21 +81,9 @@ define(['explorer/widgets/creation/CreationServiceItem', 'dojo/topic', 'explorer
         return dfd;
       });
       
-      runs(function() {
-        creationItem.itemDelete.click();
-      });
-      
-      waitsFor(function() {
-        return subscriptionReceived;
-      }, "The subscription should have been received", 750);
-      
-      runs(function() {
-        expect(subscriptionReceived).toBe(true);
-        expect(servicesService.deleteService).toHaveBeenCalled();
-        
-        subscription.remove();
-        creationItem.destroy();
-      });
-    }); 
+      creationItem.itemDelete.click();
+      expect(query('testDiv').children().length).toBe(0);
+      creationItem.destroy();
+    });  
   });
 });

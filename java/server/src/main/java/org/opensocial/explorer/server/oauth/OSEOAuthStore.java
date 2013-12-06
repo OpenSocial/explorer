@@ -20,6 +20,7 @@ package org.opensocial.explorer.server.oauth;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,11 +31,9 @@ import net.oauth.OAuthServiceProvider;
 import net.oauth.signature.RSA_SHA1;
 
 import org.apache.shindig.auth.SecurityToken;
-import org.apache.shindig.auth.SecurityTokenCodec;
 import org.apache.shindig.common.servlet.Authority;
 import org.apache.shindig.gadgets.GadgetException;
 import org.apache.shindig.gadgets.GadgetException.Code;
-import org.apache.shindig.gadgets.http.HttpFetcher;
 import org.apache.shindig.gadgets.oauth.BasicOAuthStore;
 import org.apache.shindig.gadgets.oauth.BasicOAuthStoreConsumerKeyAndSecret;
 import org.apache.shindig.gadgets.oauth.BasicOAuthStoreConsumerKeyAndSecret.KeyType;
@@ -46,7 +45,6 @@ import org.apache.wink.json4j.JSONObject;
 import com.google.caja.util.Maps;
 import com.google.common.base.Objects;
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 /**
  * Basic OAuth store for OAuth 1.0a keys and secrets and tokens.
@@ -253,7 +251,7 @@ public class OSEOAuthStore implements OAuthStore {
    * @param serviceName The name of the service.
    * @param kas The container class with all of the service's information.
    */
-  public void addToUserStore(String userId, String serviceName, BasicOAuthStoreConsumerKeyAndSecret kas) {
+  public void addUserService(String userId, String serviceName, BasicOAuthStoreConsumerKeyAndSecret kas) {
     if(this.userStore.containsKey(userId)) {
       this.userStore.get(userId).put(serviceName, kas);
     } else {
@@ -268,7 +266,7 @@ public class OSEOAuthStore implements OAuthStore {
    * @param userId The user ID.
    * @param serviceName The name of the service.
    */
-  public void deleteFromUserStore(String userId, String serviceName) throws NoSuchStoreException {
+  public void deleteUserService(String userId, String serviceName) throws NoSuchStoreException {
     if(this.userStore.containsKey(userId)) {
       this.userStore.get(userId).remove(serviceName);
     } else {
@@ -285,8 +283,8 @@ public class OSEOAuthStore implements OAuthStore {
     JSONArray array = new JSONArray();
     if(this.userStore.containsKey(userId)) {
       Map<String, BasicOAuthStoreConsumerKeyAndSecret> userMap = this.userStore.get(userId);
-      for (String key : userMap.keySet()) {
-        BasicOAuthStoreConsumerKeyAndSecret kas = userMap.get(key);
+      for (Entry<String, BasicOAuthStoreConsumerKeyAndSecret> entry : userMap.entrySet()) {
+        BasicOAuthStoreConsumerKeyAndSecret kas = entry.getValue();
         JSONObject service = new JSONObject();
         service.put("key", kas.getConsumerKey());
         service.put("secret", kas.getConsumerSecret());

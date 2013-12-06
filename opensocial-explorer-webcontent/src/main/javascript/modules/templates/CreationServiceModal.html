@@ -20,12 +20,13 @@
 				<div class="tab-pane active" data-dojo-attach-point="servicesContent" id="services-content">
 					<h5 data-dojo-attach-point="noServices">No existing services. Click 'New Service' to create a new service!</h5>
 					<h4 data-dojo-attach-point="oAuth">OAuth</h4>
+					<h4 data-dojo-attach-point="oAuth2">OAuth2</h4>
 				</div>
 				<div class="tab-pane" data-dojo-attach-point="newServiceContent">
 					<div>
 						<select data-dojo-attach-point="serviceSelection">
-							<option>OAuth</option>
-							<option>OAuth2</option>
+							<option value="oauth">OAuth</option>
+							<option value="oauth2">OAuth2</option>
 						</select>
 					</div>
 					<!-- Pills -->
@@ -42,7 +43,7 @@
 						<!-- OAuth1 General -->
 						<div class="pill-pane active" data-dojo-attach-point="oAuthGeneralContent">
 							<form class="form-horizontal">
-								<p class="center hide" data-dojo-attach-point="oAuthFieldsValidation" style="color:red">Please complete all fields!</p>
+								<p class="center hide red" data-dojo-attach-point="oAuthFieldsValidation">Please complete all fields!</p>
 								<div class="control-group">
 									<label class="control-label">Name</label>
 									<div class="controls">
@@ -81,6 +82,7 @@
 						<!-- OAuth2 General -->
 						<div class="pill-pane" data-dojo-attach-point="oAuth2GeneralContent">
 							<form class="form-horizontal">
+							    <p class="center hide red" data-dojo-attach-point="oAuth2FieldsValidation">Please complete all fields!</p>
 								<div class="control-group">
 									<label class="control-label">Name</label>
 									<div class="controls">
@@ -88,27 +90,27 @@
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label">Key</label>
+									<label class="control-label">Client Id</label>
 									<div class="controls">
-										<input data-dojo-attach-point="oAuth2Key" type="text" placeholder="Key">
+										<input data-dojo-attach-point="oAuth2ClientId" type="text" placeholder="Client Id">
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label">Secret</label>
+									<label class="control-label">Client Secret</label>
 									<div class="controls">
-										<input data-dojo-attach-point="oAuth2Secret" type="text" placeholder="Secret">
+										<input data-dojo-attach-point="oAuth2ClientSecret" type="text" placeholder="Client Secret">
 									</div>
 								</div>
 								<div class="control-group">
 									<label class="control-label">Authorization URL</label>
 									<div class="controls">
-										<input data-dojo-attach-point="oAuth2Authorization" type="text" placeholder="Authorization URL">
+										<input data-dojo-attach-point="oAuth2AuthUrl" type="text" placeholder="Authorization URL">
 									</div>
 								</div>
 								<div class="control-group">
 									<label class="control-label">Token URL</label>
 									<div class="controls">
-										<input data-dojo-attach-point="oAuth2Token" type="text" placeholder="Token URL">
+										<input data-dojo-attach-point="oAuth2TokenUrl" type="text" placeholder="Token URL">
 									</div>
 								</div>
 							</form>
@@ -151,7 +153,7 @@
 											<input type="radio" data-dojo-attach-point="oAuth2Override" name="oAuth2OverrideRadio" checked> True
 										</label> 
 										<label class="radio inline"> 
-											<input type="radio" name="oAuth2OverrideRadio"> False
+											<input type="radio" id="oAuth2OverrideRadio" name="oAuth2OverrideRadio"> False
 										</label>
 									</div>
 								</div>
@@ -159,10 +161,10 @@
 									<label class="control-label">Use Authorization Header</label>
 									<div class="controls">
 										<label class="radio inline"> 
-											<input type="radio" data-dojo-attach-point="oAuth2Header" name="oAuth2HeaderRadio"> True
+											<input type="radio" id="oAuth2HeaderRadio" name="oAuth2HeaderRadio"> True
 										</label> 
 										<label class="radio inline"> 
-											<input type="radio" name="oAuth2HeaderRadio" checked> False
+											<input type="radio" data-dojo-attach-point="oAuth2Header" name="oAuth2HeaderRadio" checked> False
 										</label>
 									</div>
 								</div>
@@ -173,7 +175,7 @@
 											<input type="radio" data-dojo-attach-point="oAuth2Parameter" name="oAuth2ParameterRadio" checked> True
 										</label> 
 										<label class="radio inline"> 
-											<input type="radio" name="oAuth2ParameterRadio"> False
+											<input type="radio" id="oAuth2ParameterRadio" name="oAuth2ParameterRadio"> False
 										</label>
 									</div>
 								</div>

@@ -16,9 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['explorer/widgets/creation/CreationServiceModal', 'explorer/widgets/creation/CreationMenu', 
+define(['explorer/widgets/creation/CreationServiceModal', 'explorer/widgets/creation/CreationMenu', 'dojo/query',
         'dojo/topic', 'dojo/dom-class', 'dojo/dom-style', 'explorer/services-service', 'dojo/Deferred'], 
-        function(CreationServiceModal, CreationMenu, topic, domClass, domStyle, servicesService, Deferred){
+        function(CreationServiceModal, CreationMenu, query, topic, domClass, domStyle, servicesService, Deferred){
   describe('An CreationServiceModal widget', function() {
     
     beforeEach(function() {
@@ -49,7 +49,10 @@ define(['explorer/widgets/creation/CreationServiceModal', 'explorer/widgets/crea
       
       spyOn(servicesService, "getServices").andCallFake(function() {
         var dfd = new Deferred();
-        var data = [];
+        var data = {
+            oauth: [],
+            oauth2: []
+        }
         dfd.resolve(data);
         return dfd;
       });
@@ -74,10 +77,13 @@ define(['explorer/widgets/creation/CreationServiceModal', 'explorer/widgets/crea
       var creationServiceModal = new CreationServiceModal();
       document.getElementById('testDiv').appendChild(creationServiceModal.domNode);
       
-      spyOn(creationServiceModal, "addServiceItem");
+      spyOn(creationServiceModal, "addOAuthItem");
       spyOn(servicesService, "getServices").andCallFake(function() {
         var dfd = new Deferred();
-        var data = [testData];
+        var data = {
+            oauth: [testData],
+            oauth2: []
+        }
         dfd.resolve(data);
         return dfd;
       });
@@ -86,14 +92,14 @@ define(['explorer/widgets/creation/CreationServiceModal', 'explorer/widgets/crea
 
       expect(domClass.contains(creationServiceModal.noServices, "hide")).toBe(true);
       expect(domClass.contains(creationServiceModal.oAuth, "hide")).toBe(false);
-      expect(creationServiceModal.addServiceItem).toHaveBeenCalledWith(testData);
+      expect(creationServiceModal.addOAuthItem).toHaveBeenCalledWith(testData);
       
       creationServiceModal.destroy();
     });
     
-    it("can create a new service and display the services tab afterwards", function() {
+    it("can create a new OAuth service and display the services tab afterwards", function() {
       var testData = {
-          version: "OAuth",
+          version: "oauth",
           st: "testSt",
           name: "testName",
           key: "testKey",
@@ -106,10 +112,13 @@ define(['explorer/widgets/creation/CreationServiceModal', 'explorer/widgets/crea
       document.getElementById('testDiv').appendChild(creationServiceModal.domNode);
       
       spyOn(creationServiceModal, "getToken").andReturn("testSt");
-      spyOn(creationServiceModal, "addServiceItem");
+      spyOn(creationServiceModal, "addOAuthItem");
       spyOn(servicesService, "createNewService").andCallFake(function() {
         var dfd = new Deferred();
-        var data = [testData];
+        var data = {
+            oauth: [testData],
+            oauth2: []
+        }
         dfd.resolve(data);
         return dfd;
       });
@@ -120,16 +129,65 @@ define(['explorer/widgets/creation/CreationServiceModal', 'explorer/widgets/crea
       creationServiceModal.toggleTab();
       creationServiceModal.serviceSubmit.click();
       
-      expect(creationServiceModal.addServiceItem).toHaveBeenCalledWith(testData);
+      expect(creationServiceModal.addOAuthItem).toHaveBeenCalledWith(testData);
       expect(domClass.contains(creationServiceModal.servicesTab, "active")).toBe(true);
       expect(domClass.contains(creationServiceModal.oAuthFieldsValidation, "hide")).toBe(true);
       
       creationServiceModal.destroy();
     });
     
+    it("can create a new OAuth2 service and display the services tab afterwards", function() {
+      var testData = {
+          version: "oauth2",
+          st: "testSt",
+          name: "testName",
+          clientId: "testClientId",
+          clientSecret: "testClientSecret",
+          authUrl: "testAuthUrl",
+          tokenUrl: "testTokenUrl",
+          type: "confidential",
+          grantType: "code",
+          authentication: "STANDARD",
+          override: "true",
+          authHeader: "false",
+          urlParam: "true",
+          redirectUrl: "%origin%%contextRoot%/gadgets/oauth2callback"
+      }
+      
+      var creationServiceModal = new CreationServiceModal();
+      document.getElementById('testDiv').appendChild(creationServiceModal.domNode);
+      
+      spyOn(creationServiceModal, "getToken").andReturn("testSt");
+      spyOn(creationServiceModal, "addOAuth2Item");
+      spyOn(servicesService, "createNewService").andCallFake(function() {
+        var dfd = new Deferred();
+        var data = {
+            oauth: [],
+            oauth2: [testData]
+        }
+        dfd.resolve(data);
+        return dfd;
+      });
+      
+      creationServiceModal.serviceSelection.value = "oauth2";
+      creationServiceModal.oAuth2Name.value = "testName";
+      creationServiceModal.oAuth2ClientId.value = "testClientId";
+      creationServiceModal.oAuth2ClientSecret.value = "testClientSecret";
+      creationServiceModal.oAuth2AuthUrl.value = "testAuthUrl";
+      creationServiceModal.oAuth2TokenUrl.value = "testTokenUrl";
+      creationServiceModal.toggleTab();
+      creationServiceModal.serviceSubmit.click();
+      
+      expect(creationServiceModal.addOAuth2Item).toHaveBeenCalledWith(testData);
+      expect(domClass.contains(creationServiceModal.servicesTab, "active")).toBe(true);
+      expect(domClass.contains(creationServiceModal.oAuth2FieldsValidation, "hide")).toBe(true);
+      
+      creationServiceModal.destroy();
+    });
+    
     it("resets user inputted fields after a successful submission", function() {
       var testData = {
-          version: "OAuth",
+          version: "oauth",
           st: "testSt",
           name: "testName",
           key: "testKey",
@@ -142,10 +200,13 @@ define(['explorer/widgets/creation/CreationServiceModal', 'explorer/widgets/crea
       document.getElementById('testDiv').appendChild(creationServiceModal.domNode);
       
       spyOn(creationServiceModal, "getToken").andReturn("testSt");
-      spyOn(creationServiceModal, "addServiceItem");
+      spyOn(creationServiceModal, "addOAuthItem");
       spyOn(servicesService, "createNewService").andCallFake(function() {
         var dfd = new Deferred();
-        var data = [testData];
+        var data = {
+            oauth: [testData],
+            oauth2: []
+        }
         dfd.resolve(data);
         return dfd;
       });
@@ -154,24 +215,49 @@ define(['explorer/widgets/creation/CreationServiceModal', 'explorer/widgets/crea
       creationServiceModal.oAuthKey.value = "testKey";
       creationServiceModal.oAuthSecret.value = "testSecret";
       creationServiceModal.oAuthKeyType.selectedIndex = 1;
+      
+      creationServiceModal.oAuth2Name.value = "testName2";
+      creationServiceModal.oAuth2ClientId.value = "testKey2";
+      creationServiceModal.oAuth2ClientSecret.value = "testSecret2";
+      creationServiceModal.oAuth2AuthUrl.value = "testAuth2";
+      creationServiceModal.oAuth2TokenUrl.value = "testToken2";
+      creationServiceModal.oAuth2Type.selectedIndex = 1;
+      creationServiceModal.oAuth2GrantType.selectedIndex = 1;
+      creationServiceModal.oAuth2Authentication.selectedIndex = 1;
+      query("#oAuth2OverrideRadio")[0].checked = true;
+      query("#oAuth2HeaderRadio")[0].checked = true;
+      query("#oAuth2ParameterRadio")[0].checked = true;
+      
       creationServiceModal.toggleTab();
       creationServiceModal.serviceSubmit.click();
-      
       expect(creationServiceModal.oAuthName.value).toBe("");
       expect(creationServiceModal.oAuthKey.value).toBe("");
       expect(creationServiceModal.oAuthSecret.value).toBe("");
       expect(creationServiceModal.oAuthKeyType.selectedIndex).toBe(0);
       
-      expect(creationServiceModal.addServiceItem).toHaveBeenCalledWith(testData);
+      expect(creationServiceModal.oAuth2Name.value).toBe("");
+      expect(creationServiceModal.oAuth2ClientId.value).toBe("");
+      expect(creationServiceModal.oAuth2ClientSecret.value).toBe("");
+      expect(creationServiceModal.oAuth2AuthUrl.value).toBe("");
+      expect(creationServiceModal.oAuth2TokenUrl.value).toBe("");
+      expect(creationServiceModal.oAuth2Type.selectedIndex).toBe(0);
+      expect(creationServiceModal.oAuth2GrantType.selectedIndex).toBe(0);
+      expect(creationServiceModal.oAuth2Authentication.selectedIndex).toBe(0);
+      expect(creationServiceModal.oAuth2Override.checked).toBe(true);
+      expect(creationServiceModal.oAuth2Header.checked).toBe(true);
+      expect(creationServiceModal.oAuth2Parameter.checked).toBe(true);
+      
+      
+      expect(creationServiceModal.addOAuthItem).toHaveBeenCalledWith(testData);
       expect(domClass.contains(creationServiceModal.servicesTab, "active")).toBe(true);
       expect(domClass.contains(creationServiceModal.oAuthFieldsValidation, "hide")).toBe(true);
       
       creationServiceModal.destroy();
     });
     
-    it("will prompt the user to fill out all fields if any are left blank upon submission", function() {
+    it("will prompt the user to fill out all fields if any are left blank upon OAuth submission", function() {
       var testData = {
-          version: "OAuth",
+          version: "oauth",
           st: "testSt",
           name: "",
           key: "",
@@ -185,7 +271,6 @@ define(['explorer/widgets/creation/CreationServiceModal', 'explorer/widgets/crea
       
       spyOn(creationServiceModal, "getToken").andReturn("testSt");
       spyOn(creationServiceModal, "validateFields");
-      creationServiceModal.toggleTab();
       creationServiceModal.serviceSubmit.click();
       
       expect(creationServiceModal.validateFields).toHaveBeenCalledWith(testData);
@@ -194,9 +279,41 @@ define(['explorer/widgets/creation/CreationServiceModal', 'explorer/widgets/crea
       creationServiceModal.destroy();
     }); 
     
+    it("will prompt the user to fill out all fields if any are left blank upon OAuth2 submission", function() {      
+      var testData = {
+          version: "oauth2",
+          st: "testSt",
+          name: "",
+          clientId: "",
+          clientSecret: "",
+          authUrl: "",
+          tokenUrl: "",
+          type: "confidential",
+          grantType: "code",
+          authentication: "STANDARD",
+          override: "true",
+          authHeader: "false",
+          urlParam: "true",
+          redirectUrl: "%origin%%contextRoot%/gadgets/oauth2callback"
+      }
+      
+      var creationServiceModal = new CreationServiceModal();
+      document.getElementById('testDiv').appendChild(creationServiceModal.domNode);
+      
+      spyOn(creationServiceModal, "getToken").andReturn("testSt");
+      spyOn(creationServiceModal, "validateFields");
+      creationServiceModal.serviceSelection.value = "oauth2";
+      creationServiceModal.serviceSubmit.click();
+      
+      expect(creationServiceModal.validateFields).toHaveBeenCalledWith(testData);
+      expect(domClass.contains(creationServiceModal.oAuth2FieldsValidation, "hide")).toBe(false);
+      
+      creationServiceModal.destroy();
+    }); 
+    
     it("changes its content when a different oAuth selection in the dropdown is toggled", function() {
       var testData = {
-          version: "OAuth",
+          version: "oauth",
           st: "testSt",
           name: "",
           key: "",
@@ -210,7 +327,7 @@ define(['explorer/widgets/creation/CreationServiceModal', 'explorer/widgets/crea
       
       spyOn(creationServiceModal, "clearContent").andCallThrough();
       
-      creationServiceModal.serviceSelection.value = "OAuth2";
+      creationServiceModal.serviceSelection.value = "oauth2";
       
       expect(domClass.contains(creationServiceModal.oAuthGeneralContent, "active")).toBe(true);
       
@@ -223,6 +340,78 @@ define(['explorer/widgets/creation/CreationServiceModal', 'explorer/widgets/crea
       expect(domClass.contains(creationServiceModal.oAuthGeneralContent, "active")).toBe(false);
       
       creationServiceModal.destroy();
+    }); 
+    
+    it("removes the oAuth title after the last oAuth item is deleted", function() {
+      var subscriptionReceived = false;
+      var subscription = topic.subscribe("serviceDeleted", function(data) {
+        subscriptionReceived = true;
+      })
+      
+      var creationServiceModal = new CreationServiceModal();
+      document.getElementById('testDiv').appendChild(creationServiceModal.domNode);
+      domClass.remove(creationServiceModal.oAuth, "hide");
+
+      runs(function() {
+        topic.publish("serviceDeleted");
+      });
+    
+      waitsFor(function() {
+        return subscriptionReceived;
+      }, "The subscription should have been received", 750);
+
+      runs(function() {
+        expect(domClass.contains(creationServiceModal.oAuth, "hide")).toBe(true);
+        creationServiceModal.destroy();
+      });
+    }); 
+    
+    it("removes the oAuth2 title after the last oAuth2 item is deleted", function() {
+      var subscriptionReceived = false;
+      var subscription = topic.subscribe("serviceDeleted", function(data) {
+        subscriptionReceived = true;
+      })
+      
+      var creationServiceModal = new CreationServiceModal();
+      document.getElementById('testDiv').appendChild(creationServiceModal.domNode);
+      domClass.remove(creationServiceModal.oAuth2, "hide");
+
+      runs(function() {
+        topic.publish("serviceDeleted");
+      });
+    
+      waitsFor(function() {
+        return subscriptionReceived;
+      }, "The subscription should have been received", 750);
+
+      runs(function() {
+        expect(domClass.contains(creationServiceModal.oAuth2, "hide")).toBe(true);
+        creationServiceModal.destroy();
+      });
+    }); 
+    
+    it("shows the no services title after all services are deleted", function() {
+      var subscriptionReceived = false;
+      var subscription = topic.subscribe("serviceDeleted", function(data) {
+        subscriptionReceived = true;
+      })
+      
+      var creationServiceModal = new CreationServiceModal();
+      document.getElementById('testDiv').appendChild(creationServiceModal.domNode);
+      domClass.add(creationServiceModal.noServices, "hide");
+      
+      runs(function() {
+        topic.publish("serviceDeleted");
+      });
+    
+      waitsFor(function() {
+        return subscriptionReceived;
+      }, "The subscription should have been received", 750);
+
+      runs(function() {
+        expect(domClass.contains(creationServiceModal.noServices, "hide")).toBe(false);
+        creationServiceModal.destroy();
+      });
     }); 
   });
 });

@@ -18,12 +18,15 @@
  */
 package org.opensocial.explorer.server.oauth2;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,12 +41,12 @@ import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Client;
 import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Encrypter;
 import org.apache.shindig.gadgets.oauth2.persistence.OAuth2EncryptionException;
 import org.apache.shindig.gadgets.oauth2.persistence.OAuth2PersistenceException;
-import org.apache.shindig.gadgets.oauth2.persistence.OAuth2Persister;
 import org.apache.shindig.gadgets.oauth2.persistence.sample.OAuth2GadgetBinding;
 import org.apache.shindig.gadgets.oauth2.persistence.sample.OAuth2Provider;
 import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
+import org.opensocial.explorer.server.oauth.NoSuchStoreException;
 
 import com.google.caja.util.Maps;
 import com.google.inject.Inject;
@@ -56,7 +59,7 @@ import com.google.inject.name.Named;
 /**
  * Persists OAuth 2.0 data from a JSON file.
  */
-public class OSEOAuth2Persister implements OAuth2Persister {
+public class OSEOAuth2Persister implements IOAuth2Persister {
   
   private static final String CLAZZ = OSEOAuth2Persister.class.getName();
   private static final Logger LOG = Logger.getLogger(CLAZZ);
@@ -76,6 +79,7 @@ public class OSEOAuth2Persister implements OAuth2Persister {
   private static final String URL_PARAMETER = "usesUrlParameter";
   private static final String ALLOWED_DOMAINS = "allowedDomains";
   
+  private Map<String, Map<String, OAuth2Client>> userClientStore;
   private OAuth2Encrypter encrypter;
   private Authority authority;
   private String globalRedirectUri;
@@ -93,7 +97,61 @@ public class OSEOAuth2Persister implements OAuth2Persister {
     this.globalRedirectUri = globalRedirectUri;
     this.contextRoot = contextRoot;
     this.oauthConfig = oauthConfig;
+    final Map<String, Map<String, OAuth2Client>> uMap = Maps.newHashMap();
+    this.userClientStore = Collections.synchronizedMap(uMap);
     loadConfig();
+  }
+  
+  public JSONArray getUserClients(String userId) throws JSONException, UnsupportedEncodingException {
+    JSONArray array = new JSONArray();
+    if(this.userClientStore.containsKey(userId)) {
+      Map<String, OAuth2Client> userMap = this.userClientStore.get(userId);
+      for (Entry<String, OAuth2Client> entry : userMap.entrySet()) {
+        OAuth2Client client = entry.getValue();
+        JSONObject service = new JSONObject();
+        service.put("name", client.getServiceName());
+        service.put("clientId", client.getClientId());
+        service.put("clientSecret", new String(client.getClientSecret(), "UTF-8"));
+        service.put("authUrl", client.getAuthorizationUrl());
+        service.put("tokenUrl", client.getTokenUrl());
+        service.put("type", client.getType().toString());
+        service.put("grantType", client.getGrantType());
+        service.put("authentication", client.getClientAuthenticationType());
+        service.put("override", client.isAllowModuleOverride());
+        service.put("authHeader", client.isAuthorizationHeader());
+        service.put("urlParam", client.isUrlParameter());
+        service.put("redirectUrl", client.getRedirectUri());
+        array.add(service);
+      }
+    }
+    return array;
+  }
+  
+  public OAuth2Client getUserClient(String userId, String serviceName) {
+      Map<String, OAuth2Client> userMap = this.userClientStore.get(userId);
+      return userMap.get(serviceName);
+  }
+  
+  public void addUserClient(String userId, String serviceName, OAuth2Client client) {
+    if(this.userClientStore.containsKey(userId)) {
+      this.userClientStore.get(userId).put(serviceName, client);
+    } else {
+      Map<String, OAuth2Client> newUser = new HashMap<String, OAuth2Client>();
+      newUser.put(serviceName, client);
+      this.userClientStore.put(userId, newUser);
+    }
+  }
+  
+  public void deleteUserClient(String userId, String serviceName) throws NoSuchStoreException {
+    if(this.userClientStore.containsKey(userId)) {
+      this.userClientStore.get(userId).remove(serviceName);
+    } else {
+      throw new NoSuchStoreException("Couldn't find the given userId in userStore:" + userId);
+    }
+  }
+  
+  public boolean isUserExisting(String userId) {
+    return this.userClientStore.containsKey(userId);
   }
   
   protected void loadConfig() {
@@ -104,9 +162,9 @@ public class OSEOAuth2Persister implements OAuth2Persister {
       LOG.logp(Level.WARNING, CLAZZ, method, "Error loading config from " + oauthConfig, e);
     }
   }
-
+  
   public OAuth2Client findClient(String gadgetUri, String serviceName)
-          throws OAuth2PersistenceException {
+      throws OAuth2PersistenceException {
     return null;
   }
 
