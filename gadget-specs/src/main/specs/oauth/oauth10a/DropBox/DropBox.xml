@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+  <ModulePrefs title="DropBox OAuth Gadget" width="700">
+    <Require feature="dynamic-height" />
+    <Require feature="oauthpopup" />
+    <OAuth>
+      <Service name="DropBox">
+        <Request url="https://api.dropbox.com/1/oauth/request_token" />
+        <Access url="https://api.dropbox.com/1/oauth/access_token" />
+        <Authorization url="https://www.dropbox.com/1/oauth/authorize" />
+      </Service>
+    </OAuth>
+  </ModulePrefs>
+  <Content type="html" href="dropbox.html">
+  </Content>
+</Module>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<script type="text/javascript" src="dropbox.js"></script>
+  </head>
+  <body>
+  	<h1>DropBox Gadget</h1>
+    <div id="error" style="display: none; color: red;">
+      <p>There was an error!!!</p>
+      <p id="errorText"></p>
+    </div>
+  	<div id="loading">Loading...</div>
+  	<div id="authorize" style="display: none;">
+  		<p>
+  		This gadget uses OAuth 1.0a to authorize with DropBox and retrieve your DropBox account information.
+  		In order to retrieve any information from DropBox you first need to authorize the gadget.
+  		To begin the authorization process click 
+  		<a id="authorizeLink" href="javascript:void(0)">here</a>.
+  		</p>
+  		<p>
+  		Note:  Clicking the link will open a popup window, make sure your browser allows the popup to open.
+  		After you authorize the gadget you will have to manually close the popup window and return back to the
+  		gadget.
+  		</p>
+  	</div>
+  	<div id="accountInfo" style="display: none;">
+  		<div>Name: <span id="name"></span></div>
+  		<div>Country: <span id="country"></span></div>
+  		<div>Email: <span id="email"></span></div>
+  	</div>
+  </body>
+</html>
