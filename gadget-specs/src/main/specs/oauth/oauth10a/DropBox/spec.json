@@ -1,0 +1,7 @@
+{
+  "isDefault" : false,
+  "gadget" : "DropBox.xml",
+  "htmlFiles" : ["dropbox.html"],
+  "jsFiles" : ["dropbox.js"],
+  "title" : "DropBox Gadget"
+}
