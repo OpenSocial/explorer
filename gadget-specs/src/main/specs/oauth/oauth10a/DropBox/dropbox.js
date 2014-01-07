@@ -42,6 +42,7 @@ function displayAuthorizeMessage(onClick) {
   document.getElementById('accountInfo').style.display = 'none';
   document.getElementById('authorizeLink').onclick = onClick;
   document.getElementById('authorize').style.display = 'block';
+  gadgets.window.adjustHeight();
 };
 
 function displayAccountInfo(accountData) {
