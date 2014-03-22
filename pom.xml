@@ -70,7 +70,7 @@
     <maven-project-info-reports-plugin.version>2.2</maven-project-info-reports-plugin.version>
     <servletapi.version>2.4-20040521</servletapi.version>
     <wink.version>1.2.1-incubating</wink.version>
-    <guava.version>13.0</guava.version>
+    <guava.version>14.0.1</guava.version>
     <junit.version>4.10</junit.version>
     <easymock.version>3.0</easymock.version>
     <powermock.version>1.5</powermock.version>
